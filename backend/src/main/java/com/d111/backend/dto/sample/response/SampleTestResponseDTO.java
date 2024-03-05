@@ -8,7 +8,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SampleTestResponse {
+public class SampleTestResponseDTO {
 
     @Schema(description = "sample 이름", nullable = false, example = "적당한 무언가")
     String sampleColumn;

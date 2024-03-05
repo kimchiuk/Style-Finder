@@ -1,6 +1,6 @@
 package com.d111.backend.controller.sample;
 
-import com.d111.backend.dto.sample.response.SampleTestResponse;
+import com.d111.backend.dto.sample.response.SampleTestResponseDTO;
 import com.d111.backend.service.sample.SampleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,11 +24,11 @@ public class SampleController {
 
     @Operation(summary = "모든 sample 조회", description = "모든 sample의 sample_column 정보를 조회합니다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = SampleTestResponse.class))),
+            @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = SampleTestResponseDTO.class))),
             @ApiResponse(responseCode = "404", description = "조회 실패", content = @Content(schema = @Schema(implementation = String.class)))
     })
     @GetMapping("/getAll")
-    ResponseEntity<List<SampleTestResponse>> getSamples() {
+    ResponseEntity<List<SampleTestResponseDTO>> getSamples() {
         return sampleService.getSamples();
     }
 

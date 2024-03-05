@@ -1,6 +1,6 @@
 package com.d111.backend.serviceImpl.sample;
 
-import com.d111.backend.dto.sample.response.SampleTestResponse;
+import com.d111.backend.dto.sample.response.SampleTestResponseDTO;
 import com.d111.backend.entity.sample.Sample;
 import com.d111.backend.repository.sample.SampleRepository;
 import com.d111.backend.service.sample.SampleService;
@@ -9,13 +9,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SampleServiceImpl implements SampleService {
 
     SampleRepository sampleRepository;
@@ -28,13 +27,13 @@ public class SampleServiceImpl implements SampleService {
     }
 
     @Override
-    public ResponseEntity<List<SampleTestResponse>> getSamples() {
+    public ResponseEntity<List<SampleTestResponseDTO>> getSamples() {
         List<Sample> samples = sampleRepository.findAll();
 
-        List<SampleTestResponse> sampleTestResponses = new ArrayList<>();
+        List<SampleTestResponseDTO> sampleTestResponses = new ArrayList<>();
 
         for (Sample sample: samples) {
-            sampleTestResponses.add(SampleTestResponse.builder().sampleColumn(sample.getSampleColumn()).build());
+            sampleTestResponses.add(SampleTestResponseDTO.builder().sampleColumn(sample.getSampleColumn()).build());
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(sampleTestResponses);
