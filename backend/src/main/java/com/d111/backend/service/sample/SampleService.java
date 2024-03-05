@@ -11,6 +11,6 @@ public interface SampleService {
 
     ResponseEntity<List<SampleTestResponse>> getSamples();
 
-    ResponseEntity<String> createSample();
+    ResponseEntity<String> createSample(String sampleName);
 
 }
