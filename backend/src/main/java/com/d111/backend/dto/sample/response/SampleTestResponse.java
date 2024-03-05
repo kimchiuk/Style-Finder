@@ -1,5 +1,6 @@
 package com.d111.backend.dto.sample.response;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 @Getter
@@ -9,6 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 public class SampleTestResponse {
 
+    @Schema(description = "sample 이름", nullable = false, example = "적당한 무언가")
     String sampleColumn;
 
 }

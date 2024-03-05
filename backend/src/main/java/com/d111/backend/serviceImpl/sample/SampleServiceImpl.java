@@ -21,9 +21,9 @@ public class SampleServiceImpl implements SampleService {
     SampleRepository sampleRepository;
 
     @Override
-    public ResponseEntity<String> createSample() {
-        Sample sample = Sample.builder().sampleColumn("Good?").build();
-
+    public ResponseEntity<String> createSample(String sampleName) {
+        Sample sample = Sample.builder().sampleColumn(sampleName).build();
+        sampleRepository.save(sample);
         return ResponseEntity.status(HttpStatus.CREATED).body("Good");
     }
 
