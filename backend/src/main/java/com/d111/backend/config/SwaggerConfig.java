@@ -24,4 +24,20 @@ public class SwaggerConfig {
                         .build();
         }
 
+        @Bean
+        public GroupedOpenApi user() {
+                return GroupedOpenApi.builder()
+                        .group("user")
+                        .pathsToMatch("/api/user/**")
+                        .build();
+        }
+
+        @Bean
+        public GroupedOpenApi feed() {
+                return GroupedOpenApi.builder()
+                        .group("feed")
+                        .pathsToMatch("/api/feed/**")
+                        .build();
+        }
+
 }
