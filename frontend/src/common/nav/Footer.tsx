@@ -1,9 +1,14 @@
-import React from 'react'
+import React from 'react';
+import './Footer.css'; // 스타일 파일을 import합니다.
 
-const Layout = () => {
-    return (
-        <div>Footer</div>
-    )
-}
+const Footer = () => {
+  return (
+    <footer className="footer-container">
+      <div className="footer-content">
+        <p>Footer</p>
+      </div>
+    </footer>
+  );
+};
 
-export default Layout
+export default Footer;
