@@ -37,12 +37,16 @@ public class UserServiceImpl implements UserService {
         // S3 연동 후 프로필 이미지 로직 구현 예정
         String profileImageUrl = "";
 
+        // List<String> -> String
+        String likeCategories = String.join(",", signUpRequestDTO.getLikeCategories());
+        String dislikeCategories = String.join(",", signUpRequestDTO.getDislikeCategories());
+
         User newUser = User.builder()
                 .email(signUpRequestDTO.getEmail())
                 .password(passwordEncoder.encode(signUpRequestDTO.getPassword()))
                 .nickname(signUpRequestDTO.getNickname())
-                .likeCategories(signUpRequestDTO.getLikeCategories())
-                .dislikeCategories(signUpRequestDTO.getDislikeCategories())
+                .likeCategories(likeCategories)
+                .dislikeCategories(dislikeCategories)
                 .height(signUpRequestDTO.getHeight())
                 .weight(signUpRequestDTO.getWeight())
                 .profileImage(profileImageUrl)
