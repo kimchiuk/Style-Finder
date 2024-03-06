@@ -1,4 +1,4 @@
-package com.d111.backend.dto.sample.request;
+package com.d111.backend.dto.user.request;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
