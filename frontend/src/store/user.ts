@@ -1,21 +1,16 @@
-import create from 'zustand'
+import create from 'zustand';
 
-interface UserStore {
-    pk: number
-    id: string
-    nickname: string
-    likes: string[]
-    dislikes: string[]
-    setNickname: (newNickname: string) => void
-}
+import { UserStore } from '../interface/user';
 
-const useUserStore = create<UserStore>((set) => ({
-    pk: 0,
-    id: '',
-    nickname: '',
-    likes: [],
-    dislikes: [],
-    setNickname: (newNickname: string) => set({ nickname: newNickname }),
-}))
+const useUserStore = create<UserStore>(() => ({
+  id: 0,
+  email: '',
+  nickname: '',
+  image: '',
+  likes: [],
+  dislikes: [],
+  height: 0,
+  weight: 0,
+}));
 
-export default useUserStore
+export default useUserStore;
