@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<SignInResponseDTO> signIn(SignInRequestDTO signInRequestDTO) {
         User user = userRepository.findByEmail(signInRequestDTO.getEmail()).orElseThrow(() -> new EmailNotFoundException("일치하는 이메일이 없습니다."));
 
-        if (!passwordEncoder.matches(user.getPassword(), passwordEncoder.encode(signInRequestDTO.getPassword()))) {
+        if (!passwordEncoder.matches(signInRequestDTO.getPassword(), user.getPassword())) {
             throw new PasswordNotMatchException("비밀번호가 일치하지 않습니다.");
         }
 
