@@ -17,12 +17,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SampleServiceImpl implements SampleService {
 
-    SampleRepository sampleRepository;
+    private final SampleRepository sampleRepository;
 
     @Override
     public ResponseEntity<String> createSample(String sampleName) {
-        Sample sample = Sample.builder().sampleColumn(sampleName).build();
+        Sample sample = Sample.builder()
+                .sampleColumn(sampleName)
+                .build();
+
         sampleRepository.save(sample);
+
         return ResponseEntity.status(HttpStatus.CREATED).body("Good");
     }
 

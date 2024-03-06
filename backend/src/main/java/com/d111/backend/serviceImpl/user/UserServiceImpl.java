@@ -6,12 +6,14 @@ import com.d111.backend.dto.user.response.SignInResponseDTO;
 import com.d111.backend.entity.user.User;
 import com.d111.backend.exception.user.EmailNotFoundException;
 import com.d111.backend.exception.user.ExistedEmailException;
+import com.d111.backend.exception.user.PasswordNotMatchException;
 import com.d111.backend.repository.user.UserRepository;
 import com.d111.backend.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +26,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public ResponseEntity signUp(SignUpRequestDTO signUpRequestDTO, MultipartFile profileImage) {
@@ -36,7 +39,7 @@ public class UserServiceImpl implements UserService {
 
         User newUser = User.builder()
                 .email(signUpRequestDTO.getEmail())
-                .password(signUpRequestDTO.getPassword())
+                .password(passwordEncoder.encode(signUpRequestDTO.getPassword()))
                 .nickname(signUpRequestDTO.getNickname())
                 .likeCategories(signUpRequestDTO.getLikeCategories())
                 .dislikeCategories(signUpRequestDTO.getDislikeCategories())
@@ -53,6 +56,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<SignInResponseDTO> signIn(SignInRequestDTO signInRequestDTO) {
         User user = userRepository.findByEmail(signInRequestDTO.getEmail()).orElseThrow(() -> new EmailNotFoundException("일치하는 이메일이 없습니다."));
+
+        if (!passwordEncoder.matches(user.getPassword(), passwordEncoder.encode(signInRequestDTO.getPassword()))) {
+            throw new PasswordNotMatchException("비밀번호가 일치하지 않습니다.");
+        }
 
         SignInResponseDTO signInResponseDTO = SignInResponseDTO.builder()
                 .nickname(user.getNickname())

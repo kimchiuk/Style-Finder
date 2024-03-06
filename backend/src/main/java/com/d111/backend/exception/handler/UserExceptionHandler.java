@@ -2,6 +2,7 @@ package com.d111.backend.exception.handler;
 
 import com.d111.backend.exception.user.EmailNotFoundException;
 import com.d111.backend.exception.user.ExistedEmailException;
+import com.d111.backend.exception.user.PasswordNotMatchException;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -34,6 +35,13 @@ public class UserExceptionHandler {
     @ExceptionHandler(ExistedEmailException.class)
     public ResponseEntity<String> handleExistedEmailException(ExistedEmailException exception) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
+                .headers(JSON_HEADERS)
+                .body(stringToJson(exception.getMessage()));
+    }
+
+    @ExceptionHandler(PasswordNotMatchException.class)
+    public ResponseEntity<String> handlePasswordNotMatchException(PasswordNotMatchException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .headers(JSON_HEADERS)
                 .body(stringToJson(exception.getMessage()));
     }
