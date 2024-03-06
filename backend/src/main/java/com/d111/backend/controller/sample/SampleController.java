@@ -43,3 +43,5 @@ public class SampleController {
     }
 
 }
+
+// 브랜치 동작 확인
