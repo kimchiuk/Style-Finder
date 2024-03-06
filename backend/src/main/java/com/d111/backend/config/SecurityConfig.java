@@ -1,6 +1,7 @@
 package com.d111.backend.config;
 
 import com.d111.backend.security.filter.JWTFilter;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -16,6 +17,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+@Log4j2
 @EnableMethodSecurity
 @Configuration
 public class SecurityConfig {
@@ -25,11 +28,12 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-                .csrf(AbstractHttpConfigurer::disable);
-
+        // CORS 설정
         httpSecurity.cors(httpSecurityCorsConfigurer ->
                         httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()));
+
+        httpSecurity
+                .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable());
 
         httpSecurity
                 .authorizeHttpRequests(
