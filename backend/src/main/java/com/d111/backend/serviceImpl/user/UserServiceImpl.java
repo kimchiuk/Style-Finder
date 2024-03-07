@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
 
         claims.put("email", signInRequestDTO.getEmail());
 
-        String accessToken = JWTUtil.createToken(claims, 1);
+        String accessToken = JWTUtil.createToken(claims, 10);
         String refreshToken = JWTUtil.createToken(claims, 50);
 
         SignInResponseDTO signInResponseDTO = SignInResponseDTO.builder()
