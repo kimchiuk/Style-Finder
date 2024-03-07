@@ -52,6 +52,9 @@ dependencies {
 			"com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
 	)
 
+	// Google Gson
+	implementation 'com.google.code.gson:gson:2.10.1'
+
 	// Spring Security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
