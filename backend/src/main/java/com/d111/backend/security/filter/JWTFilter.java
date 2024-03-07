@@ -1,7 +1,9 @@
 package com.d111.backend.security.filter;
 
 
+import com.d111.backend.exception.user.CustomJWTException;
 import com.d111.backend.util.JWTUtil;
+import com.google.gson.Gson;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,11 +19,26 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Log4j2
 @RequiredArgsConstructor
 public class JWTFilter extends OncePerRequestFilter {
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+
+        String path = request.getRequestURI();
+
+        if (path.startsWith("/api/user/")) {
+            return true;
+        }
+
+        return false;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -29,11 +46,9 @@ public class JWTFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
-        log.info("authorization : " + authorization);
 
         if (authorization == null || !authorization.startsWith("Bearer ")){
-            log.error("authorization을 잘못 보냈습니다.");
-            filterChain.doFilter(request, response);
+            UnauthorizedError(response);
             return;
         }
 
@@ -41,15 +56,30 @@ public class JWTFilter extends OncePerRequestFilter {
         String token = authorization.split(" ")[1];
         log.info("token : " + token);
 
+        Map<String, Object> claim = JWTUtil.validateToken(token);
+
         // 인증된 사용자를 나타내는 토큰 객체를 생성하고, 권한 정보를 설정
-//        UsernamePasswordAuthenticationToken authenticationToken =
-//                new UsernamePasswordAuthenticationToken(userName, null, List.of(new SimpleGrantedAuthority("USER")));
-//
-//        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-//
-//        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-//
-//        filterChain.doFilter(request, response);
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(claim, null, List.of(new SimpleGrantedAuthority("USER")));
+
+        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+        filterChain.doFilter(request, response);
+    }
+
+    private void UnauthorizedError(HttpServletResponse response) throws IOException {
+        Gson gson = new Gson();
+
+        String message = gson.toJson(Collections.singletonMap("message", "AUTHORIZATION_HEADER_ERROR"));
+
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+
+        PrintWriter printWriter = response.getWriter();
+        printWriter.println(message);
+        printWriter.close();
     }
 
 }
