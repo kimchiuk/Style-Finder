@@ -1,5 +1,6 @@
 package com.d111.backend.serviceImpl.user;
 
+import com.d111.backend.dto.user.UserDTO;
 import com.d111.backend.dto.user.request.SignInRequestDTO;
 import com.d111.backend.dto.user.request.SignUpRequestDTO;
 import com.d111.backend.dto.user.response.SignInResponseDTO;
@@ -9,6 +10,8 @@ import com.d111.backend.exception.user.ExistedEmailException;
 import com.d111.backend.exception.user.PasswordNotMatchException;
 import com.d111.backend.repository.user.UserRepository;
 import com.d111.backend.service.user.UserService;
+import com.d111.backend.util.JWTUtil;
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -18,6 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -65,12 +71,22 @@ public class UserServiceImpl implements UserService {
             throw new PasswordNotMatchException("비밀번호가 일치하지 않습니다.");
         }
 
+
+        Map<String, Object> claims = new HashMap<>();
+
+        claims.put("email", signInRequestDTO.getEmail());
+
+        String accessToken = JWTUtil.createToken(claims, 1);
+        String refreshToken = JWTUtil.createToken(claims, 50);
+
         SignInResponseDTO signInResponseDTO = SignInResponseDTO.builder()
                 .nickname(user.getNickname())
                 .likeCategories(user.getLikeCategories())
                 .dislikeCategories(user.getDislikeCategories())
                 .height(user.getHeight())
                 .weight(user.getWeight())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .build();
 
         return ResponseEntity.status(HttpStatus.OK).body(signInResponseDTO);

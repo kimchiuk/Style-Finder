@@ -1,5 +1,6 @@
 package com.d111.backend.exception.handler;
 
+import com.d111.backend.exception.user.CustomJWTException;
 import com.d111.backend.exception.user.EmailNotFoundException;
 import com.d111.backend.exception.user.ExistedEmailException;
 import com.d111.backend.exception.user.PasswordNotMatchException;
@@ -41,6 +42,13 @@ public class UserExceptionHandler {
 
     @ExceptionHandler(PasswordNotMatchException.class)
     public ResponseEntity<String> handlePasswordNotMatchException(PasswordNotMatchException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .headers(JSON_HEADERS)
+                .body(stringToJson(exception.getMessage()));
+    }
+
+    @ExceptionHandler(CustomJWTException.class)
+    public ResponseEntity<String> handleCustomJWTException(CustomJWTException exception) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .headers(JSON_HEADERS)
                 .body(stringToJson(exception.getMessage()));
