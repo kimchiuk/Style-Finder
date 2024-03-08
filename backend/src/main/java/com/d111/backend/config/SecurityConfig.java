@@ -45,9 +45,9 @@ public class SecurityConfig {
                                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED)));
                         });
 
-        httpSecurity.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/**").permitAll()
-        );
+//        httpSecurity.authorizeHttpRequests(authorize -> authorize
+//                        .requestMatchers("/api/**").permitAll()
+//        );
 
         httpSecurity
                 .addFilterBefore(new JWTFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -63,7 +63,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5000"));
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173"));
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", " Content-Type"));
         corsConfiguration.setAllowCredentials(true);

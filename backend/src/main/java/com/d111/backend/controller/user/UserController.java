@@ -39,6 +39,7 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(schema = @Schema(implementation = SignInResponseDTO.class))),
             @ApiResponse(responseCode = "404", description = "가입되지 않은 회원", content = @Content)
     })
+
     @PostMapping(value = "/signIn")
     ResponseEntity<SignInResponseDTO> signIn(@RequestBody SignInRequestDTO signInRequest) {
         return userService.signIn(signInRequest);
