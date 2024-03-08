@@ -34,6 +34,7 @@ public class JWTFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
 
         if (path.startsWith("/api/user/")) {
+            log.info("---notfilter---");
             return true;
         }
 

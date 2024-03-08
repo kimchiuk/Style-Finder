@@ -32,4 +32,7 @@ public class SignInResponseDTO {
     @Schema(description = "리프레시 토큰")
     String refreshToken;
 
+    @Schema(description = "프로필 이미지", example = "binary")
+    private byte[] profileImage;
+
 }

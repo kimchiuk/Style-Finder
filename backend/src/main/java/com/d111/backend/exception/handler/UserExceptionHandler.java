@@ -1,9 +1,6 @@
 package com.d111.backend.exception.handler;
 
-import com.d111.backend.exception.user.CustomJWTException;
-import com.d111.backend.exception.user.EmailNotFoundException;
-import com.d111.backend.exception.user.ExistedEmailException;
-import com.d111.backend.exception.user.PasswordNotMatchException;
+import com.d111.backend.exception.user.*;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -50,6 +47,13 @@ public class UserExceptionHandler {
     @ExceptionHandler(CustomJWTException.class)
     public ResponseEntity<String> handleCustomJWTException(CustomJWTException exception) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .headers(JSON_HEADERS)
+                .body(stringToJson(exception.getMessage()));
+    }
+
+    @ExceptionHandler(ProfileImageIOException.class)
+    public ResponseEntity<String> handleProfileImageIOException(ProfileImageIOException exception) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
                 .headers(JSON_HEADERS)
                 .body(stringToJson(exception.getMessage()));
     }
