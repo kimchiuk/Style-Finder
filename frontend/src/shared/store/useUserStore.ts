@@ -1,6 +1,6 @@
-import create from 'zustand';
+import { create } from 'zustand';
 
-import { UserStore } from '../interface/user';
+import { UserStore } from '../types/user';
 
 const useUserStore = create<UserStore>(() => ({
   id: 0,

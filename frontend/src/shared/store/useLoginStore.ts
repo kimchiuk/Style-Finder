@@ -1,6 +1,6 @@
-import create from 'zustand';
+import { create } from 'zustand';
 
-import { LoginStore } from '../interface/user';
+import { LoginStore } from '../types/user';
 
 const useLoginStore = create<LoginStore>((set) => ({
   isLogin: false,
