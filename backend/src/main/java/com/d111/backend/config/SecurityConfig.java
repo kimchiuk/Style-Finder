@@ -1,8 +1,11 @@
 package com.d111.backend.config;
 
+import com.d111.backend.exception.user.CustomJWTException;
+import com.d111.backend.security.filter.ExceptionHandlerFilter;
 import com.d111.backend.security.filter.JWTFilter;
 import com.d111.backend.security.handler.CustomAccessDeniedHandler;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +26,11 @@ import java.util.List;
 @Log4j2
 @EnableMethodSecurity
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JWTFilter jwtFilter;
+    private final ExceptionHandlerFilter exceptionHandlerFilter;
 
     @Bean
     public BCryptPasswordEncoder PasswordEncoder() { return new BCryptPasswordEncoder(); }
@@ -37,7 +44,7 @@ public class SecurityConfig {
         httpSecurity.sessionManagement(sessionConfig ->  sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         httpSecurity
-                .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable());
+                .csrf(AbstractHttpConfigurer::disable);
 
         httpSecurity.formLogin(AbstractHttpConfigurer::disable)
                         .exceptionHandling(config -> {
@@ -45,12 +52,13 @@ public class SecurityConfig {
                                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED)));
                         });
 
-//        httpSecurity.authorizeHttpRequests(authorize -> authorize
-//                        .requestMatchers("/api/**").permitAll()
-//        );
+        httpSecurity.authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/**").permitAll()
+        );
 
         httpSecurity
-                .addFilterBefore(new JWTFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(exceptionHandlerFilter, JWTFilter.class);
 
         httpSecurity.exceptionHandling(config -> {
             config.accessDeniedHandler(new CustomAccessDeniedHandler());

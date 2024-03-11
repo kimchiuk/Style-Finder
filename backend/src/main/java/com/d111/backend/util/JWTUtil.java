@@ -36,16 +36,14 @@ public class JWTUtil {
                     .build()
                     .parseSignedClaims(token) // 파싱 및 검증, 실패 시 에러
                     .getPayload();
-        }catch(MalformedJwtException malformedJwtException){
-            throw new CustomJWTException("MalFormed");
-        }catch(ExpiredJwtException expiredJwtException){
-            throw new CustomJWTException("Expired");
-        }catch(InvalidClaimException invalidClaimException){
-            throw new CustomJWTException("Invalid");
-        }catch(JwtException jwtException){
-            throw new CustomJWTException("JWTError");
-        }catch(Exception e){
-            throw new CustomJWTException("Error");
+        } catch (MalformedJwtException malformedJwtException) {
+            throw new CustomJWTException("MALFORMED_TOKEN");
+        } catch (ExpiredJwtException expiredJwtException) {
+            throw new CustomJWTException("TOKEN_EXPIRED");
+        } catch (InvalidClaimException invalidClaimException) {
+            throw new CustomJWTException("INVALID_TOKEN");
+        } catch (JwtException jwtException) {
+            throw new CustomJWTException("JWT_TOKEN_ERROR");
         }
 
         return claim;

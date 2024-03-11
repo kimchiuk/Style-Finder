@@ -2,14 +2,18 @@ package com.d111.backend.service.user;
 
 import com.d111.backend.dto.user.request.SignInRequestDTO;
 import com.d111.backend.dto.user.request.SignUpRequestDTO;
+import com.d111.backend.dto.user.request.TokenReissueRequestDTO;
 import com.d111.backend.dto.user.response.SignInResponseDTO;
+import com.d111.backend.dto.user.response.TokenReissueResponseDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
 
-    ResponseEntity signUp(SignUpRequestDTO signUpRequestDTO, MultipartFile profileImage);
+    ResponseEntity<?> signUp(SignUpRequestDTO signUpRequestDTO, MultipartFile profileImage);
 
     ResponseEntity<SignInResponseDTO> signIn(SignInRequestDTO signInRequestDTO);
+
+    ResponseEntity<TokenReissueResponseDTO> tokenReissue(TokenReissueRequestDTO tokenReissueRequestDTO);
 
 }
