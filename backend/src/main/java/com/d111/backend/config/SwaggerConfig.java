@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
         info = @Info(
                 title = "StyleFinder API 명세서",
                 description = "StyleFinder API 명세서",
-                version = "v0"
+                version = "2.0"
         )
 )
 @Configuration

@@ -16,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 @Log4j2
+@Component
 @RequiredArgsConstructor
 public class JWTFilter extends OncePerRequestFilter {
 
@@ -34,7 +36,16 @@ public class JWTFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
 
         if (path.startsWith("/api/user/")) {
-            log.info("---notfilter---");
+            return true;
+        }
+
+        // Swagger UI 경로
+        if (path.startsWith("/swagger-ui/")) {
+            return true;
+        }
+        
+        // Swagger API 경로
+        if (path.startsWith("/v3/api-docs")) {
             return true;
         }
 
@@ -54,10 +65,12 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         //token 꺼내기
-        String token = authorization.split(" ")[1];
-        log.info("token : " + token);
+        String accessToken = authorization.split(" ")[1];
+        log.info("token : " + accessToken);
 
-        Map<String, Object> claim = JWTUtil.validateToken(token);
+        Map<String, Object> claim = JWTUtil.validateToken(accessToken);
+
+        log.info(claim.get("email"));
 
         // 인증된 사용자를 나타내는 토큰 객체를 생성하고, 권한 정보를 설정
         UsernamePasswordAuthenticationToken authenticationToken =

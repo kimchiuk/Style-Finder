@@ -5,12 +5,15 @@ import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
 import com.d111.backend.dto.user.request.SignInRequestDTO;
 import com.d111.backend.dto.user.request.SignUpRequestDTO;
+import com.d111.backend.dto.user.request.TokenReissueRequestDTO;
 import com.d111.backend.dto.user.response.SignInResponseDTO;
+import com.d111.backend.dto.user.response.TokenReissueResponseDTO;
+import com.d111.backend.entity.multipart.S3File;
+import com.d111.backend.entity.user.RefreshToken;
 import com.d111.backend.entity.user.User;
-import com.d111.backend.exception.user.EmailNotFoundException;
-import com.d111.backend.exception.user.ExistedEmailException;
-import com.d111.backend.exception.user.PasswordNotMatchException;
-import com.d111.backend.exception.user.ProfileImageIOException;
+import com.d111.backend.exception.user.*;
+import com.d111.backend.repository.s3.S3Repository;
+import com.d111.backend.repository.user.RefreshTokenRepository;
 import com.d111.backend.repository.user.UserRepository;
 import com.d111.backend.service.user.UserService;
 import com.d111.backend.util.JWTUtil;
@@ -36,14 +39,13 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final S3Repository s3Repository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket; // 버킷 이름
-
-//    @Value("${DEFAULT_PROFILE_URL}")
-//    private String DEFAULT_PROFILE_URL;
 
     @Override
     @Transactional
@@ -73,6 +75,9 @@ public class UserServiceImpl implements UserService {
             throw new ProfileImageIOException("프로필 이미지 저장에 실패하였습니다.");
         }
 
+        S3File s3File = new S3File(originalFileFullName, storeFileName, storeFilePath);
+        s3Repository.upload(s3File);
+
         // List<String> -> String
         String likeCategories = String.join(",", signUpRequestDTO.getLikeCategories());
         String dislikeCategories = String.join(",", signUpRequestDTO.getDislikeCategories());
@@ -85,7 +90,7 @@ public class UserServiceImpl implements UserService {
                 .dislikeCategories(dislikeCategories)
                 .height(signUpRequestDTO.getHeight())
                 .weight(signUpRequestDTO.getWeight())
-                .profileImage(amazonS3Client.getUrl(bucket, storeFileName).toString())
+                .profileImage(storeFilePath)
                 .build();
 
         userRepository.save(newUser);
@@ -107,7 +112,8 @@ public class UserServiceImpl implements UserService {
         // 프로필 이미지 binary 타입으로 불러오기
         byte[] profileImage;
 
-        String storeFilePath = "PROFILE/" + user.getProfileImage();
+        String storeFilePath = user.getProfileImage();
+        log.info("storeFilePath: " + storeFilePath);
 
         try {
             GetObjectRequest getObjectRequest = new GetObjectRequest(bucket, storeFilePath);
@@ -127,8 +133,16 @@ public class UserServiceImpl implements UserService {
 
         claims.put("email", signInRequestDTO.getEmail());
 
-        String accessToken = JWTUtil.createToken(claims, 10);
-        String refreshToken = JWTUtil.createToken(claims, 50);
+        String accessToken = JWTUtil.createToken(claims, 1);
+        String refreshToken = JWTUtil.createToken(claims, 5);
+
+        log.info(user.getEmail());
+
+        refreshTokenRepository.save(RefreshToken.builder()
+                        .email(user.getEmail())
+                        .accessToken(accessToken)
+                        .refreshToken(refreshToken)
+                        .build());
 
         // 로그인 응답 정보 생성
         SignInResponseDTO signInResponseDTO = SignInResponseDTO.builder()
@@ -143,6 +157,25 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         return ResponseEntity.status(HttpStatus.OK).body(signInResponseDTO);
+    }
+
+    @Override
+    public ResponseEntity<TokenReissueResponseDTO> tokenReissue(TokenReissueRequestDTO tokenReissueRequestDTO) {
+        RefreshToken refreshToken =
+                refreshTokenRepository.findById(tokenReissueRequestDTO.getRefreshToken())
+                        .orElseThrow(() -> new RefreshTokenNotFoundException("리프레시 토큰이 유효하지 않습니다."));
+
+        Map<String, Object> claims = new HashMap<>();
+
+        claims.put("email", refreshToken.getEmail());
+
+        String accessToken = JWTUtil.createToken(claims, 1);
+
+        TokenReissueResponseDTO tokenReissueResponseDTO = TokenReissueResponseDTO.builder()
+                .accessToken(accessToken)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(tokenReissueResponseDTO);
     }
 
 }

@@ -58,6 +58,13 @@ public class UserExceptionHandler {
                 .body(stringToJson(exception.getMessage()));
     }
 
+    @ExceptionHandler(RefreshTokenNotFoundException.class)
+    public ResponseEntity<String> handleRefreshTokenNotFoundException(RefreshTokenNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .headers(JSON_HEADERS)
+                .body(stringToJson(exception.getMessage()));
+    }
+
     public String stringToJson(String message) { return gson.toJson(Collections.singletonMap("message", message)); }
 
 }
