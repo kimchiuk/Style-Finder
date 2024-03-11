@@ -1,5 +1,5 @@
-import useLoginStore from '../../store/login';
-import useUserStore from '../../store/user'
+import useLoginStore from '../shared/store/useLoginStore';
+import useUserStore from '../shared/store/useUserStore';
 
 // import useAxios from '../../hooks/useAxios';
 // import api from '../../utils/axios';
@@ -16,23 +16,23 @@ const LoginPage = () => {
 
   return (
     <div>
-      {!loginStore.isLogin? (
+      {!loginStore.isLogin ? (
         // 로그아웃 상태
         <div>
-          로그인 페이지
+          <div>로그인</div>
           <Link to="/">
             <div>홈으로 돌아가기</div>
           </Link>
         </div>
       ) : (
-        // 로그인 상태 
+        // 로그인 상태
         <div>
-          로그인 페이지
-          id : {userStore.id}
+          <div>로그인</div>
+          <div> 콘텐츠 </div>
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;
