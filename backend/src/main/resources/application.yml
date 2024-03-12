@@ -1,0 +1,47 @@
+spring:
+  # MySQL
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/sample
+    username: sample
+    password: sample
+
+  # redis
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+
+  # jpa
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL57Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format-sql: true
+
+  # request multipart file
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+# S3
+cloud:
+  aws:
+    s3:
+      bucket: ENC(pwgGGwQF55dmqyPA1/ppvRruzWfbnZXMihe6tT/5hZc=)
+      credentials:
+        access-key: ENC(RkqjDt4Me0UiBJ/DOywtFy24yPiBZFXFqMVYfea6Ln8=)
+        secret-key: ENC(jULgi4BF9ZtwsmyZsfiI/OVXmQbaXMt+l58Io7p7WuukbVcAEA2bx0kqhlNsvOA2Vq2nQpcHY2Q=)
+      region: ap-northeast-2
+    stack:
+      auto: false # EC2의 Spring Cloud 자동 구성 해제
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+
+DEFAULT_PROFILE_URL: ENC(CMi9xaa/WsATNtR4JioO8eu82a/ZArsMHlqWS5mMo8VrJMU/G2GurA==)
