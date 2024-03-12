@@ -3,7 +3,7 @@ import useUserStore from '../shared/store/useUserStore';
 
 import { Link } from 'react-router-dom';
 
-const MyInfo = () => {
+const My = () => {
   const loginStore = useLoginStore();
   const userStore = useUserStore();
 
@@ -28,4 +28,4 @@ const MyInfo = () => {
   );
 };
 
-export default MyInfo;
+export default My;
