@@ -6,8 +6,10 @@ import com.amazonaws.util.IOUtils;
 import com.d111.backend.dto.user.request.SignInRequestDTO;
 import com.d111.backend.dto.user.request.SignUpRequestDTO;
 import com.d111.backend.dto.user.request.TokenReissueRequestDTO;
+import com.d111.backend.dto.user.request.UpdateUserInfoRequestDTO;
 import com.d111.backend.dto.user.response.SignInResponseDTO;
 import com.d111.backend.dto.user.response.TokenReissueResponseDTO;
+import com.d111.backend.dto.user.response.UpdateUserInfoResponseDTO;
 import com.d111.backend.entity.multipart.S3File;
 import com.d111.backend.entity.user.RefreshToken;
 import com.d111.backend.entity.user.User;
@@ -22,6 +24,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -122,7 +126,6 @@ public class UserServiceImpl implements UserService {
         byte[] profileImage;
 
         String storeFilePath = user.getProfileImage();
-        log.info("storeFilePath: " + storeFilePath);
 
         try {
             GetObjectRequest getObjectRequest = new GetObjectRequest(bucket, storeFilePath);
@@ -138,17 +141,13 @@ public class UserServiceImpl implements UserService {
         }
 
         // JWT 토큰 생성
-        Map<String, Object> claims = new HashMap<>();
+        String userEmail = signInRequestDTO.getEmail();
 
-        claims.put("email", signInRequestDTO.getEmail());
-
-        String accessToken = JWTUtil.createToken(claims, 1);
-        String refreshToken = JWTUtil.createToken(claims, 5);
-
-        log.info(user.getEmail());
+        String accessToken = JWTUtil.createToken(userEmail, 1);
+        String refreshToken = JWTUtil.createToken(userEmail, 5);
 
         refreshTokenRepository.save(RefreshToken.builder()
-                        .email(user.getEmail())
+                        .email(userEmail)
                         .accessToken(accessToken)
                         .refreshToken(refreshToken)
                         .build());
@@ -174,17 +173,63 @@ public class UserServiceImpl implements UserService {
                 refreshTokenRepository.findById(tokenReissueRequestDTO.getRefreshToken())
                         .orElseThrow(() -> new RefreshTokenNotFoundException("리프레시 토큰이 유효하지 않습니다."));
 
-        Map<String, Object> claims = new HashMap<>();
-
-        claims.put("email", refreshToken.getEmail());
-
-        String accessToken = JWTUtil.createToken(claims, 1);
+        String accessToken = JWTUtil.createToken(refreshToken.getEmail(), 10);
 
         TokenReissueResponseDTO tokenReissueResponseDTO = TokenReissueResponseDTO.builder()
                 .accessToken(accessToken)
                 .build();
 
         return ResponseEntity.status(HttpStatus.CREATED).body(tokenReissueResponseDTO);
+    }
+
+    @Override
+    public ResponseEntity<UpdateUserInfoResponseDTO> updateUserInfo(UpdateUserInfoRequestDTO updateUserInfoRequestDTO,
+                                                                    MultipartFile profileImage) {
+        String email = JWTUtil.findUserByToken();
+        log.info(email);
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EmailNotFoundException("유저 정보가 존재하지 않습니다."));
+
+        // S3 bucket에 프로필 이미지 저장
+//        String storeFilePath;
+//
+//        if (profileImage.isEmpty()) {
+//            storeFilePath = DEFAULT_PROFILE_URL;
+//        } else {
+//            ObjectMetadata objectMetadata = new ObjectMetadata();
+//            objectMetadata.setContentEncoding(profileImage.getContentType());
+//            objectMetadata.setContentLength(profileImage.getSize());
+//
+//            String originalFileFullName = profileImage.getOriginalFilename();
+//            String originalFileName = originalFileFullName.substring(originalFileFullName.lastIndexOf(".") + 1);
+//
+//            String storeFileName = UUID.randomUUID() + "." + originalFileName;
+//            storeFilePath = "PROFILE/" + storeFileName;
+//
+//            try {
+//                PutObjectRequest putObjectRequest = new PutObjectRequest(
+//                        bucket, storeFilePath, profileImage.getInputStream(), objectMetadata
+//                );
+//
+//                amazonS3Client.putObject(putObjectRequest);
+//            } catch (IOException e) {
+//                throw new ProfileImageIOException("프로필 이미지 저장에 실패하였습니다.");
+//            }
+//
+//            S3File s3File = new S3File(originalFileFullName, storeFileName, storeFilePath);
+//            s3Repository.upload(s3File);
+//        }
+
+        // List<String> -> String
+//        String likeCategories = String.join(",", signUpRequestDTO.getLikeCategories());
+//        String dislikeCategories = String.join(",", signUpRequestDTO.getDislikeCategories());
+
+//        userRepository.save(newUser);
+
+//        return ResponseEntity.status(HttpStatus.CREATED).body("SignUp Success");
+
+        return null;
     }
 
 }

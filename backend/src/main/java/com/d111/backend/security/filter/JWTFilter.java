@@ -1,6 +1,8 @@
 package com.d111.backend.security.filter;
 
 
+import com.d111.backend.dto.user.UserDTO;
+import com.d111.backend.entity.user.User;
 import com.d111.backend.exception.user.CustomJWTException;
 import com.d111.backend.util.JWTUtil;
 import com.google.gson.Gson;
@@ -21,6 +23,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +38,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
-        if (path.startsWith("/api/user/")) {
+        if (path.startsWith("/api/user/sign")) {
             return true;
         }
 
@@ -66,17 +69,18 @@ public class JWTFilter extends OncePerRequestFilter {
 
         //token 꺼내기
         String accessToken = authorization.split(" ")[1];
-        log.info("token : " + accessToken);
 
-        Map<String, Object> claim = JWTUtil.validateToken(accessToken);
+        Map<String, Object> claims = JWTUtil.validateToken(accessToken);
 
-        log.info(claim.get("email"));
+        String username = (String) claims.get("iss");
+        List<String> authorities = new ArrayList<>();
+        authorities.add("USER");
+
+        UserDTO userDTO = new UserDTO(username, "", authorities);
 
         // 인증된 사용자를 나타내는 토큰 객체를 생성하고, 권한 정보를 설정
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(claim, null, List.of(new SimpleGrantedAuthority("USER")));
-
-        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                new UsernamePasswordAuthenticationToken(userDTO, null, userDTO.getAuthorities());
 
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
