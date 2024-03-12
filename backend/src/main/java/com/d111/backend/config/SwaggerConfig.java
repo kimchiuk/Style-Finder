@@ -2,6 +2,10 @@ package com.d111.backend.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,11 +14,17 @@ import org.springframework.context.annotation.Configuration;
         info = @Info(
                 title = "StyleFinder API 명세서",
                 description = "StyleFinder API 명세서",
-                version = "v0"
+                version = "2.0"
         )
 )
 @Configuration
 public class SwaggerConfig {
+
+        @Bean
+        public OpenAPI openAPI() {
+                return new OpenAPI().addSecurityItem(new SecurityRequirement().addList("JWT"))
+                        .components(new Components().addSecuritySchemes("JWT", createAPIKeyScheme()));
+        }
 
         @Bean
         public GroupedOpenApi sample() {
@@ -38,6 +48,12 @@ public class SwaggerConfig {
                         .group("feed")
                         .pathsToMatch("/api/feed/**")
                         .build();
+        }
+
+        private SecurityScheme createAPIKeyScheme() {
+                return new SecurityScheme().type(SecurityScheme.Type.HTTP)
+                        .bearerFormat("JWT")
+                        .scheme("bearer");
         }
 
 }
