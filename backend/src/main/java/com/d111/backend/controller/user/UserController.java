@@ -2,7 +2,9 @@ package com.d111.backend.controller.user;
 
 import com.d111.backend.dto.user.request.SignInRequestDTO;
 import com.d111.backend.dto.user.request.SignUpRequestDTO;
+import com.d111.backend.dto.user.request.TokenReissueRequestDTO;
 import com.d111.backend.dto.user.response.SignInResponseDTO;
+import com.d111.backend.dto.user.response.TokenReissueResponseDTO;
 import com.d111.backend.exception.user.EmailNotFoundException;
 import com.d111.backend.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,4 +46,12 @@ public class UserController {
         return userService.signIn(signInRequest);
     }
 
+    @Operation(summary = "액세스 토큰 재발급", description = "리프레시 토큰을 이용하여 액세스 토큰을 재발급합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "재발급 성공", content = @Content(schema = @Schema(implementation = SignInResponseDTO.class)))
+    })
+    @PostMapping(value = "/token")
+    ResponseEntity<TokenReissueResponseDTO> tokenReissue(@RequestBody TokenReissueRequestDTO tokenReissueRequest) {
+        return userService.tokenReissue(tokenReissueRequest);
+    }
 }
