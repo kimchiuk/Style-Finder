@@ -32,10 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Log4j2
@@ -152,11 +149,14 @@ public class UserServiceImpl implements UserService {
                         .refreshToken(refreshToken)
                         .build());
 
+        List<String> likeCategories = Arrays.asList(user.getLikeCategories().split(","));
+        List<String> dislikeCategories = Arrays.asList(user.getDislikeCategories().split(","));
+
         // 로그인 응답 정보 생성
         SignInResponseDTO signInResponseDTO = SignInResponseDTO.builder()
                 .nickname(user.getNickname())
-                .likeCategories(user.getLikeCategories())
-                .dislikeCategories(user.getDislikeCategories())
+                .likeCategories(likeCategories)
+                .dislikeCategories(dislikeCategories)
                 .height(user.getHeight())
                 .weight(user.getWeight())
                 .accessToken(accessToken)
@@ -183,53 +183,78 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<UpdateUserInfoResponseDTO> updateUserInfo(UpdateUserInfoRequestDTO updateUserInfoRequestDTO,
                                                                     MultipartFile profileImage) {
-        String email = JWTUtil.findUserByToken();
-        log.info(email);
+        String email = JWTUtil.findEmailByToken();
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EmailNotFoundException("유저 정보가 존재하지 않습니다."));
 
-        // S3 bucket에 프로필 이미지 저장
-//        String storeFilePath;
-//
-//        if (profileImage.isEmpty()) {
-//            storeFilePath = DEFAULT_PROFILE_URL;
-//        } else {
-//            ObjectMetadata objectMetadata = new ObjectMetadata();
-//            objectMetadata.setContentEncoding(profileImage.getContentType());
-//            objectMetadata.setContentLength(profileImage.getSize());
-//
-//            String originalFileFullName = profileImage.getOriginalFilename();
-//            String originalFileName = originalFileFullName.substring(originalFileFullName.lastIndexOf(".") + 1);
-//
-//            String storeFileName = UUID.randomUUID() + "." + originalFileName;
-//            storeFilePath = "PROFILE/" + storeFileName;
-//
-//            try {
-//                PutObjectRequest putObjectRequest = new PutObjectRequest(
-//                        bucket, storeFilePath, profileImage.getInputStream(), objectMetadata
-//                );
-//
-//                amazonS3Client.putObject(putObjectRequest);
-//            } catch (IOException e) {
-//                throw new ProfileImageIOException("프로필 이미지 저장에 실패하였습니다.");
-//            }
-//
-//            S3File s3File = new S3File(originalFileFullName, storeFileName, storeFilePath);
-//            s3Repository.upload(s3File);
-//        }
+        // 프로필 이미지 변경 요청이 있을 경우
+        if (!profileImage.isEmpty()) {
+            String storeFilePath;
 
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentEncoding(profileImage.getContentType());
+            objectMetadata.setContentLength(profileImage.getSize());
+
+            String originalFileFullName = profileImage.getOriginalFilename();
+            String originalFileName = originalFileFullName.substring(originalFileFullName.lastIndexOf(".") + 1);
+
+            String storeFileName = UUID.randomUUID() + "." + originalFileName;
+            storeFilePath = "PROFILE/" + storeFileName;
+
+            try {
+                PutObjectRequest putObjectRequest = new PutObjectRequest(
+                        bucket, storeFilePath, profileImage.getInputStream(), objectMetadata
+                );
+
+                amazonS3Client.putObject(putObjectRequest);
+
+                user.updateProfileImage(storeFilePath);
+            } catch (IOException e) {
+                throw new ProfileImageIOException("프로필 이미지 저장에 실패하였습니다.");
+            }
+
+            S3File s3File = new S3File(originalFileFullName, storeFileName, storeFilePath);
+            s3Repository.upload(s3File);
+        }
+
+        // 닉네임에 대한 입력값이 없을 경우
+        if (updateUserInfoRequestDTO.getNickname().isBlank()) {
+            throw new InvalidInputException("닉네임을 입력해주세요.");
+        }
+
+        user.updateNickname(updateUserInfoRequestDTO.getNickname());
+        
         // List<String> -> String
-//        String likeCategories = String.join(",", signUpRequestDTO.getLikeCategories());
-//        String dislikeCategories = String.join(",", signUpRequestDTO.getDislikeCategories());
+        String likeCategories = String.join(",", updateUserInfoRequestDTO.getLikeCategories());
+        String dislikeCategories = String.join(",", updateUserInfoRequestDTO.getDislikeCategories());
 
-//        userRepository.save(newUser);
+        user.updateLikeCategories(likeCategories);
+        user.updateDislikeCategories(dislikeCategories);
 
-//        return ResponseEntity.status(HttpStatus.CREATED).body("SignUp Success");
+        user.updateHeight(updateUserInfoRequestDTO.getHeight());
+        user.updateWeight(updateUserInfoRequestDTO.getWeight());
 
-        return null;
+        userRepository.save(user);
+
+        UpdateUserInfoResponseDTO updateUserInfoResponseDTO = UpdateUserInfoResponseDTO.builder()
+                .nickname(user.getNickname())
+                .likeCategories(likeCategories)
+                .dislikeCategories(dislikeCategories)
+                .height(user.getHeight())
+                .weight(user.getWeight())
+                .build();
+
+        try {
+            updateUserInfoResponseDTO.setProfileImage(profileImage.getBytes());
+        } catch (IOException exception) {
+            throw new ProfileImageIOException("프로필 이미지 전송 과정 중 오류가 발생했습니다.");
+        }
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(updateUserInfoResponseDTO);
     }
 
 }
