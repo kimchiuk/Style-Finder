@@ -13,7 +13,7 @@ import java.util.List;
 @ToString
 public class UpdateUserInfoRequestDTO {
 
-    @Schema(description = "닉네임", nullable = true)
+    @Schema(description = "닉네임")
     String nickname;
 
     @Schema(description = "선호하는 옷 종류", nullable = true, example = "[원피스, 청바지, 니트]")
