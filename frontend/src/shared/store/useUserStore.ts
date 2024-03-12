@@ -1,6 +1,15 @@
 import { create } from 'zustand';
 
-import { UserStore } from '../types/user';
+export interface UserStore {
+  id: number;
+  email: string;
+  nickname: string;
+  image: string;
+  likes: string[];
+  dislikes: string[];
+  height: number;
+  weight: number;
+}
 
 const useUserStore = create<UserStore>(() => ({
   id: 0,

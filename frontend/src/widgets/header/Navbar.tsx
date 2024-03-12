@@ -1,26 +1,24 @@
-import React from 'react';
-
 import { Link } from 'react-router-dom';
 
 import useLoginStore from '../../shared/store/useLoginStore';
-
-const Header = () => {
+import logo from '../../assets/logos/logo.png';
+const Navbar = () => {
   const loginStore = useLoginStore();
 
   return (
-    <div className="fixed top-0 flex justify-between w-full h-16 bg-gray-200 navbar bg-base-100">
+    <div className="navbar">
       <div className="navbar-start">
-        <div className="flex">
+        <div className="logo">
           <Link to="/" replace={true}>
-            <img className="w-10 h-10" src="" alt="" />
+            <img className="w-10 h-10" src={logo} alt="" />
           </Link>
           <Link to="/" replace={true}>
             StyleFinder
           </Link>
         </div>
       </div>
-      <div className="hidden navbar-center lg:flex">
-        <ul className="px-1 menu menu-horizontal">
+      <div className="navbar-center">
+        <ul className="menu">
           <li>
             <Link to="/fitting" replace={true}>
               피팅
@@ -40,23 +38,17 @@ const Header = () => {
       </div>
       <div className="navbar-end">
         {!loginStore.isLogin ? (
-          <a className="btn">
-            <Link to="/login" replace={true}>
-              {' '}
-              Sign In{' '}
-            </Link>
-          </a>
+          <Link to="/login" replace={true}>
+            Sign In
+          </Link>
         ) : (
-          <a className="btn">
-            <Link to="/" replace={true}>
-              {' '}
-              Sign Up{' '}
-            </Link>
-          </a>
+          <Link to="/" replace={true}>
+            Sign Up
+          </Link>
         )}
       </div>
     </div>
   );
 };
 
-export default Header;
+export default Navbar;

@@ -1,11 +1,9 @@
-import React from 'react';
-
 import useLoginStore from '../shared/store/useLoginStore';
 import useUserStore from '../shared/store/useUserStore';
 
 import { Link } from 'react-router-dom';
 
-const FittingPage = () => {
+const Feed = () => {
   const loginStore = useLoginStore();
   const userStore = useUserStore();
 
@@ -14,7 +12,7 @@ const FittingPage = () => {
       {!loginStore.isLogin ? (
         // 로그아웃 상태
         <div>
-          <div>피팅</div>
+          <div>피드</div>
           <Link to="/">
             <div>홈으로 돌아가기</div>
           </Link>
@@ -22,12 +20,12 @@ const FittingPage = () => {
       ) : (
         // 로그인 상태
         <div>
-          <div>피팅</div>
-          <div>콘텐츠</div>
+          <div>피드</div>
+          <div>id: {userStore.id}</div>
         </div>
       )}
     </div>
   );
 };
 
-export default FittingPage;
+export default Feed;

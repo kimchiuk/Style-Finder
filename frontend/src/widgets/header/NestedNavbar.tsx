@@ -1,11 +1,10 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
-const AnalysisNavBar = () => {
+const NestedNavbar = () => {
   return (
-    <div className="flex w-30% h-16 justify-center bg-gray-200 navbar bg-base-100">
-      <div className="hidden navbar-center lg:flex">
-        <ul className="px-1 menu menu-horizontal">
+    <div className="navbar">
+      <div className="navbar-center">
+        <ul className="menu">
           <li>
             <Link to="/analysis/myinfo" replace={true}>
               내 옷장
@@ -22,4 +21,4 @@ const AnalysisNavBar = () => {
   );
 };
 
-export default AnalysisNavBar;
+export default NestedNavbar;

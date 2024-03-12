@@ -1,11 +1,9 @@
-import React from 'react';
-
 import useLoginStore from '../shared/store/useLoginStore';
 import useUserStore from '../shared/store/useUserStore';
 
 import { Link } from 'react-router-dom';
 
-const RecommendationPage = () => {
+const Recommendation = () => {
   const loginStore = useLoginStore();
   const userStore = useUserStore();
 
@@ -30,4 +28,4 @@ const RecommendationPage = () => {
   );
 };
 
-export default RecommendationPage;
+export default Recommendation;

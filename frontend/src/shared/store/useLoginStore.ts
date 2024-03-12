@@ -1,6 +1,10 @@
 import { create } from 'zustand';
 
-import { LoginStore } from '../types/user';
+export interface LoginStore {
+  isLogin: boolean;
+  setLogin: () => void;
+  setLogout: () => void;
+}
 
 const useLoginStore = create<LoginStore>((set) => ({
   isLogin: false,
