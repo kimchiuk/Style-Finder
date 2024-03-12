@@ -44,6 +44,9 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final AmazonS3Client amazonS3Client;
 
+    @Value("${DEFAULT_PROFILE_URL}")
+    private String DEFAULT_PROFILE_URL;
+
     @Value("${cloud.aws.s3.bucket}")
     private String bucket; // 버킷 이름
 
@@ -55,28 +58,34 @@ public class UserServiceImpl implements UserService {
         user.ifPresent(findUser -> { throw new ExistedEmailException("이미 가입한 이메일입니다."); });
 
         // S3 bucket에 프로필 이미지 저장
-        ObjectMetadata objectMetadata = new ObjectMetadata();
-        objectMetadata.setContentEncoding(profileImage.getContentType());
-        objectMetadata.setContentLength(profileImage.getSize());
+        String storeFilePath;
 
-        String originalFileFullName = profileImage.getOriginalFilename();
-        String originalFileName = originalFileFullName.substring(originalFileFullName.lastIndexOf(".") + 1);
+        if (profileImage.isEmpty()) {
+            storeFilePath = DEFAULT_PROFILE_URL;
+        } else {
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentEncoding(profileImage.getContentType());
+            objectMetadata.setContentLength(profileImage.getSize());
 
-        String storeFileName = UUID.randomUUID() + "." + originalFileName;
-        String storeFilePath = "PROFILE/" + storeFileName;
+            String originalFileFullName = profileImage.getOriginalFilename();
+            String originalFileName = originalFileFullName.substring(originalFileFullName.lastIndexOf(".") + 1);
 
-        try {
-            PutObjectRequest putObjectRequest = new PutObjectRequest(
-                    bucket, storeFilePath, profileImage.getInputStream(), objectMetadata
-            );
+            String storeFileName = UUID.randomUUID() + "." + originalFileName;
+            storeFilePath = "PROFILE/" + storeFileName;
 
-            amazonS3Client.putObject(putObjectRequest);
-        } catch (IOException e) {
-            throw new ProfileImageIOException("프로필 이미지 저장에 실패하였습니다.");
+            try {
+                PutObjectRequest putObjectRequest = new PutObjectRequest(
+                        bucket, storeFilePath, profileImage.getInputStream(), objectMetadata
+                );
+
+                amazonS3Client.putObject(putObjectRequest);
+            } catch (IOException e) {
+                throw new ProfileImageIOException("프로필 이미지 저장에 실패하였습니다.");
+            }
+
+            S3File s3File = new S3File(originalFileFullName, storeFileName, storeFilePath);
+            s3Repository.upload(s3File);
         }
-
-        S3File s3File = new S3File(originalFileFullName, storeFileName, storeFilePath);
-        s3Repository.upload(s3File);
 
         // List<String> -> String
         String likeCategories = String.join(",", signUpRequestDTO.getLikeCategories());
