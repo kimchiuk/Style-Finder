@@ -13,9 +13,10 @@ import lombok.*;
 public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     Long id;
 
-    @Column(name = "user_id", length = 50, nullable = false, unique = true)
+    @Column(name = "user_email", length = 50, nullable = false, unique = true)
     String email;
 
     @Column(name = "user_password", nullable = false)
