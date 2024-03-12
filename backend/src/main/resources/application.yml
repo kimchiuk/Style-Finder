@@ -44,4 +44,4 @@ jasypt:
   encryptor:
     bean: jasyptStringEncryptor
 
-DEFAULT_PROFILE_URL: ENC(CMi9xaa/WsATNtR4JioO8eu82a/ZArsMHlqWS5mMo8VrJMU/G2GurA==)
+DEFAULT_PROFILE_URL: ENC(GkdPwE281MXookWfHzd1rYPlOsqptuohVklnzz2GuEk4V++5bzMsJ1QB/2yXTznn)
