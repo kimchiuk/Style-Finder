@@ -1,8 +1,7 @@
-import React from 'react';
 import useLoginStore from '../shared/store/useLoginStore';
 import useUserStore from '../shared/store/useUserStore';
 
-const MainPage = () => {
+const Main = () => {
   const loginStore = useLoginStore();
   const userStore = useUserStore();
 
@@ -23,4 +22,4 @@ const MainPage = () => {
   );
 };
 
-export default MainPage;
+export default Main;

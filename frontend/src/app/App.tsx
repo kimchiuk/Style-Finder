@@ -1,22 +1,22 @@
 import React from 'react';
 
-import Header from '../widgets/Header/Header';
-import Footer from '../widgets/Footer/Footer';
+import Navbar from '../widgets/header/Navbar';
+import Footer from '../widgets/footer/Footer';
 
-import MainPage from '../pages/MainPage';
-import LoginPage from '../pages/LoginPage';
-import FittingPage from '../pages/FittingPage';
-import FeedPage from '../pages/FeedPage';
-import AnalysisPage from '../pages/AnalysisPage';
-import MyInfoPage from '../pages/MyInfoPage';
-import RecommendationPage from '../pages/RecommendationPage';
+import MainPage from '../pages/Main';
+import LoginPage from '../pages/SignIn';
+import FittingPage from '../pages/Fitting';
+import FeedPage from '../pages/Feed';
+import AnalysisPage from '../pages/Analysis';
+import MyInfoPage from '../pages/MyInfo';
+import RecommendationPage from '../pages/Recommendation';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 const Router = () => {
   return (
     <BrowserRouter>
-      <Header></Header>
+      <Navbar></Navbar>
 
       <Routes>
         <Route path="/" element={<MainPage />}></Route>
