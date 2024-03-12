@@ -1,7 +1,6 @@
 package com.d111.backend.security.filter;
 
 
-import com.d111.backend.exception.user.CustomJWTException;
 import com.d111.backend.util.JWTUtil;
 import com.google.gson.Gson;
 import jakarta.servlet.FilterChain;
@@ -10,7 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -34,6 +32,10 @@ public class JWTFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
 
         if (path.startsWith("/api/user/")) {
+            return true;
+        }
+
+        if (path.startsWith("/api/mongo/")) {
             return true;
         }
 
