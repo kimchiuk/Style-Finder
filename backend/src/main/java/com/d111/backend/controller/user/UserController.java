@@ -60,12 +60,25 @@ public class UserController {
 
     @Operation(summary = "유저 정보 수정", description = "유저 정보를 수정합니다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "유저 정보 수정 성공", content = @Content(schema = @Schema(implementation = UpdateUserInfoResponseDTO.class)))
+            @ApiResponse(responseCode = "202", description = "유저 정보 수정 성공", content = @Content(schema = @Schema(implementation = UpdateUserInfoResponseDTO.class))),
+            @ApiResponse(responseCode = "400", description = "입력값이 적절하지 않음"),
+            @ApiResponse(responseCode = "404", description = "유저 정보 없음"),
+            @ApiResponse(responseCode = "500", description = "프로필 이미지 업로드 실패")
     })
-    @PostMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<UpdateUserInfoResponseDTO> updateUserInfo(@RequestPart(value = "updateUserInfoRequest") UpdateUserInfoRequestDTO updateUserInfoRequestDTO,
                           @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {
         return userService.updateUserInfo(updateUserInfoRequestDTO, profileImage);
+    }
+
+    @Operation(summary = "유저 정보 삭제", description = "유저 정보를 삭제합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "203", description = "유저 정보 삭제 성공"),
+            @ApiResponse(responseCode = "401", description = "삭제하려는 유저와 토큰을 발급한 유저가 일치하지 않음")
+    })
+    @DeleteMapping(value = "/remove")
+    ResponseEntity<String> removeUserInfo() {
+        return userService.removeUserInfo();
     }
 
 }
