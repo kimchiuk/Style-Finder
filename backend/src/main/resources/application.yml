@@ -12,6 +12,7 @@ spring:
       host: 127.0.0.1
       port: 6379
 
+
   # jpa
   jpa:
     database-platform: org.hibernate.dialect.MySQL57Dialect
@@ -45,3 +46,22 @@ jasypt:
     bean: jasyptStringEncryptor
 
 DEFAULT_PROFILE_URL: ENC(GkdPwE281MXookWfHzd1rYPlOsqptuohVklnzz2GuEk4V++5bzMsJ1QB/2yXTznn)
+
+# local MongoDB
+---
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: stylefinder
+      authentication-database: admin
+---
+
+# Server MongoDB
+#
+#data:
+#  mongodb:
+#    uri: mongodb+srv://style-finder-admin:1234@stylefinder-cluster.vjzqtb2.mongodb.net/stylefinder?retryWrites=true&w=majority&appName=stylefinder-cluster
+#
+
