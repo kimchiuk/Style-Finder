@@ -1,9 +1,6 @@
 package com.d111.backend.security.filter;
 
 
-import com.d111.backend.dto.user.UserDTO;
-import com.d111.backend.entity.user.User;
-import com.d111.backend.exception.user.CustomJWTException;
 import com.d111.backend.util.JWTUtil;
 import com.google.gson.Gson;
 import jakarta.servlet.FilterChain;
@@ -12,7 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,7 +19,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +33,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
-        if (path.startsWith("/api/user/sign")) {
+        if (path.startsWith("/api/user/")) {
             return true;
         }
 
@@ -69,18 +64,17 @@ public class JWTFilter extends OncePerRequestFilter {
 
         //token 꺼내기
         String accessToken = authorization.split(" ")[1];
+        log.info("token : " + accessToken);
 
-        Map<String, Object> claims = JWTUtil.validateToken(accessToken);
+        Map<String, Object> claim = JWTUtil.validateToken(accessToken);
 
-        String username = (String) claims.get("iss");
-        List<String> authorities = new ArrayList<>();
-        authorities.add("USER");
-
-        UserDTO userDTO = new UserDTO(username, "", authorities);
+        log.info(claim.get("email"));
 
         // 인증된 사용자를 나타내는 토큰 객체를 생성하고, 권한 정보를 설정
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(userDTO, null, userDTO.getAuthorities());
+                new UsernamePasswordAuthenticationToken(claim, null, List.of(new SimpleGrantedAuthority("USER")));
+
+        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
