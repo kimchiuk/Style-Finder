@@ -14,7 +14,7 @@ import java.util.List;
 @ToString
 public class SignUpRequestDTO {
 
-    @Schema(description = "이메일", nullable = false)
+    @Schema(description = "이메일", nullable = false, example = "example@gmail.com")
     String email;
 
     @Schema(description = "비밀번호", nullable = false)

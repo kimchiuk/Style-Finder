@@ -65,6 +65,13 @@ public class UserExceptionHandler {
                 .body(stringToJson(exception.getMessage()));
     }
 
+    @ExceptionHandler(InvalidInputException.class)
+    public ResponseEntity<String> handleInvalidInputException(InvalidInputException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .headers(JSON_HEADERS)
+                .body(stringToJson(exception.getMessage()));
+    }
+
     public String stringToJson(String message) { return gson.toJson(Collections.singletonMap("message", message)); }
 
 }
