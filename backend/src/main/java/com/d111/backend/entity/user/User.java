@@ -41,4 +41,28 @@ public class User {
     @Column(name = "user_weight")
     Integer weight;
 
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void updateProfileImage(String profileImagePath) {
+        this.profileImage = profileImagePath;
+    }
+
+    public void updateLikeCategories(String likeCategories) {
+        this.likeCategories = likeCategories;
+    }
+
+    public void updateDislikeCategories(String dislikeCategories) {
+        this.dislikeCategories = dislikeCategories;
+    }
+
+    public void updateHeight(int height) {
+        this.height = height;
+    }
+
+    public void updateWeight(int weight) {
+        this.weight = weight;
+    }
+
 }
