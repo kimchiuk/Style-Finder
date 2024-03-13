@@ -51,9 +51,12 @@ public class UserServiceImpl implements UserService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket; // 버킷 이름
 
+    private int accessTokenMinute = 10;
+    private int refreshTokenMinute = 30;
+
     @Override
     @Transactional
-    public ResponseEntity signUp(SignUpRequestDTO signUpRequestDTO, MultipartFile profileImage) {
+    public ResponseEntity<String> signUp(SignUpRequestDTO signUpRequestDTO, MultipartFile profileImage) {
         Optional<User> user = userRepository.findByEmail(signUpRequestDTO.getEmail());
 
         user.ifPresent(findUser -> { throw new ExistedEmailException("이미 가입한 이메일입니다."); });
@@ -105,7 +108,7 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(newUser);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("SignUp Success");
+        return ResponseEntity.status(HttpStatus.CREATED).body("회원가입이 완료되었습니다.");
     }
 
     @Override
@@ -140,8 +143,8 @@ public class UserServiceImpl implements UserService {
         // JWT 토큰 생성
         String userEmail = signInRequestDTO.getEmail();
 
-        String accessToken = JWTUtil.createToken(userEmail, 1);
-        String refreshToken = JWTUtil.createToken(userEmail, 5);
+        String accessToken = JWTUtil.createToken(userEmail, accessTokenMinute);
+        String refreshToken = JWTUtil.createToken(userEmail, refreshTokenMinute);
 
         refreshTokenRepository.save(RefreshToken.builder()
                         .email(userEmail)
@@ -173,7 +176,7 @@ public class UserServiceImpl implements UserService {
                 refreshTokenRepository.findById(tokenReissueRequestDTO.getRefreshToken())
                         .orElseThrow(() -> new RefreshTokenNotFoundException("리프레시 토큰이 유효하지 않습니다."));
 
-        String accessToken = JWTUtil.createToken(refreshToken.getEmail(), 10);
+        String accessToken = JWTUtil.createToken(refreshToken.getEmail(), accessTokenMinute);
 
         TokenReissueResponseDTO tokenReissueResponseDTO = TokenReissueResponseDTO.builder()
                 .accessToken(accessToken)
@@ -255,6 +258,19 @@ public class UserServiceImpl implements UserService {
         }
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(updateUserInfoResponseDTO);
+    }
+
+    @Override
+    public ResponseEntity<String> removeUserInfo() {
+        String email = JWTUtil.findEmailByToken();
+
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new CustomJWTException("삭제하려는 유저와 토큰을 발급한 유저가 일치하지 않습니다.")
+        );
+
+        userRepository.delete(user);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("유저 정보가 삭제되었습니다.");
     }
 
 }
