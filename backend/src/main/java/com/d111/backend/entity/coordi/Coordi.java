@@ -6,6 +6,8 @@ import jakarta.persistence.Id;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Instant;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -17,11 +19,12 @@ public class Coordi {
     private String id;
 
     private String coordiId;
-    private String userId;
+    private Long userId;
     private String head;
     private String upperBody;
     private String lowerBody;
     private String shoes;
+    private Instant timestamp;
 
     public static Coordi createCoordi(CoordiCreateRequest coordiCreateRequest){
         return Coordi.builder()

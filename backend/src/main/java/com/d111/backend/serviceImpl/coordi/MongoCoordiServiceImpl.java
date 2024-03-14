@@ -9,6 +9,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+
+
+
 @Service
 @RequiredArgsConstructor
 public class MongoCoordiServiceImpl implements MongoCoordiService {
@@ -19,6 +25,9 @@ public class MongoCoordiServiceImpl implements MongoCoordiService {
     public ResponseEntity<CoordiCreateResponse> createCoordi(CoordiCreateRequest coordiCreateRequest) {
 
         Coordi coordi = Coordi.createCoordi(coordiCreateRequest);
+        LocalDate localDate = LocalDate.now();
+        Instant instant = localDate.atStartOfDay(ZoneId.of("UTC")).toInstant();
+        coordi.setTimestamp(instant);
         mongoCoordiRepository.save(coordi);
         CoordiCreateResponse response = CoordiCreateResponse.createCoordiCreateResponse(
                 "success",
