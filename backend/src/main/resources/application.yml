@@ -49,19 +49,26 @@ DEFAULT_PROFILE_URL: ENC(GkdPwE281MXookWfHzd1rYPlOsqptuohVklnzz2GuEk4V++5bzMsJ1Q
 
 # local MongoDB
 ---
-#spring:
-#  data:
-#    mongodb:
-#      host: localhost
-#      port: 27017
-#      database: stylefinder
-#      authentication-database: admin
----
-
-# Server MongoDB
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://style-finder-admin:ydwchTQJfvFmU6K1@stylefinder-cluster.vjzqtb2.mongodb.net/stylefinder?retryWrites=true&w=majority&appName=stylefinder-cluster
+      host: localhost
+      port: 27017
+      database: stylefinder
+      authentication-database: admin
+---
 
+# Server MongoDB
+#spring:
+#  data:
+#    mongodb:
+#      uri: mongodb+srv://style-finder-admin:ydwchTQJfvFmU6K1@stylefinder-cluster.vjzqtb2.mongodb.net/stylefinder?retryWrites=true&w=majority&appName=stylefinder-cluster
+#
+#
+---
 
+# mongoDB 충돌나서 임시조치
+spring:
+  main:
+    allow-bean-definition-overriding: true
+---
