@@ -31,6 +31,11 @@ public class MongoCoordiController {
     })
     @PostMapping
     public ResponseEntity<CoordiCreateResponse> coordiCreate(@RequestBody CoordiCreateRequest coordiCreateRequest) {
-        return mongoCoordiService.createCoordi(coordiCreateRequest);
+        return mongoCoordiService.create(coordiCreateRequest);
     }
+
+//    @GetMapping("/{id}")
+//    public ResponseEntity<CoordiReadResponse> coordiRead(@PathVariable String id) {
+//        return mongoCoordiService.read(id);
+//    }
 }
