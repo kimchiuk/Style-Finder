@@ -1,7 +1,10 @@
 package com.d111.backend.entity.user;
 
+import com.d111.backend.entity.comment.Comment;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Data
