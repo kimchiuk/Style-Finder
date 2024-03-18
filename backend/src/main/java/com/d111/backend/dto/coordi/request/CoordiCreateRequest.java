@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CoordiCreateRequest {
 
+
     private String head;
 
     private String upperBody;
