@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class FeedCreateResponse {
+public class FeedDeleteResponse {
 
     @Schema(description = "상태 메시지", example = "Success")
     private String message;
@@ -15,10 +15,10 @@ public class FeedCreateResponse {
     @Schema(description = "데이터")
     private Boolean data;
 
-    public static FeedCreateResponse createFeedCreateResponse(String message, boolean isCreated) {
-        return FeedCreateResponse.builder()
+    public static FeedDeleteResponse createFeedDeleteResponse(String message, boolean isDeleted) {
+        return FeedDeleteResponse.builder()
                 .message(message)
-                .data(isCreated)
+                .data(isDeleted)
                 .build();
     }
 }
