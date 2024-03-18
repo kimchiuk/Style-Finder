@@ -1,7 +1,6 @@
 package com.d111.backend.entity.feed;
 
 import com.d111.backend.dto.feed.request.FeedCreateRequest;
-import com.d111.backend.entity.coordi.Coordi;
 import com.d111.backend.entity.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Entity
 @Data
@@ -45,14 +43,15 @@ public class Feed {
     @Column(nullable = false, name = "feed_updated_date")
     private LocalDateTime feedUpdatedDate;
 
+    @Column(nullable = false, name = "coordi_id")
+    private String coordiId;
 
-    public static Feed createFeed(FeedCreateRequest feedCreateRequest, Optional<Coordi> currentCoordi) {
+    public static Feed createFeed(FeedCreateRequest feedCreateRequest, String coordiId) {
         return Feed.builder()
                 .feedTitle(feedCreateRequest.getFeedTitle())
                 .feedContent(feedCreateRequest.getFeedContent())
                 .feedThumbnail(feedCreateRequest.getFeedThumbnail())
+                .coordiId(coordiId)
                 .build();
-
     }
-
 }

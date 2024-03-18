@@ -1,6 +1,5 @@
 package com.d111.backend.dto.feed.request;
 
-import com.d111.backend.entity.coordi.Coordi;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +17,7 @@ public class FeedCreateRequest {
 
     private String feedThumbnail;
 
-    private Coordi coordi;
+    private String coordiId; // Coordi의 _id 추가
 
 
 }

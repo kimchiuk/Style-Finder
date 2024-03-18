@@ -5,18 +5,12 @@ import com.d111.backend.dto.coordi.response.CoordiCreateResponse;
 import com.d111.backend.dto.coordi.response.CoordiReadResponse;
 import com.d111.backend.dto.coordi.response.dto.CoordiReadResponseDTO;
 import com.d111.backend.entity.coordi.Coordi;
-import com.d111.backend.entity.user.User;
 import com.d111.backend.repository.mongo.MongoCoordiRepository;
-import com.d111.backend.repository.user.UserRepository;
 import com.d111.backend.service.coordi.MongoCoordiService;
-import com.d111.backend.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Optional;
 
 
@@ -25,17 +19,11 @@ import java.util.Optional;
 public class MongoCoordiServiceImpl implements MongoCoordiService {
 
     private final MongoCoordiRepository mongoCoordiRepository;
-    private final UserRepository userRepository;
 
     @Override
     public ResponseEntity<CoordiCreateResponse> create(CoordiCreateRequest coordiCreateRequest) {
 
-        String userid = JWTUtil.findEmailByToken();
-        Optional<User> currentUser = userRepository.findByEmail(userid);
-        Coordi coordi = Coordi.createCoordi(coordiCreateRequest, currentUser);
-        LocalDate localDate = LocalDate.now();
-        Instant instant = localDate.atStartOfDay(ZoneId.of("UTC")).toInstant();
-        coordi.setTimestamp(instant);
+        Coordi coordi = Coordi.createCoordi(coordiCreateRequest);
         mongoCoordiRepository.save(coordi);
         CoordiCreateResponse response = CoordiCreateResponse.createCoordiCreateResponse(
                 "success",

@@ -33,7 +33,6 @@ public class CoordiReadResponseDTO {
             Coordi coordi = coordiOptional.get();
             return CoordiReadResponseDTO.builder()
                     ._id(coordi.get_id())
-                    .userId(String.valueOf(coordi.getUser().getId()))
                     .head(coordi.getHead())
                     .upperBody(coordi.getUpperBody())
                     .lowerBody(coordi.getLowerBody())
