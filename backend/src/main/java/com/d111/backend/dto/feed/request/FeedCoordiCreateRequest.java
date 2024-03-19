@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FeedCoordiCreateRequest {
-    private FeedCreateRequest feedCreateRequest;
-    private CoordiCreateRequest coordiCreateRequest;
+    public FeedCreateRequest feedCreateRequest;
+    public CoordiCreateRequest coordiCreateRequest;
 }
