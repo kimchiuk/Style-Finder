@@ -6,7 +6,7 @@ const NestedNavbar = () => {
       <div className="navbar-center">
         <ul className="menu">
           <li>
-            <Link to="/analysis/myinfo" replace={true}>
+            <Link to="/analysis/my" replace={true}>
               내 옷장
             </Link>
           </li>

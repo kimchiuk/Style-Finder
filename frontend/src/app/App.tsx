@@ -7,7 +7,7 @@ import SignUpPage from '../pages/SignUp';
 import FittingPage from '../pages/Fitting';
 import FeedPage from '../pages/Feed';
 import AnalysisPage from '../pages/Analysis';
-import MyInfoPage from '../pages/MyInfo';
+import MyPage from '../pages/My';
 import RecommendationPage from '../pages/Recommendation';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -24,7 +24,7 @@ const Router = () => {
         <Route path="/fitting" element={<FittingPage />}></Route>
         <Route path="/feed" element={<FeedPage />}></Route>
         <Route path="/analysis/*" element={<AnalysisPage />}>
-          <Route path="myinfo" element={<MyInfoPage />}></Route>
+          <Route path="my" element={<MyPage />}></Route>
           <Route path="recommendation" element={<RecommendationPage />}></Route>
         </Route>
       </Routes>
