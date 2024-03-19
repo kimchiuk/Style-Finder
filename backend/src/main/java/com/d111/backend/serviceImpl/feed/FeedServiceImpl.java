@@ -12,8 +12,10 @@ import com.d111.backend.dto.feed.reponse.dto.FeedReadResponseDTO;
 import com.d111.backend.dto.feed.request.FeedCreateRequest;
 import com.d111.backend.entity.coordi.Coordi;
 import com.d111.backend.entity.feed.Feed;
+import com.d111.backend.entity.likes.Likes;
 import com.d111.backend.entity.multipart.S3File;
 import com.d111.backend.entity.user.User;
+import com.d111.backend.repository.Likes.LikesRepository;
 import com.d111.backend.repository.feed.FeedRepository;
 import com.d111.backend.repository.mongo.MongoCoordiRepository;
 import com.d111.backend.repository.s3.S3Repository;
@@ -44,6 +46,7 @@ public class FeedServiceImpl implements FeedService {
     private final MongoCoordiRepository mongoCoordiRepository;
     private final S3Repository s3Repository;
     private final AmazonS3Client amazonS3Client;
+    private final LikesRepository likesRepository;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket; // 버킷 이름
@@ -157,6 +160,43 @@ public class FeedServiceImpl implements FeedService {
         );
 
         return ResponseEntity.ok(response);
+    }
+
+
+    @Override
+    public ResponseEntity<?> feedLikes(Long feedId) {
+
+        String userid = JWTUtil.findEmailByToken();
+        Optional<User> currentUser = userRepository.findByEmail(userid);
+        Long userId = currentUser.get().getId();
+
+        Optional<Feed> feedOptional = feedRepository.findById(feedId);
+
+        if (feedOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Feed feed = feedOptional.get();
+
+        // 해당 사용자가 해당 피드에 이미 좋아요를 눌렀는지 확인
+        Optional<Likes> existingLike = likesRepository.findByFeedIdAndUserId(feedId, userId);
+
+        if (existingLike.isPresent()) {
+            // 이미 좋아요를 누른 상태라면 좋아요 취소
+            likesRepository.delete(existingLike.get());
+            feed.setFeedlikes(feed.getFeedlikes() - 1);
+
+            return ResponseEntity.ok("좋아요 취소를 눌렀습니다.");
+
+        } else {
+            // 좋아요를 누르지 않았다면 좋아요
+            Likes like = Likes.createLikes(feed, currentUser.get());
+            likesRepository.save(like);
+            feed.setFeedlikes(feed.getFeedlikes() + 1);
+        }
+        feedRepository.save(feed);
+
+        return ResponseEntity.ok("피드 좋아요를 눌렀습니다.");
     }
 
 

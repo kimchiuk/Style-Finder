@@ -61,4 +61,11 @@ public class FeedController {
         return feedService.delete(feedId);
     }
 
+    // 피드 좋아요
+
+    @PostMapping("/like/{feedId}")
+    public ResponseEntity<?> feedLikes(@PathVariable Long feedId) {
+        return feedService.feedLikes(feedId);
+    }
+
 }
