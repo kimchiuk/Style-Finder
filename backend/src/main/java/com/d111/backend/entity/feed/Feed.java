@@ -20,7 +20,7 @@ public class Feed {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "feed_id")
-    private Long feedId;
+    private Long id;
 
     @Column(nullable = false, length = 50, name = "feed_title")
     private String feedTitle;
@@ -45,6 +45,10 @@ public class Feed {
 
     @Column(nullable = false, name = "coordi_id")
     private String coordiId;
+
+    @Builder.Default
+    @Column(name = "feed_likes")
+    private Long feedlikes = 0L;
 
     public static Feed createFeed(FeedCreateRequest feedCreateRequest, String coordiId) {
         return Feed.builder()

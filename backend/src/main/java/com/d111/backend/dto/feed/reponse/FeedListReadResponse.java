@@ -22,7 +22,7 @@ public class FeedListReadResponse {
 
     public static FeedListReadResponse createFeedListReadResponse(String message, List<Feed> feedList) {
         List<FeedInfo> feedInfoList = feedList.stream()
-                .map(feed -> new FeedInfo(feed.getFeedId(), feed.getFeedTitle(), feed.getFeedContent(), feed.getFeedThumbnail(), feed.getCoordiId()))
+                .map(feed -> new FeedInfo(feed.getId(), feed.getFeedTitle(), feed.getFeedContent(), feed.getFeedThumbnail(), feed.getCoordiId()))
                 .collect(Collectors.toList());
 
         return FeedListReadResponse.builder()
