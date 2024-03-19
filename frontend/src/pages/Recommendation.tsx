@@ -21,7 +21,7 @@ const Recommendation = () => {
         // 로그인 상태
         <div>
           <div>추천</div>
-          <div>콘텐츠</div>
+          <div>id: {userStore.id}</div>
         </div>
       )}
     </div>
