@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Navbar from '../widgets/header/Navbar';
 import Footer from '../widgets/footer/Footer';
 
