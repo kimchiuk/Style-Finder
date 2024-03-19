@@ -33,7 +33,7 @@ public class Feed {
     public User userId;
 
     @Column(nullable = false, name = "feed_thumbnail")
-    private String feedThumbnail;
+    private String feedThumbnail = "";
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, name = "feed_created_date")
@@ -50,7 +50,6 @@ public class Feed {
         return Feed.builder()
                 .feedTitle(feedCreateRequest.getFeedTitle())
                 .feedContent(feedCreateRequest.getFeedContent())
-                .feedThumbnail(feedCreateRequest.getFeedThumbnail())
                 .coordiId(coordiId)
                 .build();
     }
