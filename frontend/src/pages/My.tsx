@@ -21,7 +21,7 @@ const My = () => {
         // 로그인 상태
         <div>
           <div>내 옷장</div>
-          <div>콘텐츠</div>
+          <div>id: {userStore.id}</div>
         </div>
       )}
     </div>
