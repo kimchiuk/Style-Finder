@@ -16,8 +16,8 @@ public class FeedReadResponseDTO {
     @Schema(description = "피드 Id", example = "12f5de12346a2e111aace123")
     private String id;
 
-    @Schema(description = "머리", example = "모자")
-    private String head;
+    @Schema(description = "아우터", example = "패딩")
+    private String outer;
 
     @Schema(description = "상의", example = "티셔츠")
     private String upperBody;
@@ -25,17 +25,17 @@ public class FeedReadResponseDTO {
     @Schema(description = "하의", example = "바지")
     private String lowerBody;
 
-    @Schema(description = "신발", example = "운동화")
-    private String shoes;
+    @Schema(description = "원피스", example = "원피스")
+    private String onepiece;
 
 
     public static FeedReadResponseDTO createFeedReadResponseDTO(Coordi coordi) {
         return FeedReadResponseDTO.builder()
                 .id(coordi.get_id())
-                .head(coordi.getHead())
+                .outer(coordi.getOuter())
                 .upperBody(coordi.getUpperBody())
                 .lowerBody(coordi.getLowerBody())
-                .shoes(coordi.getShoes())
+                .onepiece(coordi.getOnepiece())
                 .build();
     }
 
