@@ -17,8 +17,8 @@ public class CoordiReadResponseDTO {
     @Schema(description = "코디 번호", example = "1")
     private String _id;
 
-    @Schema(description = "머리", example = "모자")
-    private String head;
+    @Schema(description = "아우터", example = "패딩")
+    private String outer;
 
     @Schema(description = "상의", example = "티셔츠")
     private String upperBody;
@@ -26,17 +26,17 @@ public class CoordiReadResponseDTO {
     @Schema(description = "하의", example = "바지")
     private String lowerBody;
 
-    @Schema(description = "신발", example = "운동화")
-    private String shoes;
+    @Schema(description = "원피스", example = "원피스")
+    private String onepiece;
 
     public static CoordiReadResponseDTO createCoordiReadResponseDTO(Optional<Coordi> coordiOptional) {
             Coordi coordi = coordiOptional.get();
             return CoordiReadResponseDTO.builder()
                     ._id(coordi.get_id())
-                    .head(coordi.getHead())
+                    .outer(coordi.getOuter())
                     .upperBody(coordi.getUpperBody())
                     .lowerBody(coordi.getLowerBody())
-                    .shoes(coordi.getShoes())
+                    .onepiece(coordi.getOnepiece())
                     .build();
     }
 }

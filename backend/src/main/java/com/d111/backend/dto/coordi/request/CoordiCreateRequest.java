@@ -12,12 +12,12 @@ import lombok.NoArgsConstructor;
 public class CoordiCreateRequest {
 
 
-    private String head;
+    private String outer;
 
     private String upperBody;
 
     private String lowerBody;
 
-    private String shoes;
+    private String onepiece;
 
 }
