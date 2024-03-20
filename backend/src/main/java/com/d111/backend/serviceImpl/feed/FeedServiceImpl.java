@@ -186,6 +186,8 @@ public class FeedServiceImpl implements FeedService {
             // 이미 좋아요를 누른 상태라면 좋아요 취소
             likesRepository.delete(existingLike.get());
             feed.setFeedlikes(feed.getFeedlikes() - 1);
+            feedRepository.save(feed);
+
 
             return ResponseEntity.ok("좋아요 취소를 눌렀습니다.");
 
@@ -194,8 +196,8 @@ public class FeedServiceImpl implements FeedService {
             Likes like = Likes.createLikes(feed, currentUser.get());
             likesRepository.save(like);
             feed.setFeedlikes(feed.getFeedlikes() + 1);
+            feedRepository.save(feed);
         }
-        feedRepository.save(feed);
 
         return ResponseEntity.ok("피드 좋아요를 눌렀습니다.");
     }
