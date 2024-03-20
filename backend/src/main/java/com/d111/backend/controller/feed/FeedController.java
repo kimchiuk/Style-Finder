@@ -33,21 +33,6 @@ public class FeedController {
         return feedService.create(request.getFeedCreateRequest(), request.getCoordiCreateRequest(), feedThumbnail);
     }
 
-
-//    // coordiId로 피드 상세 조회
-//    @GetMapping("/{coordiId}")
-//    public ResponseEntity<FeedReadResponse> readFeed(@PathVariable String coordiId){
-//        return feedService.read(coordiId);
-//    }
-
-//    //coordiId로 피드 삭제
-//    @DeleteMapping("/{coordiId}")
-//    public ResponseEntity<FeedDeleteResponse> deleteFeed(@PathVariable String coordiId){
-//        return feedService.delete(coordiId);
-//    }
-
-
-
     // 피드 개별 조회
     @GetMapping("/{feedId}")
     public ResponseEntity<FeedReadResponse> readFeed(@PathVariable Long feedId){
@@ -62,7 +47,6 @@ public class FeedController {
     }
 
     // 피드 좋아요
-
     @PostMapping("/like/{feedId}")
     public ResponseEntity<?> feedLikes(@PathVariable Long feedId) {
         return feedService.feedLikes(feedId);

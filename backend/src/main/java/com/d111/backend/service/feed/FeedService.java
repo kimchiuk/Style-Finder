@@ -21,13 +21,6 @@ public interface FeedService {
 
     ResponseEntity<?> feedLikes(Long feedId);
 
-
-    // coordiId로 조회 후 삭제
-//    ResponseEntity<FeedDeleteResponse> delete(String coordiId);
-
-    // coordiId로 조회 상세 조회
-//    ResponseEntity<FeedReadResponse> read(String coordiId);
-
 }
 
 
