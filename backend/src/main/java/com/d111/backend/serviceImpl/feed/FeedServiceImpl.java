@@ -198,39 +198,4 @@ public class FeedServiceImpl implements FeedService {
 
         return ResponseEntity.ok("피드 좋아요를 눌렀습니다.");
     }
-
-
-    // coordiId로 상세 조회
-//    @Override
-//    public ResponseEntity<FeedReadResponse> read(String coordiId) {
-//
-//        Coordi coordi = mongoCoordiRepository.findById(coordiId).orElseThrow(() -> new FeedNotFoundException("feed not found"));
-//
-//        FeedReadResponse response = FeedReadResponse.createFeedReadResponse(
-//                "success",
-//                FeedReadResponseDTO.createFeedReadResponseDTO(coordi));
-//
-//        return ResponseEntity.status(HttpStatus.OK).body(response);
-//    }
-
-
-//    coordi 아이디로 피드 삭제
-//    public ResponseEntity<FeedDeleteResponse> delete(String coordiId){
-//
-//        Coordi coordi = mongoCoordiRepository.findById(coordiId).orElseThrow(() -> new FeedNotFoundException("feed not found"));
-//        mongoCoordiRepository.delete(coordi);
-//
-//        Optional<Feed> optionalFeed = feedRepository.findByCoordiId(coordiId);
-//        Feed feed = optionalFeed.get();
-//        feedRepository.delete(feed);
-//
-//
-//        FeedDeleteResponse response = FeedDeleteResponse.createFeedDeleteResponse(
-//                "success",
-//                true
-//        );
-//
-//        return ResponseEntity.ok(response);
-//    }
-
 }
