@@ -116,7 +116,8 @@ public class FeedServiceImpl implements FeedService {
         List<Feed> feedList = feedRepository.findAll();
         FeedListReadResponse response = FeedListReadResponse.createFeedListReadResponse(
                 "Success",
-                feedList
+                feedList,
+                mongoCoordiRepository
         );
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
