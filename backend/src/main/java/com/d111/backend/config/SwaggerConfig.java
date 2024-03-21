@@ -50,6 +50,14 @@ public class SwaggerConfig {
                         .build();
         }
 
+        @Bean
+        public GroupedOpenApi coordi() {
+                return GroupedOpenApi.builder()
+                        .group("coordi")
+                        .pathsToMatch("/api/coordi/**")
+                        .build();
+        }
+
         private SecurityScheme createAPIKeyScheme() {
                 return new SecurityScheme().type(SecurityScheme.Type.HTTP)
                         .bearerFormat("JWT")

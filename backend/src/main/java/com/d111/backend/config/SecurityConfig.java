@@ -1,6 +1,5 @@
 package com.d111.backend.config;
 
-import com.d111.backend.exception.user.CustomJWTException;
 import com.d111.backend.security.filter.ExceptionHandlerFilter;
 import com.d111.backend.security.filter.JWTFilter;
 import com.d111.backend.security.handler.CustomAccessDeniedHandler;
@@ -53,7 +52,7 @@ public class SecurityConfig {
                         });
 
         httpSecurity.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/**").permitAll().anyRequest().authenticated()
         );
 
         httpSecurity

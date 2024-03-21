@@ -1,5 +1,5 @@
 import Navbar from '../widgets/header/Navbar';
-import Footer from '../widgets/footer/Footer';
+//import Footer from '../widgets/footer/Footer';
 
 import MainPage from '../pages/Main';
 import LoginPage from '../pages/SignIn';
@@ -28,8 +28,6 @@ const Router = () => {
           <Route path="recommendation" element={<RecommendationPage />}></Route>
         </Route>
       </Routes>
-
-      <Footer></Footer>
     </BrowserRouter>
   );
 };

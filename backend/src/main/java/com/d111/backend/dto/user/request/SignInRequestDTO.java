@@ -11,10 +11,10 @@ import lombok.*;
 @ToString
 public class SignInRequestDTO {
 
-    @Schema(name = "이메일")
+    @Schema(name = "email", example = "example@gmail.com")
     String email;
 
-    @Schema(name = "비밀번호")
+    @Schema(name = "password")
     String password;
 
 }
