@@ -19,7 +19,7 @@ public interface FeedService {
 
     ResponseEntity<?> feedLikes(Long feedId);
 
-    ResponseEntity<FeedUpdateResponse> update(Long feedId, FeedUpdateRequest request);
+    ResponseEntity<FeedUpdateResponse> update(Long feedId, FeedUpdateRequest request, MultipartFile multipartFile);
 }
 
 

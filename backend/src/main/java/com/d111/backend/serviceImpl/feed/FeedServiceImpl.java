@@ -203,10 +203,7 @@ public class FeedServiceImpl implements FeedService {
     }
 
     @Override
-    public ResponseEntity<FeedUpdateResponse> update(Long feedId, FeedUpdateRequest feedUpdateRequest) {
-
-        System.out.println(feedUpdateRequest.getFeedTitle() + "피드 제목");
-        System.out.println(feedUpdateRequest.getFeedContent() + "피드 내용");
+    public ResponseEntity<FeedUpdateResponse> update(Long feedId, FeedUpdateRequest feedUpdateRequest, MultipartFile multipartFile) {
 
         Optional<Feed> optionalFeed = feedRepository.findById(feedId);
 
@@ -234,31 +231,4 @@ public class FeedServiceImpl implements FeedService {
         return ResponseEntity.status(HttpStatus.OK).body(response);
 
     }
-//
-//    @Override
-//    public ResponseEntity<FeedUpdateResponse> update(Long feedId, UpdateFeedRequest updateFeedRequest, MultipartFile profileImage) {
-//        // 해당 피드의 존재 여부 확인
-//        Optional<Feed> optionalFeed = feedRepository.findById(feedId);
-//        if (optionalFeed.isEmpty()) {
-//            throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
-//        }
-//        Feed feed = optionalFeed.get();
-//
-//        // 제목에 대한 입력값이 없을 경우
-//        if (updateFeedRequest.getFeedTitle().isBlank()) {
-//            throw new InvalidInputException("제목을 입력해주세요.");
-//        }
-//
-//        // 피드 제목 및 내용 업데이트
-//        feed.updateFeedTitle(updateFeedRequest.getFeedTitle());
-//        feed.updateFeedContent(updateFeedRequest.getFeedContent());
-//
-//        feedRepository.save(feed);
-//
-//        FeedUpdateResponse response = FeedUpdateResponse.createFeedUpdateResponse(
-//                "success",
-//                FeedUpdateResponseDTO.createFeedUpdateResponseDTO(feed));
-//
-//        return ResponseEntity.status(HttpStatus.OK).body(response);
-//    }
 }
