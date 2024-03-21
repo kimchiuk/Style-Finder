@@ -18,6 +18,6 @@ public class CoordiCreateRequest {
 
     private String lowerBody;
 
-    private String onepiece;
+    private String dress;
 
 }

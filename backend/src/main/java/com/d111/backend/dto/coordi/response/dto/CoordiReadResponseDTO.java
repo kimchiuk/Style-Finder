@@ -27,7 +27,7 @@ public class CoordiReadResponseDTO {
     private String lowerBody;
 
     @Schema(description = "원피스", example = "원피스")
-    private String onepiece;
+    private String dress;
 
     public static CoordiReadResponseDTO createCoordiReadResponseDTO(Optional<Coordi> coordiOptional) {
             Coordi coordi = coordiOptional.get();
@@ -36,7 +36,7 @@ public class CoordiReadResponseDTO {
                     .outerCloth(coordi.getOuterCloth())
                     .upperBody(coordi.getUpperBody())
                     .lowerBody(coordi.getLowerBody())
-                    .onepiece(coordi.getOnepiece())
+                    .dress(coordi.getDress())
                     .build();
     }
 }

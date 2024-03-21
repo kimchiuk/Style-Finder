@@ -32,24 +32,21 @@
         @Schema(description = "하의", example = "바지")
         private String lowerBody;
 
-        @Schema(description = "신발", example = "운동화")
-        private String onepeice;
+        @Schema(description = "원피스", example = "원피스")
+        private String dress;
 
         public static CoordiContainer createMongoContainer(String coordiId, MongoCoordiRepository mongoCoordiRepository) {
 
             Optional<Coordi> coordi = mongoCoordiRepository.findById(coordiId);
 
-            // 조회한 정보를 기반으로 MongoContainer 생성
             CoordiContainer mongoContainer = CoordiContainer.builder()
                     .id(coordi.get().get_id())
                     .outerCloth(coordi.get().getOuterCloth())
                     .upperBody(coordi.get().getUpperBody())
                     .lowerBody(coordi.get().getLowerBody())
-                    .onepeice(coordi.get().getOnepiece())
+                    .dress(coordi.get().getDress())
                     .build();
 
             return mongoContainer;
         }
-
-
     }

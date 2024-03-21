@@ -34,14 +34,14 @@ public class FeedController {
         return feedService.create(request.getFeedCreateRequest(), request.getCoordiCreateRequest(), feedThumbnail);
     }
 
-    // 피드 개별 조회
+    // 피드 상세 조회
     @GetMapping("/{feedId}")
     public ResponseEntity<FeedReadResponse> readFeed(@PathVariable Long feedId){
         return feedService.read(feedId);
     }
 
 
-    //피드 삭제
+    // 피드 삭제
     @DeleteMapping("/{feedId}")
     public ResponseEntity<FeedDeleteResponse> deleteFeed(@PathVariable Long feedId){
         return feedService.delete(feedId);
@@ -53,13 +53,11 @@ public class FeedController {
         return feedService.feedLikes(feedId);
     }
 
+    // 피드 수정
     @PutMapping(value = "/update/{feedId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateFeed(@PathVariable Long feedId,
                                         @RequestPart(value = "feedUpdateRequest") FeedUpdateRequest feedUpdateRequest,
                                         @RequestPart(value = "feedThumbnail", required = false) MultipartFile multipartFile) {
         return feedService.update(feedId, feedUpdateRequest, multipartFile);
     }
-
-
-
 }

@@ -32,8 +32,8 @@ public class Coordi {
     @Column(name = "lower_body")
     private String lowerBody;
 
-    @Column(name = "onepiece")
-    private String onepiece;
+    @Column(name = "dress")
+    private String dress;
 
     @OneToOne
     @JoinColumn(name = "feed_id")
@@ -44,7 +44,7 @@ public class Coordi {
         coordi.setOuterCloth(coordiCreateRequest.getOuterCloth());
         coordi.setUpperBody(coordiCreateRequest.getUpperBody());
         coordi.setLowerBody(coordiCreateRequest.getLowerBody());
-        coordi.setOnepiece(coordiCreateRequest.getOnepiece());
+        coordi.setDress(coordiCreateRequest.getDress());
         return coordi;
     }
 
