@@ -40,7 +40,6 @@ public class FeedController {
         return feedService.read(feedId);
     }
 
-
     // 피드 삭제
     @DeleteMapping("/{feedId}")
     public ResponseEntity<FeedDeleteResponse> deleteFeed(@PathVariable Long feedId){
@@ -59,5 +58,11 @@ public class FeedController {
                                         @RequestPart(value = "feedUpdateRequest") FeedUpdateRequest feedUpdateRequest,
                                         @RequestPart(value = "feedThumbnail", required = false) MultipartFile multipartFile) {
         return feedService.update(feedId, feedUpdateRequest, multipartFile);
+    }
+
+    // 피드 인기순 조회
+    @GetMapping("/popularity")
+    public ResponseEntity<FeedListReadResponse> readPopularFeedList() {
+        return feedService.readPopularList();
     }
 }
