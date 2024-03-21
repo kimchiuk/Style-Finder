@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -35,13 +35,13 @@ public class Feed {
     @Column(nullable = false, name = "feed_thumbnail")
     private String feedThumbnail = "";
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     @Column(nullable = false, name = "feed_created_date")
-    private LocalDateTime feedCreatedDate;
+    private LocalDate feedCreatedDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     @Column(nullable = false, name = "feed_updated_date")
-    private LocalDateTime feedUpdatedDate;
+    private LocalDate feedUpdatedDate;
 
     @Column(nullable = false, name = "coordi_id")
     private String coordiId;
@@ -49,6 +49,9 @@ public class Feed {
     @Builder.Default
     @Column(name = "feed_likes")
     private Long feedlikes = 0L;
+
+    @Column(name = "origin_writer")
+    private Long originWriter;
 
 
     public void updateFeedTitle(String feedTitle) {
