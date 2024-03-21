@@ -4,6 +4,7 @@ import com.d111.backend.dto.feed.reponse.FeedDeleteResponse;
 import com.d111.backend.dto.feed.reponse.FeedListReadResponse;
 import com.d111.backend.dto.feed.reponse.FeedReadResponse;
 import com.d111.backend.dto.feed.request.FeedCoordiCreateRequest;
+import com.d111.backend.dto.feed.request.FeedUpdateRequest;
 import com.d111.backend.service.feed.FeedService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -52,8 +53,13 @@ public class FeedController {
         return feedService.feedLikes(feedId);
     }
 
-//    @PutMapping(value = "/update/{feedId}")
-//    public ResponseEntity<FeedUpdateResponse> updateFeed(@PathVariable Long feedId, @RequestBody FeedUpdateRequest feedUpdateRequest) {
-//        return feedService.update(feedId, feedUpdateRequest);
-//    }
+    @PutMapping(value = "/update/{feedId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateFeed(@PathVariable Long feedId,
+                                        @RequestPart(value = "feedUpdateRequest") FeedUpdateRequest feedUpdateRequest,
+                                        @RequestPart(value = "feedThumbnail", required = false) MultipartFile multipartFile) {
+        return feedService.update(feedId, feedUpdateRequest, multipartFile);
+    }
+
+
+
 }
