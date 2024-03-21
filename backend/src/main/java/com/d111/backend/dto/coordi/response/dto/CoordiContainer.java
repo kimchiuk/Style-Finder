@@ -23,8 +23,8 @@
         @Id
         private String id;
 
-        @Schema(description = "머리", example = "모자")
-        private String outer;
+        @Schema(description = "아우터", example = "패딩")
+        private String outerCloth;
 
         @Schema(description = "상의", example = "티셔츠")
         private String upperBody;
@@ -42,7 +42,7 @@
             // 조회한 정보를 기반으로 MongoContainer 생성
             CoordiContainer mongoContainer = CoordiContainer.builder()
                     .id(coordi.get().get_id())
-                    .outer(coordi.get().getOuter())
+                    .outerCloth(coordi.get().getOuterCloth())
                     .upperBody(coordi.get().getUpperBody())
                     .lowerBody(coordi.get().getLowerBody())
                     .onepeice(coordi.get().getOnepiece())

@@ -23,8 +23,8 @@ public class Coordi {
     @Id
     private String _id;
 
-    @Column(name = "outer")
-    private String outer;
+    @Column(name = "outer_cloth")
+    private String outerCloth;
 
     @Column(name = "upper_body")
     private String upperBody;
@@ -41,7 +41,7 @@ public class Coordi {
 
     public static Coordi createCoordi(CoordiCreateRequest coordiCreateRequest) {
         Coordi coordi = new Coordi();
-        coordi.setOuter(coordiCreateRequest.getOuter());
+        coordi.setOuterCloth(coordiCreateRequest.getOuterCloth());
         coordi.setUpperBody(coordiCreateRequest.getUpperBody());
         coordi.setLowerBody(coordiCreateRequest.getLowerBody());
         coordi.setOnepiece(coordiCreateRequest.getOnepiece());

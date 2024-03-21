@@ -17,7 +17,7 @@ public class FeedReadResponseDTO {
     private String id;
 
     @Schema(description = "아우터", example = "패딩")
-    private String outer;
+    private String outerCloth;
 
     @Schema(description = "상의", example = "티셔츠")
     private String upperBody;
@@ -32,7 +32,7 @@ public class FeedReadResponseDTO {
     public static FeedReadResponseDTO createFeedReadResponseDTO(Coordi coordi) {
         return FeedReadResponseDTO.builder()
                 .id(coordi.get_id())
-                .outer(coordi.getOuter())
+                .outerCloth(coordi.getOuterCloth())
                 .upperBody(coordi.getUpperBody())
                 .lowerBody(coordi.getLowerBody())
                 .onepiece(coordi.getOnepiece())

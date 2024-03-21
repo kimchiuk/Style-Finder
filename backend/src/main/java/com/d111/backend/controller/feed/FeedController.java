@@ -52,4 +52,8 @@ public class FeedController {
         return feedService.feedLikes(feedId);
     }
 
+//    @PutMapping(value = "/update/{feedId}")
+//    public ResponseEntity<FeedUpdateResponse> updateFeed(@PathVariable Long feedId, @RequestBody FeedUpdateRequest feedUpdateRequest) {
+//        return feedService.update(feedId, feedUpdateRequest);
+//    }
 }
