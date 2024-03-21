@@ -48,7 +48,7 @@ public class Feed {
 
     @Builder.Default
     @Column(name = "feed_likes")
-    private Long feedlikes = 0L;
+    private Long feedLikes = 0L;
 
     @Column(name = "origin_writer")
     private Long originWriter;

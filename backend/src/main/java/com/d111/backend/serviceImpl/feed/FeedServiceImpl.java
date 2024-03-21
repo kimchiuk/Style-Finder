@@ -136,26 +136,6 @@ public class FeedServiceImpl implements FeedService {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-
-//    // feedId로 피드 상세 조회
-//    @Override
-//    public ResponseEntity<FeedReadResponse> read(Long feedId) {
-//
-//
-//        Optional<Feed> optionalFeed = feedRepository.findById(feedId);
-//        Feed feed = optionalFeed.get();
-//
-//        String coordiId = feed.getCoordiId();
-//        Coordi coordi = mongoCoordiRepository.findById(coordiId).orElseThrow(() -> new RuntimeException("coordi not found"));
-//
-//        FeedReadResponse response = FeedReadResponse.createFeedReadResponse(
-//                "success",
-//                FeedReadResponseDTO.createFeedReadResponseDTO(coordi));
-//
-//        return ResponseEntity.status(HttpStatus.OK).body(response);
-//    }
-
-
     @Override
     public ResponseEntity<FeedReadResponse> read(Long feedId) {
         Optional<Feed> optionalFeed = feedRepository.findById(feedId);
@@ -227,7 +207,7 @@ public class FeedServiceImpl implements FeedService {
         if (existingLike.isPresent()) {
             // 이미 좋아요를 누른 상태라면 좋아요 취소
             likesRepository.delete(existingLike.get());
-            feed.setFeedlikes(feed.getFeedlikes() - 1);
+            feed.setFeedLikes(feed.getFeedLikes() - 1);
             feedRepository.save(feed);
 
 
@@ -237,7 +217,7 @@ public class FeedServiceImpl implements FeedService {
             // 좋아요를 누르지 않았다면 좋아요
             Likes like = Likes.createLikes(feed, currentUser.get());
             likesRepository.save(like);
-            feed.setFeedlikes(feed.getFeedlikes() + 1);
+            feed.setFeedLikes(feed.getFeedLikes() + 1);
             feedRepository.save(feed);
         }
 
@@ -285,6 +265,23 @@ public class FeedServiceImpl implements FeedService {
         FeedUpdateResponse response = FeedUpdateResponse.createFeedUpdateResponse(
                 "success",
                 FeedUpdateResponseDTO.createFeedUpdateResponseDTO(feed));
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @Override
+    public ResponseEntity<FeedListReadResponse> readPopularList() {
+        List<Feed> feedList = feedRepository.findAllByOrderByFeedLikesDesc();
+
+        if (feedList.isEmpty()) {
+            throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
+        }
+
+        FeedListReadResponse response = FeedListReadResponse.createFeedListReadResponse(
+                "Success",
+                feedList,
+                mongoCoordiRepository
+        );
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
