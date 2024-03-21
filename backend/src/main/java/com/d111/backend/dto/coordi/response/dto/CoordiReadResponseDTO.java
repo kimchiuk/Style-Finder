@@ -18,7 +18,7 @@ public class CoordiReadResponseDTO {
     private String _id;
 
     @Schema(description = "아우터", example = "패딩")
-    private String outer;
+    private String outerCloth;
 
     @Schema(description = "상의", example = "티셔츠")
     private String upperBody;
@@ -33,7 +33,7 @@ public class CoordiReadResponseDTO {
             Coordi coordi = coordiOptional.get();
             return CoordiReadResponseDTO.builder()
                     ._id(coordi.get_id())
-                    .outer(coordi.getOuter())
+                    .outerCloth(coordi.getOuterCloth())
                     .upperBody(coordi.getUpperBody())
                     .lowerBody(coordi.getLowerBody())
                     .onepiece(coordi.getOnepiece())

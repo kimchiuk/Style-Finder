@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class CoordiCreateRequest {
 
 
-    private String outer;
+    private String outerCloth;
 
     private String upperBody;
 

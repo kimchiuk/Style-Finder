@@ -50,6 +50,16 @@ public class Feed {
     @Column(name = "feed_likes")
     private Long feedlikes = 0L;
 
+
+    public void updateFeedTitle(String feedTitle) {
+        this.feedTitle = feedTitle;
+    }
+
+    public void updateFeedContent(String feedContent) {
+        this.feedContent = feedContent;
+    }
+
+
     public static Feed createFeed(FeedCreateRequest feedCreateRequest, String coordiId) {
         return Feed.builder()
                 .feedTitle(feedCreateRequest.getFeedTitle())

@@ -4,17 +4,17 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.d111.backend.dto.coordi.request.CoordiCreateRequest;
-import com.d111.backend.dto.feed.reponse.FeedCreateResponse;
-import com.d111.backend.dto.feed.reponse.FeedDeleteResponse;
-import com.d111.backend.dto.feed.reponse.FeedListReadResponse;
-import com.d111.backend.dto.feed.reponse.FeedReadResponse;
+import com.d111.backend.dto.feed.reponse.*;
 import com.d111.backend.dto.feed.reponse.dto.FeedReadResponseDTO;
+import com.d111.backend.dto.feed.reponse.dto.FeedUpdateResponseDTO;
 import com.d111.backend.dto.feed.request.FeedCreateRequest;
+import com.d111.backend.dto.feed.request.FeedUpdateRequest;
 import com.d111.backend.entity.coordi.Coordi;
 import com.d111.backend.entity.feed.Feed;
 import com.d111.backend.entity.likes.Likes;
 import com.d111.backend.entity.multipart.S3File;
 import com.d111.backend.entity.user.User;
+import com.d111.backend.exception.feed.FeedNotFoundException;
 import com.d111.backend.repository.Likes.LikesRepository;
 import com.d111.backend.repository.feed.FeedRepository;
 import com.d111.backend.repository.mongo.MongoCoordiRepository;
@@ -144,7 +144,7 @@ public class FeedServiceImpl implements FeedService {
 
 
     // feedId로 개별 조회 후 삭제
-    public ResponseEntity<FeedDeleteResponse> delete(Long feedId){
+    public ResponseEntity<FeedDeleteResponse> delete(Long feedId) {
 
         Optional<Feed> optionalFeed = feedRepository.findById(feedId);
         Feed feed = optionalFeed.get();
@@ -201,4 +201,64 @@ public class FeedServiceImpl implements FeedService {
 
         return ResponseEntity.ok("피드 좋아요를 눌렀습니다.");
     }
+
+    @Override
+    public ResponseEntity<FeedUpdateResponse> update(Long feedId, FeedUpdateRequest feedUpdateRequest) {
+
+        System.out.println(feedUpdateRequest.getFeedTitle() + "피드 제목");
+        System.out.println(feedUpdateRequest.getFeedContent() + "피드 내용");
+
+        Optional<Feed> optionalFeed = feedRepository.findById(feedId);
+
+        if (optionalFeed.isEmpty()) {
+            throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
+        }
+        Feed feed = optionalFeed.get();
+
+        // 제목에 대한 입력값이 없을 경우
+        if (feedUpdateRequest.getFeedTitle().isBlank()) {
+            throw new RuntimeException("제목을 입력해주세요.");
+        }
+
+        // 피드 제목 및 내용 업데이트
+        feed.updateFeedTitle(feedUpdateRequest.getFeedTitle());
+        feed.updateFeedContent(feedUpdateRequest.getFeedContent());
+
+        feedRepository.save(feed);
+
+
+        FeedUpdateResponse response = FeedUpdateResponse.createFeedUpdateResponse(
+                "success",
+                FeedUpdateResponseDTO.createFeedUpdateResponseDTO(feed));
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+
+    }
+//
+//    @Override
+//    public ResponseEntity<FeedUpdateResponse> update(Long feedId, UpdateFeedRequest updateFeedRequest, MultipartFile profileImage) {
+//        // 해당 피드의 존재 여부 확인
+//        Optional<Feed> optionalFeed = feedRepository.findById(feedId);
+//        if (optionalFeed.isEmpty()) {
+//            throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
+//        }
+//        Feed feed = optionalFeed.get();
+//
+//        // 제목에 대한 입력값이 없을 경우
+//        if (updateFeedRequest.getFeedTitle().isBlank()) {
+//            throw new InvalidInputException("제목을 입력해주세요.");
+//        }
+//
+//        // 피드 제목 및 내용 업데이트
+//        feed.updateFeedTitle(updateFeedRequest.getFeedTitle());
+//        feed.updateFeedContent(updateFeedRequest.getFeedContent());
+//
+//        feedRepository.save(feed);
+//
+//        FeedUpdateResponse response = FeedUpdateResponse.createFeedUpdateResponse(
+//                "success",
+//                FeedUpdateResponseDTO.createFeedUpdateResponseDTO(feed));
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(response);
+//    }
 }
