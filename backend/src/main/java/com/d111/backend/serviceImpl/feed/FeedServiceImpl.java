@@ -4,8 +4,8 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.d111.backend.dto.coordi.request.CoordiCreateRequest;
-import com.d111.backend.dto.feed.reponse.*;
-import com.d111.backend.dto.feed.reponse.dto.FeedUpdateResponseDTO;
+import com.d111.backend.dto.feed.response.*;
+import com.d111.backend.dto.feed.response.dto.FeedUpdateResponseDTO;
 import com.d111.backend.dto.feed.request.FeedCreateRequest;
 import com.d111.backend.dto.feed.request.FeedUpdateRequest;
 import com.d111.backend.entity.comment.Comment;
@@ -108,7 +108,6 @@ public class FeedServiceImpl implements FeedService {
         }
 
         feed.setFeedCreatedDate(now);
-        feed.setFeedUpdatedDate(now);
         feed.setUserId(currentUser.get());
         feed.setFeedThumbnail(storeFilePath);
 
@@ -260,12 +259,14 @@ public class FeedServiceImpl implements FeedService {
             throw new RuntimeException("제목을 입력해주세요.");
         }
 
+        LocalDate now = LocalDate.now(ZoneId.of("UTC"));
+
         // 피드 제목 및 내용 업데이트
         feed.updateFeedTitle(feedUpdateRequest.getFeedTitle());
         feed.updateFeedContent(feedUpdateRequest.getFeedContent());
+        feed.updateFeedUpdatedDate(now);
 
         feedRepository.save(feed);
-
 
         FeedUpdateResponse response = FeedUpdateResponse.createFeedUpdateResponse(
                 "success",

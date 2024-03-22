@@ -68,6 +68,10 @@ public class Feed {
         this.feedContent = feedContent;
     }
 
+    public void updateFeedUpdatedDate(LocalDate feedUpdatedDate) {
+        this.feedUpdatedDate = feedUpdatedDate;
+    }
+
 
     public static Feed createFeed(FeedCreateRequest feedCreateRequest, String coordiId) {
         return Feed.builder()

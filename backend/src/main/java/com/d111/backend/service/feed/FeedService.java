@@ -1,7 +1,7 @@
 package com.d111.backend.service.feed;
 
 import com.d111.backend.dto.coordi.request.CoordiCreateRequest;
-import com.d111.backend.dto.feed.reponse.*;
+import com.d111.backend.dto.feed.response.*;
 import com.d111.backend.dto.feed.request.FeedCreateRequest;
 import com.d111.backend.dto.feed.request.FeedUpdateRequest;
 import org.springframework.http.ResponseEntity;
