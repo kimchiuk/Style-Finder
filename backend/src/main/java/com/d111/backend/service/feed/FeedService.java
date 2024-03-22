@@ -1,11 +1,9 @@
 package com.d111.backend.service.feed;
 
 import com.d111.backend.dto.coordi.request.CoordiCreateRequest;
-import com.d111.backend.dto.feed.reponse.FeedCreateResponse;
-import com.d111.backend.dto.feed.reponse.FeedDeleteResponse;
-import com.d111.backend.dto.feed.reponse.FeedListReadResponse;
-import com.d111.backend.dto.feed.reponse.FeedReadResponse;
+import com.d111.backend.dto.feed.response.*;
 import com.d111.backend.dto.feed.request.FeedCreateRequest;
+import com.d111.backend.dto.feed.request.FeedUpdateRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +19,9 @@ public interface FeedService {
 
     ResponseEntity<?> feedLikes(Long feedId);
 
+    ResponseEntity<FeedUpdateResponse> update(Long feedId, FeedUpdateRequest request, MultipartFile multipartFile);
+
+    ResponseEntity<FeedListReadResponse> readPopularList();
 }
 
 

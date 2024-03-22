@@ -1,9 +1,10 @@
 package com.d111.backend.controller.feed;
 
-import com.d111.backend.dto.feed.reponse.FeedDeleteResponse;
-import com.d111.backend.dto.feed.reponse.FeedListReadResponse;
-import com.d111.backend.dto.feed.reponse.FeedReadResponse;
+import com.d111.backend.dto.feed.response.FeedDeleteResponse;
+import com.d111.backend.dto.feed.response.FeedListReadResponse;
+import com.d111.backend.dto.feed.response.FeedReadResponse;
 import com.d111.backend.dto.feed.request.FeedCoordiCreateRequest;
+import com.d111.backend.dto.feed.request.FeedUpdateRequest;
 import com.d111.backend.service.feed.FeedService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -33,14 +34,13 @@ public class FeedController {
         return feedService.create(request.getFeedCreateRequest(), request.getCoordiCreateRequest(), feedThumbnail);
     }
 
-    // 피드 개별 조회
+    // 피드 상세 조회
     @GetMapping("/{feedId}")
     public ResponseEntity<FeedReadResponse> readFeed(@PathVariable Long feedId){
         return feedService.read(feedId);
     }
 
-
-    //피드 삭제
+    // 피드 삭제
     @DeleteMapping("/{feedId}")
     public ResponseEntity<FeedDeleteResponse> deleteFeed(@PathVariable Long feedId){
         return feedService.delete(feedId);
@@ -52,4 +52,17 @@ public class FeedController {
         return feedService.feedLikes(feedId);
     }
 
+    // 피드 수정
+    @PutMapping(value = "/update/{feedId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateFeed(@PathVariable Long feedId,
+                                        @RequestPart(value = "feedUpdateRequest") FeedUpdateRequest feedUpdateRequest,
+                                        @RequestPart(value = "feedThumbnail", required = false) MultipartFile multipartFile) {
+        return feedService.update(feedId, feedUpdateRequest, multipartFile);
+    }
+
+    // 피드 인기순 조회
+    @GetMapping("/popularity")
+    public ResponseEntity<FeedListReadResponse> readPopularFeedList() {
+        return feedService.readPopularList();
+    }
 }
