@@ -4,8 +4,8 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.d111.backend.dto.coordi.request.CoordiCreateRequest;
-import com.d111.backend.dto.feed.reponse.*;
-import com.d111.backend.dto.feed.reponse.dto.FeedUpdateResponseDTO;
+import com.d111.backend.dto.feed.response.*;
+import com.d111.backend.dto.feed.response.dto.FeedUpdateResponseDTO;
 import com.d111.backend.dto.feed.request.FeedCreateRequest;
 import com.d111.backend.dto.feed.request.FeedUpdateRequest;
 import com.d111.backend.entity.coordi.Coordi;
@@ -105,7 +105,6 @@ public class FeedServiceImpl implements FeedService {
         }
 
         feed.setFeedCreatedDate(now);
-        feed.setFeedUpdatedDate(now);
         feed.setUserId(currentUser.get());
         feed.setFeedThumbnail(storeFilePath);
 

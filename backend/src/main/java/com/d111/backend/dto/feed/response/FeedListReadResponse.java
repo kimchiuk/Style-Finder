@@ -1,4 +1,4 @@
-package com.d111.backend.dto.feed.reponse;
+package com.d111.backend.dto.feed.response;
 
 import com.d111.backend.dto.coordi.response.dto.CoordiContainer;
 import com.d111.backend.entity.feed.Feed;
@@ -30,7 +30,7 @@ public class FeedListReadResponse {
                 .map(feed -> {
                     CoordiContainer coordiContainer = createMongoContainer(feed.getCoordiId(), mongoCoordiRepository);
 
-                    return new FeedInfo(feed.getId(), feed.getUserId().getId(), feed.getFeedTitle(), feed.getFeedThumbnail(), coordiContainer);
+                    return new FeedInfo(feed.getId(), feed.getUserId().getId(), feed.getFeedTitle(), feed.getFeedThumbnail(), feed.getFeedLikes(), coordiContainer);
                 })
                 .collect(Collectors.toList());
 
@@ -51,14 +51,18 @@ public class FeedListReadResponse {
         private String feedTitle;
         @Schema(description = "피드 내용", example = "example.com")
         private String feedThumbnail;
+        @Schema(description = "피드 좋아요")
+        private Long feedLikes;
+
 
         private CoordiContainer coordiContainer;
 
-        public FeedInfo(Long feedId, Long userId, String feedTitle, String feedThumbnail, CoordiContainer coordiContainer) {
+        public FeedInfo(Long feedId, Long userId, String feedTitle, String feedThumbnail, Long feedLikes,CoordiContainer coordiContainer) {
             this.feedId = feedId;
             this.userId = userId;
             this.feedTitle = feedTitle;
             this.feedThumbnail = feedThumbnail;
+            this.feedLikes = feedLikes;
             this.coordiContainer = coordiContainer;
         }
     }

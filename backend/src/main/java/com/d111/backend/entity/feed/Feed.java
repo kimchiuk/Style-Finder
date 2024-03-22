@@ -39,10 +39,6 @@ public class Feed {
     @Column(nullable = false, name = "feed_created_date")
     private LocalDate feedCreatedDate;
 
-    @Temporal(TemporalType.DATE)
-    @Column(nullable = false, name = "feed_updated_date")
-    private LocalDate feedUpdatedDate;
-
     @Column(nullable = false, name = "coordi_id")
     private String coordiId;
 

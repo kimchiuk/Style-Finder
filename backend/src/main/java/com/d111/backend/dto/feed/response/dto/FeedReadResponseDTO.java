@@ -1,4 +1,4 @@
-package com.d111.backend.dto.feed.reponse.dto;
+package com.d111.backend.dto.feed.response.dto;
 
 import com.d111.backend.entity.coordi.Coordi;
 import io.swagger.v3.oas.annotations.media.Schema;
