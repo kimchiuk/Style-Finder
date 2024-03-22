@@ -1,8 +1,8 @@
 package com.d111.backend.controller.feed;
 
-import com.d111.backend.dto.feed.reponse.FeedDeleteResponse;
-import com.d111.backend.dto.feed.reponse.FeedListReadResponse;
-import com.d111.backend.dto.feed.reponse.FeedReadResponse;
+import com.d111.backend.dto.feed.response.FeedDeleteResponse;
+import com.d111.backend.dto.feed.response.FeedListReadResponse;
+import com.d111.backend.dto.feed.response.FeedReadResponse;
 import com.d111.backend.dto.feed.request.FeedCoordiCreateRequest;
 import com.d111.backend.dto.feed.request.FeedUpdateRequest;
 import com.d111.backend.service.feed.FeedService;

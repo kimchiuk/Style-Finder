@@ -1,6 +1,6 @@
-package com.d111.backend.dto.feed.reponse;
+package com.d111.backend.dto.feed.response;
 
-import com.d111.backend.dto.feed.reponse.dto.FeedUpdateResponseDTO;
+import com.d111.backend.dto.feed.response.dto.FeedUpdateResponseDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
