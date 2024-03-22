@@ -13,7 +13,6 @@ const CoordiList = (props: ClothesList) => {
       <div>머리</div>
       <div className="flex">
         <CoordiItem onClick={handleClickHair} {...props.coordi.hair} />
-
         <CoordiItems onClick={handleClickHair} {...(props.clothesList && props.clothesList[0])} />
         <div>🔄</div>
       </div>
@@ -21,7 +20,6 @@ const CoordiList = (props: ClothesList) => {
       <div>상의</div>
       <div className="flex">
         <CoordiItem onClick={handleClickTop} {...props.coordi.top} />
-
         <CoordiItems onClick={handleClickTop} {...(props.clothesList && props.clothesList[1])} />
         <div>🔄</div>
       </div>

@@ -1,5 +1,6 @@
 import MainPage from '../pages/Main';
 import LoginPage from '../pages/SignIn';
+import SignUpPage from '../pages/SignUp';
 import CoordiPage from '../pages/Coordi';
 import FeedPage from '../pages/Feed';
 import AnalysisPage from '../pages/Analysis';
@@ -14,6 +15,7 @@ const Router = () => {
       <Routes>
         <Route path="/" element={<MainPage />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>
+        <Route path="/signup" element={<SignUpPage />}></Route>
         <Route path="/coordi" element={<CoordiPage />}></Route>
         <Route path="/feed" element={<FeedPage />}></Route>
         <Route path="/analysis/*" element={<AnalysisPage />}>
