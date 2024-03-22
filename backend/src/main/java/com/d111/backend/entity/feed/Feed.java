@@ -1,6 +1,7 @@
 package com.d111.backend.entity.feed;
 
 import com.d111.backend.dto.feed.request.FeedCreateRequest;
+import com.d111.backend.entity.comment.Comment;
 import com.d111.backend.entity.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -53,6 +56,9 @@ public class Feed {
     @Column(name = "origin_writer")
     private Long originWriter;
 
+    @Builder.Default
+    @OneToMany(mappedBy = "feedId", cascade = CascadeType.REMOVE)
+    private List<Comment> comments = new ArrayList<>();
 
     public void updateFeedTitle(String feedTitle) {
         this.feedTitle = feedTitle;
@@ -70,4 +76,9 @@ public class Feed {
                 .coordiId(coordiId)
                 .build();
     }
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
+    }
+
 }

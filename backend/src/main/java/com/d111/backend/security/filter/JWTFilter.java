@@ -64,7 +64,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
         //token 꺼내기
         String accessToken = authorization.split(" ")[1];
-        log.info("token : " + accessToken);
 
         Map<String, Object> claims = JWTUtil.validateToken(accessToken);
 

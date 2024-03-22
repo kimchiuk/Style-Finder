@@ -1,7 +1,7 @@
 package com.d111.backend.entity.comment;
 
+import com.d111.backend.entity.feed.Feed;
 import com.d111.backend.entity.user.User;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,19 +20,29 @@ public class Comment {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
-    public Long id;
+    private Long id;
 
-    @Column(name = "comment_content")
-    public String content;
+    @Column(name = "comment_content", nullable = false)
+    private String content;
 
-    @Column(name = "comment_create_date")
-    public LocalDateTime createDate;
+    @Column(name = "comment_created_date")
+    private LocalDate createdDate;
 
-    @Column(name = "comment_update_date")
-    public LocalDateTime updateDate;
+    @Column(name = "comment_updated_date")
+    private LocalDate updatedDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    public User userId;
+    private User userId;
+
+    @ManyToOne
+    @JoinColumn(name = "feed_id")
+    private Feed feedId;
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
+
+    public void updateUpdatedDate(LocalDate updatedDate) { this.updatedDate = updatedDate; }
 
 }

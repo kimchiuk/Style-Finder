@@ -14,7 +14,6 @@
 
 
     @Data
-    @Entity
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor

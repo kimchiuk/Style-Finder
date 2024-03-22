@@ -8,6 +8,7 @@ import com.d111.backend.dto.feed.reponse.*;
 import com.d111.backend.dto.feed.reponse.dto.FeedUpdateResponseDTO;
 import com.d111.backend.dto.feed.request.FeedCreateRequest;
 import com.d111.backend.dto.feed.request.FeedUpdateRequest;
+import com.d111.backend.entity.comment.Comment;
 import com.d111.backend.entity.coordi.Coordi;
 import com.d111.backend.entity.feed.Feed;
 import com.d111.backend.entity.likes.Likes;
@@ -17,6 +18,7 @@ import com.d111.backend.exception.feed.FeedNotFoundException;
 import com.d111.backend.exception.user.EmailNotFoundException;
 import com.d111.backend.exception.user.UnauthorizedAccessException;
 import com.d111.backend.repository.Likes.LikesRepository;
+import com.d111.backend.repository.comment.CommentRepository;
 import com.d111.backend.repository.feed.FeedRepository;
 import com.d111.backend.repository.mongo.MongoCoordiRepository;
 import com.d111.backend.repository.s3.S3Repository;
@@ -48,6 +50,7 @@ public class FeedServiceImpl implements FeedService {
     private final S3Repository s3Repository;
     private final AmazonS3Client amazonS3Client;
     private final LikesRepository likesRepository;
+    private final CommentRepository commentRepository;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket; // 버킷 이름
@@ -144,8 +147,10 @@ public class FeedServiceImpl implements FeedService {
         Coordi coordi = mongoCoordiRepository.findById(feed.getCoordiId())
                 .orElseThrow(() -> new RuntimeException("코디를 찾을 수 없습니다."));
 
+        List<Comment> comments = commentRepository.findAllByFeedId(feed);
+
         FeedReadResponse response = FeedReadResponse.createFeedReadResponse(
-                "success", feed, mongoCoordiRepository);
+                "success", feed, mongoCoordiRepository, comments);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
