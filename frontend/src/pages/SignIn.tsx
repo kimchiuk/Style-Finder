@@ -1,3 +1,5 @@
+import Navbar from '../widgets/header/Navbar';
+
 import useLoginStore from '../shared/store/useLoginStore';
 import useUserStore from '../shared/store/useUserStore';
 
@@ -15,23 +17,26 @@ const SignIn = () => {
   // console.log(result.response);
 
   return (
-    <div>
-      {!loginStore.isLogin ? (
-        // 로그아웃 상태
-        <div>
-          <div>로그인</div>
-          <Link to="/">
-            <div>홈으로 돌아가기</div>
-          </Link>
-        </div>
-      ) : (
-        // 로그인 상태
-        <div>
-          <div>로그인</div>
-          <div> 콘텐츠 </div>
-        </div>
-      )}
-    </div>
+    <>
+      <Navbar></Navbar>
+      <div>
+        {!loginStore.isLogin ? (
+          // 로그아웃 상태
+          <div>
+            <div>로그인</div>
+            <Link to="/">
+              <div>홈으로 돌아가기</div>
+            </Link>
+          </div>
+        ) : (
+          // 로그인 상태
+          <div>
+            <div>로그인</div>
+            <div>id: {userStore.id}</div>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 
