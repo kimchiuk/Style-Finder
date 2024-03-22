@@ -23,8 +23,8 @@ public class Coordi {
     @Id
     private String _id;
 
-    @Column(name = "head")
-    private String head;
+    @Column(name = "outer_cloth")
+    private String outerCloth;
 
     @Column(name = "upper_body")
     private String upperBody;
@@ -32,8 +32,8 @@ public class Coordi {
     @Column(name = "lower_body")
     private String lowerBody;
 
-    @Column(name = "shoes")
-    private String shoes;
+    @Column(name = "dress")
+    private String dress;
 
     @OneToOne
     @JoinColumn(name = "feed_id")
@@ -41,10 +41,10 @@ public class Coordi {
 
     public static Coordi createCoordi(CoordiCreateRequest coordiCreateRequest) {
         Coordi coordi = new Coordi();
-        coordi.setHead(coordiCreateRequest.getHead());
+        coordi.setOuterCloth(coordiCreateRequest.getOuterCloth());
         coordi.setUpperBody(coordiCreateRequest.getUpperBody());
         coordi.setLowerBody(coordiCreateRequest.getLowerBody());
-        coordi.setShoes(coordiCreateRequest.getShoes());
+        coordi.setDress(coordiCreateRequest.getDress());
         return coordi;
     }
 

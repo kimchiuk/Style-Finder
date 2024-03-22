@@ -4,17 +4,18 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.d111.backend.dto.coordi.request.CoordiCreateRequest;
-import com.d111.backend.dto.feed.reponse.FeedCreateResponse;
-import com.d111.backend.dto.feed.reponse.FeedDeleteResponse;
-import com.d111.backend.dto.feed.reponse.FeedListReadResponse;
-import com.d111.backend.dto.feed.reponse.FeedReadResponse;
-import com.d111.backend.dto.feed.reponse.dto.FeedReadResponseDTO;
+import com.d111.backend.dto.feed.reponse.*;
+import com.d111.backend.dto.feed.reponse.dto.FeedUpdateResponseDTO;
 import com.d111.backend.dto.feed.request.FeedCreateRequest;
+import com.d111.backend.dto.feed.request.FeedUpdateRequest;
 import com.d111.backend.entity.coordi.Coordi;
 import com.d111.backend.entity.feed.Feed;
 import com.d111.backend.entity.likes.Likes;
 import com.d111.backend.entity.multipart.S3File;
 import com.d111.backend.entity.user.User;
+import com.d111.backend.exception.feed.FeedNotFoundException;
+import com.d111.backend.exception.user.EmailNotFoundException;
+import com.d111.backend.exception.user.UnauthorizedAccessException;
 import com.d111.backend.repository.Likes.LikesRepository;
 import com.d111.backend.repository.feed.FeedRepository;
 import com.d111.backend.repository.mongo.MongoCoordiRepository;
@@ -31,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
@@ -93,9 +94,16 @@ public class FeedServiceImpl implements FeedService {
 
         String userid = JWTUtil.findEmailByToken();
         Optional<User> currentUser = userRepository.findByEmail(userid);
-        LocalDateTime now = LocalDateTime.now(ZoneId.of("UTC"));
+        Long userId = currentUser.get().getId();
+
+        LocalDate now = LocalDate.now(ZoneId.of("UTC"));
 
         Feed feed = Feed.createFeed(feedCreateRequest, coordiId);
+
+        if(feed.getOriginWriter() == null){
+            feed.setOriginWriter(userId);
+        }
+
         feed.setFeedCreatedDate(now);
         feed.setFeedUpdatedDate(now);
         feed.setUserId(currentUser.get());
@@ -114,39 +122,47 @@ public class FeedServiceImpl implements FeedService {
     @Override
     public ResponseEntity<FeedListReadResponse> readList() {
         List<Feed> feedList = feedRepository.findAll();
+
+        if (feedList.isEmpty()) {
+            throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
+        }
+
         FeedListReadResponse response = FeedListReadResponse.createFeedListReadResponse(
                 "Success",
-                feedList
+                feedList,
+                mongoCoordiRepository
         );
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-
-    // feedId로 피드 상세 조회
     @Override
     public ResponseEntity<FeedReadResponse> read(Long feedId) {
-
-
         Optional<Feed> optionalFeed = feedRepository.findById(feedId);
-        Feed feed = optionalFeed.get();
+        Feed feed = optionalFeed.orElseThrow(() -> new FeedNotFoundException("피드를 찾을 수 없습니다."));
 
-        String coordiId = feed.getCoordiId();
-        Coordi coordi = mongoCoordiRepository.findById(coordiId).orElseThrow(() -> new RuntimeException("coordi not found"));
+        Coordi coordi = mongoCoordiRepository.findById(feed.getCoordiId())
+                .orElseThrow(() -> new RuntimeException("코디를 찾을 수 없습니다."));
 
         FeedReadResponse response = FeedReadResponse.createFeedReadResponse(
-                "success",
-                FeedReadResponseDTO.createFeedReadResponseDTO(coordi));
+                "success", feed, mongoCoordiRepository);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
     // feedId로 개별 조회 후 삭제
-    public ResponseEntity<FeedDeleteResponse> delete(Long feedId){
+    public ResponseEntity<FeedDeleteResponse> delete(Long feedId) {
+
 
         Optional<Feed> optionalFeed = feedRepository.findById(feedId);
+
+
+        if (optionalFeed.isEmpty()) {
+            throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
+        }
         Feed feed = optionalFeed.get();
+
 
         String coordiId = feed.getCoordiId();
         Coordi coordi = mongoCoordiRepository.findById(coordiId).orElseThrow(() -> new RuntimeException("coordi not found"));
@@ -166,6 +182,13 @@ public class FeedServiceImpl implements FeedService {
     @Override
     public ResponseEntity<?> feedLikes(Long feedId) {
 
+
+        Optional<Feed> optionalFeed = feedRepository.findById(feedId);
+
+        if (optionalFeed.isEmpty()) {
+            throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
+        }
+
         String userid = JWTUtil.findEmailByToken();
         Optional<User> currentUser = userRepository.findByEmail(userid);
         Long userId = currentUser.get().getId();
@@ -184,7 +207,9 @@ public class FeedServiceImpl implements FeedService {
         if (existingLike.isPresent()) {
             // 이미 좋아요를 누른 상태라면 좋아요 취소
             likesRepository.delete(existingLike.get());
-            feed.setFeedlikes(feed.getFeedlikes() - 1);
+            feed.setFeedLikes(feed.getFeedLikes() - 1);
+            feedRepository.save(feed);
+
 
             return ResponseEntity.ok("좋아요 취소를 눌렀습니다.");
 
@@ -192,10 +217,72 @@ public class FeedServiceImpl implements FeedService {
             // 좋아요를 누르지 않았다면 좋아요
             Likes like = Likes.createLikes(feed, currentUser.get());
             likesRepository.save(like);
-            feed.setFeedlikes(feed.getFeedlikes() + 1);
+            feed.setFeedLikes(feed.getFeedLikes() + 1);
+            feedRepository.save(feed);
         }
-        feedRepository.save(feed);
 
         return ResponseEntity.ok("피드 좋아요를 눌렀습니다.");
+    }
+
+    @Override
+    public ResponseEntity<FeedUpdateResponse> update(Long feedId, FeedUpdateRequest feedUpdateRequest, MultipartFile multipartFile) {
+
+        // 현재 로그인한 유저 정보 받아오기
+        String userid = JWTUtil.findEmailByToken();
+        Optional<User> currentUser = userRepository.findByEmail(userid);
+
+        if (currentUser.isEmpty()) {
+            throw new EmailNotFoundException("사용자를 찾을 수 없습니다.");
+        }
+
+        Long userId = currentUser.get().getId();
+
+        Optional<Feed> optionalFeed = feedRepository.findById(feedId);
+
+        if (optionalFeed.isEmpty()) {
+            throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
+        }
+        Feed feed = optionalFeed.get();
+
+        Long feedUserId = feed.getUserId().getId();
+
+        if (!userId.equals(feedUserId)) {
+            throw new UnauthorizedAccessException("피드를 수정할 수 없습니다.");
+        }
+
+        // 제목에 대한 입력값이 없을 경우
+        if (feedUpdateRequest.getFeedTitle().isBlank()) {
+            throw new RuntimeException("제목을 입력해주세요.");
+        }
+
+        // 피드 제목 및 내용 업데이트
+        feed.updateFeedTitle(feedUpdateRequest.getFeedTitle());
+        feed.updateFeedContent(feedUpdateRequest.getFeedContent());
+
+        feedRepository.save(feed);
+
+
+        FeedUpdateResponse response = FeedUpdateResponse.createFeedUpdateResponse(
+                "success",
+                FeedUpdateResponseDTO.createFeedUpdateResponseDTO(feed));
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @Override
+    public ResponseEntity<FeedListReadResponse> readPopularList() {
+        List<Feed> feedList = feedRepository.findAllByOrderByFeedLikesDesc();
+
+        if (feedList.isEmpty()) {
+            throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
+        }
+
+        FeedListReadResponse response = FeedListReadResponse.createFeedListReadResponse(
+                "Success",
+                feedList,
+                mongoCoordiRepository
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
