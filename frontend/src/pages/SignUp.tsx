@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import useLoginStore from '../shared/store/useLoginStore';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../widgets/header/Navbar';
+import Footer from '../widgets/Footer/Footer';
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -90,6 +92,8 @@ const SignUp = () => {
   };
 
   return (
+    <>
+    <Navbar></Navbar>
     <div className="flex justify-center h-full">
       {!loginStore.isLogin ? (
         <div className="flex justify-center box-border w-2/3 p-4 border-4 overflow-y-auto">
@@ -101,7 +105,7 @@ const SignUp = () => {
                 placeholder="이메일 입력"
                 value={email}
                 onChange={handleEmail}
-              />
+                />
             </div>
             <div className="inputTitle">닉네임</div>
             <div className="inputWrap">
@@ -110,7 +114,7 @@ const SignUp = () => {
                 placeholder="닉네임 입력"
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
-              />
+                />
             </div>
             <div className="inputTitle">비밀번호</div>
             <div className="inputWrap">
@@ -120,7 +124,7 @@ const SignUp = () => {
                 placeholder="비밀번호 입력"
                 value={pw}
                 onChange={handlePw}
-              />
+                />
             </div>
             <div className="inputTitle">비밀번호 확인</div>
             <div className="inputWrap">
@@ -130,7 +134,7 @@ const SignUp = () => {
                 placeholder="비밀번호 확인"
                 value={confirmPw}
                 onChange={handleConfirmPw}
-              />
+                />
             </div>
             <div className="inputTitle">키</div>
             <div className="inputWrap">
@@ -139,7 +143,7 @@ const SignUp = () => {
                 placeholder="키 입력"
                 value={height}
                 onChange={handleHeight}
-              />
+                />
             </div>
             <div className="inputTitle">몸무게</div>
             <div className="inputWrap">
@@ -148,7 +152,7 @@ const SignUp = () => {
                 placeholder="몸무게 입력"
                 value={weight}
                 onChange={handleWeight}
-              />
+                />
             </div>
             <div className="inputTitle">성별</div>
             <div className="inputWrap">
@@ -156,7 +160,7 @@ const SignUp = () => {
                 className="input"
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
-              >
+                >
                 <option value="">성별 선택</option>
                 <option value="male">남성</option>
                 <option value="female">여성</option>
@@ -168,7 +172,7 @@ const SignUp = () => {
                 type="file"
                 accept="image/*"
                 onChange={handleImageUpload}
-              />
+                />
             </div>
             <button onClick={onClickConfirmButton} disabled={notAllow} className="bottomButton">
               확인
@@ -182,6 +186,8 @@ const SignUp = () => {
         </div>
       )}
     </div>
+    <Footer></Footer>
+      </>
   );
 };
 

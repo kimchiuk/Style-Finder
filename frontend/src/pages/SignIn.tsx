@@ -1,9 +1,11 @@
 import Navbar from '../widgets/header/Navbar';
+import Footer from '../widgets/Footer/Footer';
 
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import useLoginStore from '../shared/store/useLoginStore';
 import useUserStore from '../shared/store/useUserStore';
+
 
 const User = {
   email: 'test@example.com',
@@ -32,7 +34,7 @@ const SignIn = () => {
     const regex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,}$/;
     setPwValid(regex.test(newPassword));
   };
-  
+
 
   const onClickConfirmButton = () => {
     if (email === User.email && pw === User.pw) {
@@ -50,63 +52,66 @@ const SignIn = () => {
   }, [emailValid, pwValid]);
 
   return (
-    <div className="flex justify-center">
-      {!loginStore.isLogin ? (
-        <div className="flex justify-center box-border h-72 w-2/3 p-4 border-4">
-          <div className="contentWrap">
-            <div className="inputTitle">이메일 주소</div>
-            <div className="inputWrap">
-              <input
-                className="input"
-                placeholder="이메일 입력"
-                value={email}
-                onChange={handleEmail}
-              />
-            </div>
-            <div className="errorMessageWrap">
-              {!emailValid && email.length > 0 && (
-                <div>올바른 이메일을 입력해 주세요.</div>
-              )}
-            </div>
-            <div className="inputTitle">비밀번호</div>
-            <div className="inputWrap">
-              <input
-                type="password"
-                className="input"
-                placeholder="비밀번호 입력"
-                value={pw}
-                onChange={handlePw}
-              />
-            </div>
-            <div className="errorMessageWrap">
-              {!pwValid && pw.length > 0 && (
-                <div>올바른 비밀번호를 입력해주세요.</div>
-              )}
-            </div>
-            <div>
-              <button
-                onClick={onClickConfirmButton}
-                disabled={notAllow}
-                className="bottomButton"
-              >
-                확인
-              </button>
-              <Link to="/signup">
-                <div>회원가입</div>
+    <>
+      <Navbar></Navbar>
+      <div className="flex justify-center">
+        {!loginStore.isLogin ? (
+          <div className="flex justify-center box-border h-72 w-2/3 p-4 border-4">
+            <div className="contentWrap">
+              <div className="inputTitle">이메일 주소</div>
+              <div className="inputWrap">
+                <input
+                  className="input"
+                  placeholder="이메일 입력"
+                  value={email}
+                  onChange={handleEmail}
+                />
+              </div>
+              <div className="errorMessageWrap">
+                {!emailValid && email.length > 0 && (
+                  <div>올바른 이메일을 입력해 주세요.</div>
+                )}
+              </div>
+              <div className="inputTitle">비밀번호</div>
+              <div className="inputWrap">
+                <input
+                  type="password"
+                  className="input"
+                  placeholder="비밀번호 입력"
+                  value={pw}
+                  onChange={handlePw}
+                />
+              </div>
+              <div className="errorMessageWrap">
+                {!pwValid && pw.length > 0 && (
+                  <div>올바른 비밀번호를 입력해주세요.</div>
+                )}
+              </div>
+              <div>
+                <button
+                  onClick={onClickConfirmButton}
+                  disabled={notAllow}
+                  className="bottomButton"
+                >
+                  확인
+                </button>
+                <Link to="/signup">
+                  <div>회원가입</div>
+                </Link>
+              </div>
+              <Link to="/feed">
+                <div>피드로 이동하기</div>
               </Link>
             </div>
-            <Link to="/feed">
-              <div>피드로 이동하기</div>
-            </Link>
           </div>
-        </div>
-      ) : (
-        <div>
-          <Link to="/feed"></Link>
-        </div>
-      )}
-    </div>
+        ) : (
+          <div>
+            <Link to="/feed"></Link>
+          </div>
+        )}
+      </div>
+<Footer></Footer>
+    </>
   );
 };
-
 export default SignIn;
