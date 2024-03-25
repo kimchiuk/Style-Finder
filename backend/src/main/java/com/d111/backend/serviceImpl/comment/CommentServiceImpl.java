@@ -88,6 +88,12 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException("댓글을 찾지 못했습니다."));
 
+        Feed feed = feedRepository.findById(comment.getFeedId().getId())
+                .orElseThrow(() -> new FeedNotFoundException("해당 댓글이 포함된 피드가 없습니다."));
+
+        feed.deleteComment(comment);
+
+        feedRepository.save(feed);
         commentRepository.delete(comment);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("댓글 삭제가 완료되었습니다.");
