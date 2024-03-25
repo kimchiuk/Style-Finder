@@ -1,3 +1,5 @@
+import Navbar from '../widgets/header/Navbar';
+import Footer from '../widgets/Footer/Footer';
 import React, { useRef, useState } from 'react';
 import useLoginStore from '../shared/store/useLoginStore';
 import useUserStore from '../shared/store/useUserStore';
@@ -21,6 +23,8 @@ const Feed: React.FC = () => {
   };
 
   return (
+    <>
+    <Navbar></Navbar>
     <div>
       {!loginStore.isLogin ? (
         <div className='p-4'>
@@ -81,6 +85,8 @@ const Feed: React.FC = () => {
         </div>
       )}
     </div>
+      <Footer></Footer>
+      </>
   );
 };
 

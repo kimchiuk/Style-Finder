@@ -1,3 +1,5 @@
+import Navbar from '../widgets/header/Navbar';
+import Footer from '../widgets/Footer/Footer';
 import useLoginStore from '../shared/store/useLoginStore';
 import useUserStore from '../shared/store/useUserStore';
 
@@ -6,6 +8,8 @@ const FeedDetail = () => {
   const userStore = useUserStore();
 
   return (
+    <>
+    <Navbar></Navbar>
     <div>
       {!loginStore.isLogin ? (
         // 로그아웃 상태
@@ -64,6 +68,8 @@ const FeedDetail = () => {
         </div>
       )}
     </div>
+    <Footer></Footer>
+      </>
   );
 };
 
