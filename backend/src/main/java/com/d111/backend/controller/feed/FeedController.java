@@ -1,13 +1,16 @@
 package com.d111.backend.controller.feed;
 
+import com.d111.backend.dto.feed.request.FeedCoordiCreateRequest;
+import com.d111.backend.dto.feed.request.FeedUpdateRequest;
 import com.d111.backend.dto.feed.response.FeedDeleteResponse;
 import com.d111.backend.dto.feed.response.FeedListReadResponse;
 import com.d111.backend.dto.feed.response.FeedReadResponse;
-import com.d111.backend.dto.feed.request.FeedCoordiCreateRequest;
-import com.d111.backend.dto.feed.request.FeedUpdateRequest;
+import com.d111.backend.entity.feed.Feed;
 import com.d111.backend.service.feed.FeedService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -65,4 +68,25 @@ public class FeedController {
     public ResponseEntity<FeedListReadResponse> readPopularFeedList() {
         return feedService.readPopularList();
     }
+
+
+    // 피드 서치
+    @GetMapping("/search")
+    public ResponseEntity<Page<Feed>> searchByTitle(@RequestParam(value = "title") String title, Pageable pageable) {
+        Page<Feed> searchResult = feedService.searchByTitle(title, pageable);
+        return ResponseEntity.ok(searchResult);
+    }
+
+
+//
+//      // 피드 서치 페이지설정
+//        @GetMapping("/search")
+//        public ResponseEntity<Page<Feed>> searchByTitle(@RequestParam(value = "title") String title,
+//                                                        @RequestParam(value = "page", defaultValue = "0") int page,
+//                                                        @RequestParam(value = "size", defaultValue = "10") int size) {
+//            Pageable pageable = PageRequest.of(page, size);
+//            Page<Feed> searchResult = feedService.searchByTitle(title, pageable);
+//            return ResponseEntity.ok(searchResult);
+//        }
+
 }

@@ -4,10 +4,10 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.d111.backend.dto.coordi.request.CoordiCreateRequest;
-import com.d111.backend.dto.feed.response.*;
-import com.d111.backend.dto.feed.response.dto.FeedUpdateResponseDTO;
 import com.d111.backend.dto.feed.request.FeedCreateRequest;
 import com.d111.backend.dto.feed.request.FeedUpdateRequest;
+import com.d111.backend.dto.feed.response.*;
+import com.d111.backend.dto.feed.response.dto.FeedUpdateResponseDTO;
 import com.d111.backend.entity.comment.Comment;
 import com.d111.backend.entity.coordi.Coordi;
 import com.d111.backend.entity.feed.Feed;
@@ -27,6 +27,8 @@ import com.d111.backend.service.feed.FeedService;
 import com.d111.backend.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -108,6 +110,7 @@ public class FeedServiceImpl implements FeedService {
         }
 
         feed.setFeedCreatedDate(now);
+        feed.setFeedUpdatedDate(now);
         feed.setUserId(currentUser.get());
         feed.setFeedThumbnail(storeFilePath);
 
@@ -290,5 +293,17 @@ public class FeedServiceImpl implements FeedService {
         );
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+    @Override
+    public Page<Feed> searchByTitle(String title, Pageable pageable) {
+        // 검색어가 없으면 빈 문자열로 설정, trim으로 검색어 공백 제거
+        title = (title == null) ? "" : title.trim();
+        // 검색어가 없는 경우 모든 피드 반환
+        if (title.isEmpty()) {
+            return feedRepository.findAll(pageable);
+        } else {
+            // 제목에 검색어를 포함하는 피드를 반환
+            return feedRepository.findByfeedTitleContaining(title, pageable);
+        }
     }
 }
