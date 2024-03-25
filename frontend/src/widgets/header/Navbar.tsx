@@ -1,9 +1,15 @@
 import { Link } from 'react-router-dom';
-
 import useLoginStore from '../../shared/store/useLoginStore';
 import logo from '../../assets/logos/logo.png';
+
 const Navbar = () => {
   const loginStore = useLoginStore();
+
+  const handleLogout = () => {
+    // 로그아웃 버튼 클릭 시 로그아웃 처리
+    loginStore.setLogout();
+    localStorage.removeItem('isLoggedIn');
+  };
 
   return (
     <div className="navbar">
@@ -37,14 +43,13 @@ const Navbar = () => {
         </ul>
       </div>
       <div className="navbar-end">
+        {/* 로그인 상태에 따라 로그인 또는 로그아웃 버튼 렌더링 */}
         {!loginStore.isLogin ? (
           <Link to="/login" replace={true}>
-            Sign In
+            로그인
           </Link>
         ) : (
-          <Link to="/" replace={true}>
-            Sign Up
-          </Link>
+          <button onClick={handleLogout}>로그아웃</button>
         )}
       </div>
     </div>

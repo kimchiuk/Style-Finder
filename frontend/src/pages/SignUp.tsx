@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import useLoginStore from '../shared/store/useLoginStore';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,143 +9,128 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [pw, setPw] = useState('');
   const [confirmPw, setConfirmPw] = useState('');
-  const [height, setHeight] = useState(''); // 추가: 키 상태
-  const [weight, setWeight] = useState(''); // 추가: 몸무게 상태
-  
+  const [height, setHeight] = useState('');
+  const [weight, setWeight] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [gender, setGender] = useState('');
+  const [image, setImage] = useState<File | null>(null);
+
   const [emailValid, setEmailValid] = useState(false);
   const [pwValid, setPwValid] = useState(false);
   const [confirmPwValid, setConfirmPwValid] = useState(false);
-  const [heightValid, setHeightValid] = useState(true); // 추가: 키 유효성 상태
-  const [weightValid, setWeightValid] = useState(true); // 추가: 몸무게 유효성 상태
+  const [heightValid, setHeightValid] = useState(true);
+  const [weightValid, setWeightValid] = useState(true);
   const [notAllow, setNotAllow] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    setNotAllow(!(emailValid && pwValid && confirmPwValid && heightValid && weightValid && nickname && gender && image));
+  }, [emailValid, pwValid, confirmPwValid, heightValid, weightValid, nickname, gender, image]);
+
+  const validateEmail = (email: string) => {
+    const regex = /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+    return regex.test(email);
+  };
+
+  const validatePassword = (password: string) => {
+    // 최소 8자 이상, 최소 1개의 문자, 숫자, 특수 문자를 포함해야 함
+    const regex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,}$/;
+    return regex.test(password);
+  };
+  
+
+  const validateNumber = (value: string) => {
+    return /^[0-9]*$/.test(value) && value.length > 0;
+  };
 
   const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-    const regex = 
-    /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
-    if(regex.test(email)){
-      setEmailValid(true);
-    }else{
-      setEmailValid(false);
-    }
+    const value = e.target.value;
+    setEmail(value);
+    setEmailValid(validateEmail(value));
   };
 
   const handlePw = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPw(e.target.value);
-    const regex = 
-    /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+])(?!.*[^a-zA-z0-9$`~!@$!%*#^?&\\(\\)\-_=+]).{6,20}$/;
-    if(regex.test(pw)){
-      setPwValid(true);
-    }else{
-      setPwValid(false);
-    }
+    const value = e.target.value;
+    setPw(value);
+    setPwValid(validatePassword(value));
   };
 
   const handleConfirmPw = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setConfirmPw(e.target.value);
-    const regex = /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+])(?!.*[^a-zA-z0-9$`~!@$!%*#^?&\\(\\)\-_=+]).{6,20}$/;
-    
-    // 비밀번호 확인 값이 일치하는지 확인
-    if (e.target.value === pw && regex.test(e.target.value)) {
-      setConfirmPwValid(true);
-    } else {
-      setConfirmPwValid(false);
-    }
+    const value = e.target.value;
+    setConfirmPw(value);
+    setConfirmPwValid(value === pw && validatePassword(value));
   };
-  
+
   const handleHeight = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    // 키 유효성 검사 로직 추가 (숫자만 허용)
-    const isValid = /^[0-9]*$/.test(value) && value.length > 0;
     setHeight(value);
-    setHeightValid(isValid);
+    setHeightValid(validateNumber(value));
   };
-  
+
   const handleWeight = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    // 몸무게 유효성 검사 로직 추가 (숫자만 허용)
-    const isValid = /^[0-9]*$/.test(value) && value.length > 0;
     setWeight(value);
-    setWeightValid(isValid);
+    setWeightValid(validateNumber(value));
   };
-  
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setImage(file);
+    }
+  };
 
   const onClickConfirmButton = () => {
-    // 회원가입 로직
-    if (emailValid && pwValid && confirmPwValid && heightValid && weightValid) {
-      // 회원가입 성공 로직
+    if (!notAllow) {
       alert('회원가입 성공');
-      
-      // 로그인 페이지로 리디렉션
       navigate('/login');
     } else {
-      // 회원가입 실패 로직
-      alert('회원가입 실패');
+      setError('입력한 정보를 다시 확인해주세요.');
     }
   };
 
-
-  useEffect(() => {
-    // Enable or disable confirm button based on input validations
-    if (emailValid && pwValid && confirmPwValid && heightValid && weightValid) {
-      setNotAllow(false);
-    } else {
-      setNotAllow(true);
-    }
-  }, [emailValid, pwValid, confirmPwValid, heightValid, weightValid]);
-
-
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center h-full">
       {!loginStore.isLogin ? (
-        <div className="flex justify-center box-border h-72 w-2/3 p-4 border-4">
+        <div className="flex justify-center box-border w-2/3 p-4 border-4 overflow-y-auto">
           <div className="contentWrap">
             <div className="inputTitle">이메일 주소</div>
             <div className="inputWrap">
-              <input 
-                className="input" 
-                placeholder="이메일 입력" 
+              <input
+                className="input"
+                placeholder="이메일 입력"
                 value={email}
                 onChange={handleEmail}
               />
             </div>
-            {/* Email validation error message */}
-            <div className="errorMessageWrap">
-              {!emailValid && email.length > 0 && (
-                <div>올바른 이메일을 입력해 주세요.</div>
-              )}
+            <div className="inputTitle">닉네임</div>
+            <div className="inputWrap">
+              <input
+                className="input"
+                placeholder="닉네임 입력"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+              />
             </div>
             <div className="inputTitle">비밀번호</div>
             <div className="inputWrap">
-              <input 
+              <input
                 type='password'
-                className="input" 
+                className="input"
                 placeholder="비밀번호 입력"
                 value={pw}
                 onChange={handlePw}
               />
             </div>
-            {/* Password validation error message */}
-            <div className="errorMessageWrap">
-              {!pwValid && pw.length > 0 && (
-                <div>올바른 비밀번호를 입력해주세요.</div>
-              )}
-            </div>
             <div className="inputTitle">비밀번호 확인</div>
             <div className="inputWrap">
-              <input 
+              <input
                 type='password'
-                className="input" 
+                className="input"
                 placeholder="비밀번호 확인"
                 value={confirmPw}
                 onChange={handleConfirmPw}
               />
-            </div>
-            {/* Confirm Password validation error message */}
-            <div className="errorMessageWrap">
-              {!confirmPwValid && confirmPw.length > 0 && (
-                <div>비밀번호가 일치하지 않습니다.</div>
-              )}
             </div>
             <div className="inputTitle">키</div>
             <div className="inputWrap">
@@ -157,12 +141,6 @@ const SignUp = () => {
                 onChange={handleHeight}
               />
             </div>
-            {/* 키 유효성 에러 메시지 */}
-            <div className="errorMessageWrap">
-              {!heightValid && height.length > 0 && (
-                <div>올바른 키를 입력해 주세요.</div>
-              )}
-            </div>
             <div className="inputTitle">몸무게</div>
             <div className="inputWrap">
               <input
@@ -172,26 +150,34 @@ const SignUp = () => {
                 onChange={handleWeight}
               />
             </div>
-            {/* 몸무게 유효성 에러 메시지 */}
-            <div className="errorMessageWrap">
-              {!weightValid && weight.length > 0 && (
-                <div>올바른 몸무게를 입력해 주세요.</div>
-              )}
+            <div className="inputTitle">성별</div>
+            <div className="inputWrap">
+              <select
+                className="input"
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+              >
+                <option value="">성별 선택</option>
+                <option value="male">남성</option>
+                <option value="female">여성</option>
+              </select>
             </div>
-            <div>
-              <button onClick={onClickConfirmButton} disabled={notAllow} className="bottomButton">
-                확인
-              </button>
+            <div className="inputTitle">프로필 이미지 업로드</div>
+            <div className="inputWrap">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+              />
             </div>
-            {/* Link to login page */}
-            <Link to="/login">
-              <div>로그인 페이지로 이동</div>
-            </Link>
+            <button onClick={onClickConfirmButton} disabled={notAllow} className="bottomButton">
+              확인
+            </button>
+            {error && <div className="error">{error}</div>}
           </div>
         </div>
       ) : (
         <div>
-          {/* Redirect to home or other page for logged-in users */}
           <div>이미 로그인 되어 있습니다.</div>
         </div>
       )}
