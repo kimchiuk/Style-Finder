@@ -26,8 +26,8 @@ const Navbar = () => {
       <div className="navbar-center">
         <ul className="menu">
           <li>
-            <Link to="/fitting" replace={true}>
-              피팅
+            <Link to="/coordi" replace={true}>
+              코디
             </Link>
           </li>
           <li>

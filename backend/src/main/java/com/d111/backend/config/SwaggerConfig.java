@@ -58,6 +58,14 @@ public class SwaggerConfig {
                         .build();
         }
 
+        @Bean
+        public GroupedOpenApi comment() {
+                return GroupedOpenApi.builder()
+                        .group("comment")
+                        .pathsToMatch("/api/comment/**")
+                        .build();
+        }
+
         private SecurityScheme createAPIKeyScheme() {
                 return new SecurityScheme().type(SecurityScheme.Type.HTTP)
                         .bearerFormat("JWT")

@@ -1,3 +1,5 @@
+import Navbar from '../widgets/header/Navbar';
+
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import useLoginStore from '../shared/store/useLoginStore';

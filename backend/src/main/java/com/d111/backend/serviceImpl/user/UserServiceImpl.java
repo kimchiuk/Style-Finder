@@ -264,9 +264,8 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<String> removeUserInfo() {
         String email = JWTUtil.findEmailByToken();
 
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new CustomJWTException("삭제하려는 유저와 토큰을 발급한 유저가 일치하지 않습니다.")
-        );
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomJWTException("삭제하려는 유저와 토큰을 발급한 유저가 일치하지 않습니다."));
 
         userRepository.delete(user);
 
