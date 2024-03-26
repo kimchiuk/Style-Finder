@@ -1,9 +1,9 @@
 import Navbar from '../widgets/header/Navbar';
 
-import useLoginStore from '../shared/store/useLoginStore';
+// import useLoginStore from '../shared/store/useLoginStore';
 import useUserStore from '../shared/store/useUserStore';
 
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
 import CoordiForm from '../entities/coordiItems/ui/coordiForm';
 import CoordiList from '../entities/coordiItems/ui/coordiList';
@@ -11,7 +11,7 @@ import CoordiRecommend from '../entities/coordiItems/ui/coordiRecommend';
 import AI from '../assets/images/aimodel.png';
 
 const Coordi = () => {
-  const loginStore = useLoginStore();
+  // const loginStore = useLoginStore();
   const userStore = useUserStore();
 
   // 더미 데이터
@@ -34,7 +34,7 @@ const Coordi = () => {
     <>
       <Navbar></Navbar>
       <div>
-        {!loginStore.isLogin ? (
+        {/* {!loginStore.isLogin ? (
           // 로그아웃 상태
           <div>
             <div>코디</div>
@@ -43,21 +43,21 @@ const Coordi = () => {
             </Link>
           </div>
         ) : (
-          // 로그인 상태
-          <div  className="container mx-auto px-36">
-            <div>코디</div>
-            <div>id: {userStore.id}</div>
-            <div className="flex">
-              <div>
-                <CoordiForm {...FeedItemFormData}></CoordiForm>
-                <CoordiRecommend {...CoordiRecommendData}></CoordiRecommend>
-              </div>
-              <div>
-                <CoordiList {...coordiListData}></CoordiList>
-              </div>
+          // 로그인 상태 */}
+        <div>
+          <div>코디</div>
+          <div>id: {userStore.id}</div>
+          <div className="flex">
+            <div>
+              <CoordiForm {...FeedItemFormData}></CoordiForm>
+              <CoordiRecommend {...CoordiRecommendData}></CoordiRecommend>
+            </div>
+            <div>
+              <CoordiList {...coordiListData}></CoordiList>
             </div>
           </div>
-        )}
+        </div>
+        {/* )} */}
       </div>
     </>
   );

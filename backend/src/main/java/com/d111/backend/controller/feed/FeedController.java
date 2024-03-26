@@ -6,7 +6,11 @@ import com.d111.backend.dto.feed.response.FeedDeleteResponse;
 import com.d111.backend.dto.feed.response.FeedListReadResponse;
 import com.d111.backend.dto.feed.response.FeedReadResponse;
 import com.d111.backend.entity.feed.Feed;
+import com.d111.backend.entity.user.User;
+import com.d111.backend.exception.user.EmailNotFoundException;
+import com.d111.backend.repository.user.UserRepository;
 import com.d111.backend.service.feed.FeedService;
+import com.d111.backend.util.JWTUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Optional;
+
 @Tag(name = "Feed", description = "Feed API")
 @RequestMapping("/api/feed")
 @RestController
@@ -23,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class FeedController {
 
     private final FeedService feedService;
+    private final UserRepository userRepository;
 
     // 피드 전체 조회
     @GetMapping
@@ -77,6 +84,17 @@ public class FeedController {
         return ResponseEntity.ok(searchResult);
     }
 
+//
+//    @GetMapping("/myfeed")
+//    public ResponseEntity<FeedListReadResponse> searchMyFeed() {
+//        Long currentUserId = getCurrentUserId(); // 현재 로그인한 사용자의 ID를 가져오는 메서드를 호출
+//
+//        ResponseEntity<FeedListReadResponse> responseEntity = feedService.searchMyFeed(currentUserId);
+//
+//        return responseEntity;
+//    }
+
+
 
 //
 //      // 피드 서치 페이지설정
@@ -89,4 +107,18 @@ public class FeedController {
 //            return ResponseEntity.ok(searchResult);
 //        }
 
+
+
+    private Long getCurrentUserId() {
+        // 현재 로그인한 유저 정보 받아오기
+        String userid = JWTUtil.findEmailByToken();
+        Optional<User> currentUser = userRepository.findByEmail(userid);
+
+        if (currentUser.isEmpty()) {
+            throw new EmailNotFoundException("사용자를 찾을 수 없습니다.");
+        }
+
+        Long userId = currentUser.get().getId();
+        return userId;
+    }
 }

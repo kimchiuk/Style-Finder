@@ -64,6 +64,7 @@ public class JWTUtil {
     public static String findEmailByToken(){
         // 현재 접속한 유저 정보를 가져오는 메서드
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info(authentication);
         return authentication.getName();
     }
 }

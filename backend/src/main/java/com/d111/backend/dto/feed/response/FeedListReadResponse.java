@@ -30,7 +30,7 @@ public class FeedListReadResponse {
                 .map(feed -> {
                     CoordiContainer coordiContainer = createMongoContainer(feed.getCoordiId(), mongoCoordiRepository);
 
-                    return new FeedInfo(feed.getId(), feed.getUserId().getId(), feed.getFeedTitle(), feed.getFeedThumbnail(), feed.getFeedLikes(), coordiContainer);
+                    return new FeedInfo(feed.getId(), feed.getUserId().getId(), feed.getFeedTitle(), feed.getFeedThumbnail().getBytes(), feed.getFeedLikes(), coordiContainer);
                 })
                 .collect(Collectors.toList());
 
@@ -50,14 +50,14 @@ public class FeedListReadResponse {
         @Schema(description = "피드 제목", example = "멋있는 코디")
         private String feedTitle;
         @Schema(description = "피드 내용", example = "example.com")
-        private String feedThumbnail;
+        private byte[] feedThumbnail;
         @Schema(description = "피드 좋아요")
         private Long feedLikes;
 
 
         private CoordiContainer coordiContainer;
 
-        public FeedInfo(Long feedId, Long userId, String feedTitle, String feedThumbnail, Long feedLikes,CoordiContainer coordiContainer) {
+        public FeedInfo(Long feedId, Long userId, String feedTitle, byte[] feedThumbnail, Long feedLikes,CoordiContainer coordiContainer) {
             this.feedId = feedId;
             this.userId = userId;
             this.feedTitle = feedTitle;

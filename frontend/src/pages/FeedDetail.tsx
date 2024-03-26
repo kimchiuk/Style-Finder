@@ -1,11 +1,10 @@
 import Navbar from '../widgets/header/Navbar';
-import Footer from '../widgets/Footer/Footer';
 import useLoginStore from '../shared/store/useLoginStore';
-import useUserStore from '../shared/store/useUserStore';
+//import useUserStore from '../shared/store/useUserStore';
 
 const FeedDetail = () => {
   const loginStore = useLoginStore();
-  const userStore = useUserStore();
+  //const userStore = useUserStore();
 
   return (
     <>

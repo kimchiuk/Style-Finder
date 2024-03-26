@@ -1,9 +1,11 @@
 package com.d111.backend.entity.user;
 
+import com.d111.backend.entity.closet.Closet;
 import com.d111.backend.entity.comment.Comment;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,32 +19,36 @@ public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    Long id;
+    private Long id;
 
     @Column(name = "user_email", length = 50, nullable = false, unique = true)
-    String email;
+    private String email;
 
     @Column(name = "user_password", nullable = false)
-    String password;
+    private String password;
 
     @Column(name = "user_nickname", length = 50, nullable = false)
-    String nickname;
+    private String nickname;
 
     @Builder.Default
     @Column(name = "user_profile_image")
-    String profileImage = "";
+    private String profileImage = "";
 
     @Column(name = "user_like_categories")
-    String likeCategories;
+    private String likeCategories;
 
     @Column(name = "user_dislike_categories")
-    String dislikeCategories;
+    private String dislikeCategories;
 
     @Column(name = "user_height")
-    Integer height;
+    private Integer height;
 
     @Column(name = "user_weight")
-    Integer weight;
+    private Integer weight;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "userId")
+    private List<Closet> closets = new ArrayList<>();
 
     public void updateNickname(String nickname) {
         this.nickname = nickname;
@@ -66,6 +72,14 @@ public class User {
 
     public void updateWeight(int weight) {
         this.weight = weight;
+    }
+
+    public void addCloset(Closet closet) {
+        closets.add(closet);
+    }
+
+    public void deleteCloset(Closet closet) {
+        closets.remove(closet);
     }
 
 }

@@ -21,7 +21,8 @@ import java.util.List;
 @Table(name = "Feed")
 public class Feed {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "feed_id")
     private Long id;
 
@@ -72,7 +73,6 @@ public class Feed {
         this.feedUpdatedDate = feedUpdatedDate;
     }
 
-
     public static Feed createFeed(FeedCreateRequest feedCreateRequest, String coordiId) {
         return Feed.builder()
                 .feedTitle(feedCreateRequest.getFeedTitle())
@@ -83,6 +83,10 @@ public class Feed {
 
     public void addComment(Comment comment) {
         comments.add(comment);
+    }
+
+    public void deleteComment(Comment comment) {
+        comments.remove(comment);
     }
 
 }
