@@ -12,7 +12,6 @@ spring:
       host: 127.0.0.1
       port: 6379
 
-
   # jpa
   jpa:
     database-platform: org.hibernate.dialect.MySQL57Dialect
@@ -56,8 +55,9 @@ spring:
       port: 27017
       database: stylefinder
       authentication-database: admin
+      username: ENC(XMuvhXavk+NtW/BSZGAxoB/yKn/aS5YO)
+      password: ENC(C2LsI8gi+gRi4p/4fzsJHt21/9dSJqpxAQtkH6agGuU=)
 ---
-
 # Server MongoDB
 #spring:
 #  data:
@@ -66,9 +66,9 @@ spring:
 #
 #
 ---
-
 # mongoDB 충돌나서 임시조치
 spring:
   main:
     allow-bean-definition-overriding: true
 ---
+

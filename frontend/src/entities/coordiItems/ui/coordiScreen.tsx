@@ -31,28 +31,37 @@ const CoordiScreen = (props: Coordi) => {
   };
 
   return (
-    <div>
-      <div>
-        <Button onClick={() => handleChangeColor('white')} value={'🤍'} />
-        <Button onClick={() => handleChangeColor('red')} value={'💗'} />
-        <Button onClick={() => handleChangeColor('orange')} value={'🧡'} />
-        <Button onClick={() => handleChangeColor('yellow')} value={'💛'} />
-        <Button onClick={() => handleChangeColor('green')} value={'💚'} />
-        <Button onClick={() => handleChangeColor('blue')} value={'💙'} />
-        <Button onClick={() => handleChangeColor('violet')} value={'💜'} />
-        <Button onClick={() => handleChangeColor('black')} value={'🖤'} />
+    <div className="">
+  <div className="flex items-center">
+    <Button onClick={() => handleChangeColor('white')} value={'🤍'} />
+    <Button onClick={() => handleChangeColor('red')} value={'💗'} />
+    <Button onClick={() => handleChangeColor('orange')} value={'🧡'} />
+    <Button onClick={() => handleChangeColor('yellow')} value={'💛'} />
+    <Button onClick={() => handleChangeColor('green')} value={'💚'} />
+    <Button onClick={() => handleChangeColor('blue')} value={'💙'} />
+    <Button onClick={() => handleChangeColor('violet')} value={'💜'} />
+    <Button onClick={() => handleChangeColor('black')} value={'🖤'} />
+  </div>
+  <div style={{ background: color }}>
+    <div className="flex justify-between">
+      <div className="p-2 m-2 bg-gray-200 rounded-lg">
+        <img src={hair} alt="" onChange={() => handleChangeImageHair(props.hair.image)} />
       </div>
-      <div className="p-10" style={{ background: color }}>
-        <div className="flex">
-          <img className="p-2 m-2 bg-gray-200 rounded-lg" src={hair} alt="" onChange={() => handleChangeImageHair(props.hair.image)} />
-          <img className="p-2 m-2 bg-gray-200 rounded-lg" src={top} alt="" onChange={() => handleChangeImageTop(props.top.image)} />
-        </div>
-        <div className="flex">
-          <img className="p-2 m-2 bg-gray-200 rounded-lg" src={bottom} alt="" onChange={() => handleChangeImageBottom(props.bottom.image)} />
-          <img className="p-2 m-2 bg-gray-200 rounded-lg" src={shoes} alt="" onChange={() => handleChangeImageShoes(props.shoes.image)} />
-        </div>
+      <div className="p-2 m-2 bg-gray-200 rounded-lg">
+        <img src={top} alt="" onChange={() => handleChangeImageTop(props.top.image)} />
       </div>
     </div>
+    <div className="flex justify-between">
+      <div className="p-2 m-2 bg-gray-200 rounded-lg">
+        <img src={bottom} alt="" onChange={() => handleChangeImageBottom(props.bottom.image)} />
+      </div>
+      <div className="p-2 m-2 bg-gray-200 rounded-lg">
+        <img src={shoes} alt="" onChange={() => handleChangeImageShoes(props.shoes.image)} />
+      </div>
+    </div>
+  </div>
+</div>
+
   );
 };
 

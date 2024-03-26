@@ -7,7 +7,7 @@ const Analysis = () => {
   return (
     <>
       <Navbar></Navbar>
-      <div>
+      <div  className="container mx-auto px-36">
         <NestedNavbar />
         <Outlet />
       </div>
