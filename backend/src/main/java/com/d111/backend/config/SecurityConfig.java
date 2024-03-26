@@ -52,7 +52,8 @@ public class SecurityConfig {
                         });
 
         httpSecurity.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/**").permitAll().anyRequest().authenticated()
+                        .requestMatchers("/**").permitAll()
+                        .anyRequest().authenticated()
         );
 
         httpSecurity

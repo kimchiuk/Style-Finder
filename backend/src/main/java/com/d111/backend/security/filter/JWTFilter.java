@@ -33,7 +33,11 @@ public class JWTFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
-        if (path.startsWith("/api/user/")) {
+        if (path.startsWith("/api/user/signIn")) {
+            return true;
+        }
+
+        if (path.startsWith("/api/user/signUp")) {
             return true;
         }
 
@@ -67,9 +71,13 @@ public class JWTFilter extends OncePerRequestFilter {
 
         Map<String, Object> claims = JWTUtil.validateToken(accessToken);
 
+        log.info(claims.toString());
+
         String username = (String) claims.get("iss");
         List<String> authorities = new ArrayList<>();
         authorities.add("USER");
+
+        log.info(username);
 
         UserDTO userDTO = new UserDTO(username, "", authorities);
 
