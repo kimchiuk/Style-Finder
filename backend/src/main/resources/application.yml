@@ -55,6 +55,8 @@ spring:
       port: 27017
       database: stylefinder
       authentication-database: admin
+      username: ENC(XMuvhXavk+NtW/BSZGAxoB/yKn/aS5YO)
+      password: ENC(C2LsI8gi+gRi4p/4fzsJHt21/9dSJqpxAQtkH6agGuU=)
 ---
 # Server MongoDB
 #spring:

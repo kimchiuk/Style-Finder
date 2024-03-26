@@ -177,15 +177,25 @@ public class FeedServiceImpl implements FeedService {
     // feedId로 개별 조회 후 삭제
     public ResponseEntity<FeedDeleteResponse> delete(Long feedId) {
 
+        // 현재 로그인한 유저 정보 받아오기
+        String userid = JWTUtil.findEmailByToken();
+        Optional<User> currentUser = userRepository.findByEmail(userid);
 
+        if (currentUser.isEmpty()) {
+            throw new EmailNotFoundException("사용자를 찾을 수 없습니다.");
+        }
+
+        Long userId = currentUser.get().getId();
         Optional<Feed> optionalFeed = feedRepository.findById(feedId);
-
 
         if (optionalFeed.isEmpty()) {
             throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
         }
         Feed feed = optionalFeed.get();
 
+        if (!userId.equals(feed.getUserId())) {
+            throw new UnauthorizedAccessException("피드를 삭제할 권한이 없습니다.");
+        }
 
         String coordiId = feed.getCoordiId();
         Coordi coordi = mongoCoordiRepository.findById(coordiId).orElseThrow(() -> new RuntimeException("coordi not found"));
@@ -200,7 +210,6 @@ public class FeedServiceImpl implements FeedService {
 
         return ResponseEntity.ok(response);
     }
-
 
     // 피드 좋아요
     @Override
@@ -333,6 +342,32 @@ public class FeedServiceImpl implements FeedService {
             return feedRepository.findByfeedTitleContaining(title, pageable);
         }
     }
+
+//    @Override
+//    public ResponseEntity<FeedListReadResponse> searchMyFeed(Long userId) {
+//
+//        List<Feed> feedList = feedRepository.findAllByUserId(userId);
+//
+//        if (feedList.isEmpty()) {
+//            throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
+//        }
+//
+//        // 각 피드의 이미지를 가져와서 리스트에 추가
+//        for (Feed feed : feedList) {
+//            // 피드 썸네일 읽어오기
+//            String storeFilePath = feed.getFeedThumbnail();
+//            byte[] feedThumbnail = getFeedThumbnailFromS3(bucket, storeFilePath);
+//            feed.setFeedThumbnail(Arrays.toString(feedThumbnail));
+//        }
+//
+//        FeedListReadResponse response = FeedListReadResponse.createFeedListReadResponse(
+//                "Success",
+//                feedList,
+//                mongoCoordiRepository
+//        );
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(response);
+//    }
 
 
     public byte[] getFeedThumbnailFromS3(String bucket, String storeFilePath) throws FeedImageIOException {
