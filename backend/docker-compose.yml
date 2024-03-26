@@ -1,16 +1,6 @@
 version: '3'
 
 services:
-  backend:
-    image: backend
-    ports:
-      - "8080:8080"
-    environment:
-      - SPRING_PROFILES_ACTIVE=production
-    depends_on:
-      - mysql
-      - redis
-      - mongo
   redis:
     image: redis:latest
     command: redis-server --appendonly yes --requirepass onlyd111
@@ -35,3 +25,13 @@ services:
       - "27017:27017"
     volumes:
       - /home/ubuntu/db/mongo:/var/lib/mongo
+  backend:
+    image: backend
+    ports:
+      - "8080:9090"
+    environment:
+      - SPRING_PROFILES_ACTIVE=production
+    depends_on:
+      - mysql
+      - redis
+      - mongo
