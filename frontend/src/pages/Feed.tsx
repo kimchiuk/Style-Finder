@@ -1,5 +1,5 @@
 import Navbar from '../widgets/header/Navbar';
-import Footer from '../widgets/Footer/Footer';
+import Footer from '../widgets/footer/Footer';
 import React, { useRef, useState } from 'react';
 import useLoginStore from '../shared/store/useLoginStore';
 import useUserStore from '../shared/store/useUserStore';

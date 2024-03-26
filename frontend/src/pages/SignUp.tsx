@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import useLoginStore from '../shared/store/useLoginStore';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../widgets/header/Navbar';
-import Footer from '../widgets/Footer/Footer';
+import Footer from '../widgets/footer/Footer';
 
 const SignUp = () => {
   const navigate = useNavigate();
