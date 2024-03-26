@@ -3,7 +3,7 @@ version: '3'
 services:
   redis:
     image: redis:latest
-    command: redis-server --appendonly yes --requirepass onlyd111
+    command: redis-server --appendonly yes --requirepass sample
     ports:
       - "6379:6379"
     volumes:
@@ -11,7 +11,8 @@ services:
   mysql:
     image: mysql:latest
     environment:
-      MYSQL_ROOT_PASSWORD: onlyd111
+      MYSQL_ROOT_PASSWORD: sample
+      MYSQL_DATABASE: sample
     ports:
       - "3306:3306"
     volumes:
@@ -19,16 +20,16 @@ services:
   mongo:
     image: mongo:latest
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: onlyd111
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: sample
     ports:
       - "27017:27017"
     volumes:
       - /home/ubuntu/db/mongo:/var/lib/mongo
   backend:
-    image: backend
+    image: backend:latest
     ports:
-      - "8080:9090"
+      - "8080:8081"
     environment:
       - SPRING_PROFILES_ACTIVE=production
     depends_on:
