@@ -21,7 +21,8 @@ import java.util.List;
 @Table(name = "Feed")
 public class Feed {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "feed_id")
     private Long id;
 
@@ -71,7 +72,6 @@ public class Feed {
     public void updateFeedUpdatedDate(LocalDate feedUpdatedDate) {
         this.feedUpdatedDate = feedUpdatedDate;
     }
-
 
     public static Feed createFeed(FeedCreateRequest feedCreateRequest, String coordiId) {
         return Feed.builder()
