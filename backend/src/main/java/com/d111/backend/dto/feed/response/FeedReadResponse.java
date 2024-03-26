@@ -51,12 +51,13 @@ public class FeedReadResponse {
             commentInfos.add(commentInfo);
         }
 
+
         FeedInfo feedInfo = FeedInfo.builder()
                 .feedId(feed.getId())
                 .user(feed.getUserId())
                 .feedTitle(feed.getFeedTitle())
                 .feedContent(feed.getFeedContent())
-                .feedThumbnail(feed.getFeedThumbnail())
+                .feedThumbnail(feed.getFeedThumbnail().getBytes())
                 .originWriter(feed.getOriginWriter())
                 .coordiContainer(coordiContainer)
                 .feedCreatedDate(feed.getFeedCreatedDate())
@@ -89,7 +90,7 @@ public class FeedReadResponse {
         private String feedTitle;
 
         @Schema(description = "피드 썸네일", example = "example.com")
-        private String feedThumbnail;
+        private byte[] feedThumbnail;
 
         @Schema(description = "피드 내용", example = "내용입니다")
         private String feedContent;
@@ -108,7 +109,9 @@ public class FeedReadResponse {
         @Schema(description = "댓글 목록")
         private List<CommentInfo> comments;
 
-        public FeedInfo(Long feedId, User user, String feedTitle, String feedContent, String feedThumbnail, Long originWriter, CoordiContainer coordiContainer, LocalDate feedCreatedDate, Long feedLikes, LocalDate feedUpdatedDate, List<CommentInfo> comments) {
+
+
+        public FeedInfo(Long feedId, User user, String feedTitle, String feedContent, byte[] feedThumbnail, Long originWriter, CoordiContainer coordiContainer, LocalDate feedCreatedDate, Long feedLikes, LocalDate feedUpdatedDate, List<CommentInfo> comments) {
             this.feedId = feedId;
             this.user = user;
             this.feedTitle = feedTitle;
