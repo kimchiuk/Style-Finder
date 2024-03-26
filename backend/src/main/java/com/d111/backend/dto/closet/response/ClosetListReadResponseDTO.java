@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ClosetListReadResponseDTO {
 
-    private String image;
+    private byte[] image;
 
     private Enum<Part> part;
 

@@ -1,8 +1,7 @@
 package com.d111.backend.serviceImpl.closet;
 
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
 import com.d111.backend.dto.closet.response.ClosetListReadResponseDTO;
 import com.d111.backend.dto.closet.response.ClosetUploadResponseDTO;
@@ -119,8 +118,6 @@ public class ClosetServiceImpl implements ClosetService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EmailNotFoundException("토큰에 포함된 이메일이 정확하지 않습니다."));
 
-        log.info(user.getClosets());
-
         List<Closet> closets = user.getClosets();
 
         List<ClosetListReadResponseDTO> closetListReadResponseDTOList = new ArrayList<>();
@@ -130,8 +127,25 @@ public class ClosetServiceImpl implements ClosetService {
             List<String> details = Arrays.asList(closet.getDetails().split(","));
             List<String> textures = Arrays.asList(closet.getTextures().split(","));
 
+            byte[] closetImage;
+
+            String storeFilePath = closet.getImage();
+
+            try {
+                GetObjectRequest getObjectRequest = new GetObjectRequest(bucket, storeFilePath);
+
+                S3Object s3Object = amazonS3Client.getObject(getObjectRequest);
+                S3ObjectInputStream s3ObjectInputStream = s3Object.getObjectContent();
+
+                closetImage = IOUtils.toByteArray(s3ObjectInputStream);
+            } catch (IOException exception) {
+                throw new ProfileImageIOException("프로필 이미지를 불러오지 못했습니다.");
+            } catch (AmazonS3Exception exception) {
+                throw new ProfileImageIOException("저장된 프로필 이미지가 없습니다.");
+            }
+
             ClosetListReadResponseDTO closetListReadResponseDTO = ClosetListReadResponseDTO.builder()
-                    .image(closet.getImage())
+                    .image(closetImage)
                     .categories(categories)
                     .details(details)
                     .textures(textures)
