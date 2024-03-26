@@ -1,11 +1,11 @@
 version: '3'
 
 services:
-   frontend:
+  frontend:
     image: frontend
     ports:
       - "3000:3000"
-   nginx:
+  nginx:
     image: nginx:latest
     ports:
       - "80:80"

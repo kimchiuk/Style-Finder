@@ -1,5 +1,4 @@
 import Navbar from '../widgets/header/Navbar';
-import Footer from '../widgets/footer/Footer';
 import useLoginStore from '../shared/store/useLoginStore';
 //import useUserStore from '../shared/store/useUserStore';
 
@@ -68,7 +67,6 @@ const FeedDetail = () => {
           </div>
         )}
       </div>
-      <Footer></Footer>
     </>
   );
 };

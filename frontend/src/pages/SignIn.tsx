@@ -1,5 +1,4 @@
 import Navbar from '../widgets/header/Navbar';
-import Footer from '../widgets/footer/Footer';
 
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -85,7 +84,6 @@ const SignIn = () => {
           </div>
         )}
       </div>
-      <Footer></Footer>
     </>
   );
 };
