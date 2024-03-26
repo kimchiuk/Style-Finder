@@ -1,5 +1,4 @@
-FROM bellsoft/liberica-openjdk-alpine:17
-CMD ["./gradlew", "clean", "build"]
+FROM bellsoft/liberica-openjdk-alpine:17 as builder
 VOLUME /tmp
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} app.jar

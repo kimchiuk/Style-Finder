@@ -1,11 +1,9 @@
-FROM node AS build
-WORKDIR /app
-COPY package.json .
-COPY package-lock.json .
-COPY . .
-RUN npm install
-RUN npm run build
-EXPOSE 3000
+FROM nginx:alpine as build
+RUN rm -rf /etc/nginx/conf.d/nginx.conf
+COPY /nginx.conf /etc/nginx/conf.d/nginx.conf
 
-FROM nginx
-COPY --from=build /app/dist /usr/share/nginx/html
+RUN rm -rf /usr/share/nginx/html/*
+COPY /build /usr/share/nginx/html
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
