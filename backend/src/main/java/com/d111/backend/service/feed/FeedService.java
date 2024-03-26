@@ -28,6 +28,8 @@ public interface FeedService {
 
 
     Page<Feed> searchByTitle(String title, Pageable pageable);
+
+//    ResponseEntity<FeedListReadResponse> searchMyFeed(Long userId);
 }
 
 
