@@ -44,7 +44,7 @@ const Coordi = () => {
           </div>
         ) : (
           // 로그인 상태
-          <div>
+          <div  className="container mx-auto px-36">
             <div>코디</div>
             <div>id: {userStore.id}</div>
             <div className="flex">

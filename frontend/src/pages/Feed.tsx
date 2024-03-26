@@ -85,7 +85,7 @@ const Feed: React.FC = () => {
         </div>
       )}
     </div>
-      <Footer></Footer>
+      {/* <Footer></Footer> */}
       </>
   );
 };

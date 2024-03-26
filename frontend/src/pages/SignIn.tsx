@@ -54,7 +54,7 @@ const SignIn = () => {
   return (
     <>
       <Navbar></Navbar>
-      <div className="flex justify-center">
+      <div className="flex justify-center mt-3">
         {!loginStore.isLogin ? (
           <div className="flex justify-center box-border h-72 w-2/3 p-4 border-4">
             <div className="contentWrap">
