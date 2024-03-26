@@ -318,9 +318,9 @@ public class FeedServiceImpl implements FeedService {
                 mongoCoordiRepository
         );
 
-
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
     @Override
     public Page<Feed> searchByTitle(String title, Pageable pageable) {
         // 검색어가 없으면 빈 문자열로 설정, trim으로 검색어 공백 제거
