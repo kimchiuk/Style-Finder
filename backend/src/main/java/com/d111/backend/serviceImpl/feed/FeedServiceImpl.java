@@ -1,8 +1,8 @@
 package com.d111.backend.serviceImpl.feed;
 
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.*;
+import com.amazonaws.util.IOUtils;
 import com.d111.backend.dto.coordi.request.CoordiCreateRequest;
 import com.d111.backend.dto.feed.request.FeedCreateRequest;
 import com.d111.backend.dto.feed.request.FeedUpdateRequest;
@@ -14,6 +14,8 @@ import com.d111.backend.entity.feed.Feed;
 import com.d111.backend.entity.likes.Likes;
 import com.d111.backend.entity.multipart.S3File;
 import com.d111.backend.entity.user.User;
+import com.d111.backend.exception.feed.CoordiNotFoundException;
+import com.d111.backend.exception.feed.FeedImageIOException;
 import com.d111.backend.exception.feed.FeedNotFoundException;
 import com.d111.backend.exception.user.EmailNotFoundException;
 import com.d111.backend.exception.user.UnauthorizedAccessException;
@@ -38,9 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -132,6 +132,16 @@ public class FeedServiceImpl implements FeedService {
             throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
         }
 
+        // 각 피드의 이미지를 가져와서 리스트에 추가
+        for (Feed feed : feedList) {
+            // 피드 썸네일 읽어오기
+            String storeFilePath = feed.getFeedThumbnail();
+            byte[] feedThumbnail = getFeedThumbnailFromS3(bucket, storeFilePath);
+            feed.setFeedThumbnail(Arrays.toString(feedThumbnail));
+
+        }
+
+        // 응답 생성
         FeedListReadResponse response = FeedListReadResponse.createFeedListReadResponse(
                 "Success",
                 feedList,
@@ -141,13 +151,19 @@ public class FeedServiceImpl implements FeedService {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+
+    // 피드 상세 조회
     @Override
     public ResponseEntity<FeedReadResponse> read(Long feedId) {
         Optional<Feed> optionalFeed = feedRepository.findById(feedId);
         Feed feed = optionalFeed.orElseThrow(() -> new FeedNotFoundException("피드를 찾을 수 없습니다."));
-
         Coordi coordi = mongoCoordiRepository.findById(feed.getCoordiId())
-                .orElseThrow(() -> new RuntimeException("코디를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CoordiNotFoundException("코디를 찾을 수 없습니다."));
+
+        // 피드 썸네일 읽어오기
+        String storeFilePath = feed.getFeedThumbnail();
+        byte[] feedThumbnail = getFeedThumbnailFromS3(bucket, storeFilePath);
+        feed.setFeedThumbnail(Arrays.toString(feedThumbnail));
 
         List<Comment> comments = commentRepository.findAllByFeedId(feed);
 
@@ -186,6 +202,7 @@ public class FeedServiceImpl implements FeedService {
     }
 
 
+    // 피드 좋아요
     @Override
     public ResponseEntity<?> feedLikes(Long feedId) {
 
@@ -231,6 +248,7 @@ public class FeedServiceImpl implements FeedService {
         return ResponseEntity.ok("피드 좋아요를 눌렀습니다.");
     }
 
+
     @Override
     public ResponseEntity<FeedUpdateResponse> update(Long feedId, FeedUpdateRequest feedUpdateRequest, MultipartFile multipartFile) {
 
@@ -250,7 +268,6 @@ public class FeedServiceImpl implements FeedService {
             throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
         }
         Feed feed = optionalFeed.get();
-
         Long feedUserId = feed.getUserId().getId();
 
         if (!userId.equals(feedUserId)) {
@@ -286,6 +303,15 @@ public class FeedServiceImpl implements FeedService {
             throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
         }
 
+        // 각 피드의 이미지를 가져와서 리스트에 추가
+        for (Feed feed : feedList) {
+
+            // 피드 썸네일 읽어오기
+            String storeFilePath = feed.getFeedThumbnail();
+            byte[] feedThumbnail = getFeedThumbnailFromS3(bucket, storeFilePath);
+            feed.setFeedThumbnail(Arrays.toString(feedThumbnail));
+        }
+
         FeedListReadResponse response = FeedListReadResponse.createFeedListReadResponse(
                 "Success",
                 feedList,
@@ -294,6 +320,7 @@ public class FeedServiceImpl implements FeedService {
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
     @Override
     public Page<Feed> searchByTitle(String title, Pageable pageable) {
         // 검색어가 없으면 빈 문자열로 설정, trim으로 검색어 공백 제거
@@ -306,4 +333,21 @@ public class FeedServiceImpl implements FeedService {
             return feedRepository.findByfeedTitleContaining(title, pageable);
         }
     }
+
+
+    public byte[] getFeedThumbnailFromS3(String bucket, String storeFilePath) throws FeedImageIOException {
+        try {
+            GetObjectRequest getObjectRequest = new GetObjectRequest(bucket, storeFilePath);
+            S3Object s3Object = amazonS3Client.getObject(getObjectRequest);
+            S3ObjectInputStream s3ObjectInputStream = s3Object.getObjectContent();
+            return IOUtils.toByteArray(s3ObjectInputStream);
+        } catch (IOException exception) {
+            throw new FeedImageIOException("피드 썸네일을 불러오지 못했습니다.");
+        } catch (AmazonS3Exception exception) {
+            throw new FeedImageIOException("저장된 피드 썸네일이 없습니다.");
+        }
+    }
 }
+
+
+

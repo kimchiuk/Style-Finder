@@ -1,6 +1,7 @@
 package com.d111.backend.exception.handler;
 
 import com.d111.backend.exception.feed.CoordiNotFoundException;
+import com.d111.backend.exception.feed.FeedImageIOException;
 import com.d111.backend.exception.feed.FeedNotFoundException;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,13 @@ public class FeedExceptionHandler {
 
     @ExceptionHandler(CoordiNotFoundException.class)
     public ResponseEntity<String> handleCoordiNotFoundException(CoordiNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .headers(JSON_HEADERS)
+                .body(stringToJson(exception.getMessage()));
+    }
+
+    @ExceptionHandler(FeedImageIOException.class)
+    public ResponseEntity<String> handleFeedImageIOException(FeedImageIOException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .headers(JSON_HEADERS)
                 .body(stringToJson(exception.getMessage()));
