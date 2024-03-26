@@ -1,16 +1,28 @@
-import os
+import sys, os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+current_path = os.getcwd()
+
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+sys.path.append(current_path + '/utility')
+
+print(sys.path)
+
 import shutil
 
 from fastapi import FastAPI, UploadFile
 
 import torch
 import torchvision.transforms as transforms
-from utility.resnest import *
+from utility.resnest import resnest50d
 from PIL import Image
 
 app = FastAPI()
 
-UPLOAD_DIRECTORY = "C:/dev/test-project/fastapi/uploads"
+
+UPLOAD_DIRECTORY = current_path + "/uploads"
+
+print(UPLOAD_DIRECTORY)
 
 category = ["재킷", "조거팬츠", "짚업", "스커트", "가디건", "점퍼", "티셔츠", "셔츠", "팬츠", "드레스", "패딩", "청바지", "점프수트", "니트웨어", "베스트", "코트", "브라탑", "블라우스", "탑", "후드티", "래깅스"]
 
@@ -133,5 +145,10 @@ def classification(model, input_image, class_type):
             attribute = class_type[top5_indices[rank]]
             print(probability, attribute)
             classes.append(attribute)
+            
+    predicted_labels = torch.argmax(output, dim=1)
+
+    if not len(classes):
+        classes.append(class_type[predicted_labels.item()])
 
     return classes
