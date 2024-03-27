@@ -179,13 +179,10 @@ public class FeedServiceImpl implements FeedService {
 
         // 현재 로그인한 유저 정보 받아오기
         String userid = JWTUtil.findEmailByToken();
-        Optional<User> currentUser = userRepository.findByEmail(userid);
+        User user = userRepository.findByEmail(userid)
+                .orElseThrow(() -> new EmailNotFoundException("사용자를 찾을 수 없습니다."));
 
-        if (currentUser.isEmpty()) {
-            throw new EmailNotFoundException("사용자를 찾을 수 없습니다.");
-        }
-
-        Long userId = currentUser.get().getId();
+        Long userId = user.getId();
         Optional<Feed> optionalFeed = feedRepository.findById(feedId);
 
         if (optionalFeed.isEmpty()) {
@@ -193,7 +190,7 @@ public class FeedServiceImpl implements FeedService {
         }
         Feed feed = optionalFeed.get();
 
-        if (!userId.equals(feed.getUserId())) {
+        if (!userId.equals(feed.getUserId().getId())) {
             throw new UnauthorizedAccessException("피드를 삭제할 권한이 없습니다.");
         }
 
