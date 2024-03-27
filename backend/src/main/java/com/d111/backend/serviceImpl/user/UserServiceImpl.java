@@ -187,7 +187,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public ResponseEntity<UpdateUserInfoResponseDTO> updateUserInfo(UpdateUserInfoRequestDTO updateUserInfoRequestDTO,
+    public ResponseEntity<String> updateUserInfo(UpdateUserInfoRequestDTO updateUserInfoRequestDTO,
                                                                     MultipartFile profileImage) {
         String email = JWTUtil.findEmailByToken();
 
@@ -240,24 +240,13 @@ public class UserServiceImpl implements UserService {
 
         user.updateHeight(updateUserInfoRequestDTO.getHeight());
         user.updateWeight(updateUserInfoRequestDTO.getWeight());
+        user.updateIntroduce(updateUserInfoRequestDTO.getIntroduce());
+        user.updateInstagram(updateUserInfoRequestDTO.getInstagram());
+        user.updateYoutube(updateUserInfoRequestDTO.getYoutube());
 
         userRepository.save(user);
 
-        UpdateUserInfoResponseDTO updateUserInfoResponseDTO = UpdateUserInfoResponseDTO.builder()
-                .nickname(user.getNickname())
-                .likeCategories(likeCategories)
-                .dislikeCategories(dislikeCategories)
-                .height(user.getHeight())
-                .weight(user.getWeight())
-                .build();
-
-        try {
-            updateUserInfoResponseDTO.setProfileImage(profileImage.getBytes());
-        } catch (IOException exception) {
-            throw new ProfileImageIOException("프로필 이미지 전송 과정 중 오류가 발생했습니다.");
-        }
-
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(updateUserInfoResponseDTO);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("유저 정보가 수정되었습니다.");
     }
 
     @Override

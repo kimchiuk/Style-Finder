@@ -66,7 +66,7 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "프로필 이미지 업로드 실패")
     })
     @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<UpdateUserInfoResponseDTO> updateUserInfo(@RequestPart(value = "updateUserInfoRequest") UpdateUserInfoRequestDTO updateUserInfoRequestDTO,
+    ResponseEntity<String> updateUserInfo(@RequestPart(value = "updateUserInfoRequest") UpdateUserInfoRequestDTO updateUserInfoRequestDTO,
                           @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {
         return userService.updateUserInfo(updateUserInfoRequestDTO, profileImage);
     }

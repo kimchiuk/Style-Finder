@@ -18,7 +18,7 @@ public interface UserService {
 
     ResponseEntity<TokenReissueResponseDTO> tokenReissue(TokenReissueRequestDTO tokenReissueRequestDTO);
 
-    ResponseEntity<UpdateUserInfoResponseDTO> updateUserInfo(UpdateUserInfoRequestDTO updateUserInfoRequestDTO, MultipartFile profileImage);
+    ResponseEntity<String> updateUserInfo(UpdateUserInfoRequestDTO updateUserInfoRequestDTO, MultipartFile profileImage);
 
     ResponseEntity<String> removeUserInfo();
 
