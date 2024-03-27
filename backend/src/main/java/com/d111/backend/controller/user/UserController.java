@@ -4,10 +4,10 @@ import com.d111.backend.dto.user.request.SignInRequestDTO;
 import com.d111.backend.dto.user.request.SignUpRequestDTO;
 import com.d111.backend.dto.user.request.TokenReissueRequestDTO;
 import com.d111.backend.dto.user.request.UpdateUserInfoRequestDTO;
+import com.d111.backend.dto.user.response.GetUserResponse;
 import com.d111.backend.dto.user.response.SignInResponseDTO;
 import com.d111.backend.dto.user.response.TokenReissueResponseDTO;
 import com.d111.backend.dto.user.response.UpdateUserInfoResponseDTO;
-import com.d111.backend.exception.user.EmailNotFoundException;
 import com.d111.backend.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -80,5 +80,17 @@ public class UserController {
     ResponseEntity<String> removeUserInfo() {
         return userService.removeUserInfo();
     }
+
+
+    // 유저 조회
+    @Operation(summary = "유저 정보 조회", description = "개별 유저를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "재발급 성공", content = @Content(schema = @Schema(implementation = GetUserResponse.class)))
+    })
+    @GetMapping("/profile")
+    public ResponseEntity<GetUserResponse> userProfile() {
+        return userService.getUser();
+    }
+
 
 }

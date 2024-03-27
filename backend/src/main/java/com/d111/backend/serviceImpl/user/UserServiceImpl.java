@@ -7,12 +7,11 @@ import com.d111.backend.dto.user.request.SignInRequestDTO;
 import com.d111.backend.dto.user.request.SignUpRequestDTO;
 import com.d111.backend.dto.user.request.TokenReissueRequestDTO;
 import com.d111.backend.dto.user.request.UpdateUserInfoRequestDTO;
-import com.d111.backend.dto.user.response.SignInResponseDTO;
-import com.d111.backend.dto.user.response.TokenReissueResponseDTO;
-import com.d111.backend.dto.user.response.UpdateUserInfoResponseDTO;
+import com.d111.backend.dto.user.response.*;
 import com.d111.backend.entity.multipart.S3File;
 import com.d111.backend.entity.user.RefreshToken;
 import com.d111.backend.entity.user.User;
+import com.d111.backend.exception.feed.FeedImageIOException;
 import com.d111.backend.exception.user.*;
 import com.d111.backend.repository.s3.S3Repository;
 import com.d111.backend.repository.user.RefreshTokenRepository;
@@ -24,15 +23,15 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Log4j2
@@ -122,24 +121,6 @@ public class UserServiceImpl implements UserService {
             throw new PasswordNotMatchException("비밀번호가 일치하지 않습니다.");
         }
 
-        // 프로필 이미지 binary 타입으로 불러오기
-        byte[] profileImage;
-
-        String storeFilePath = user.getProfileImage();
-
-        try {
-            GetObjectRequest getObjectRequest = new GetObjectRequest(bucket, storeFilePath);
-
-            S3Object s3Object = amazonS3Client.getObject(getObjectRequest);
-            S3ObjectInputStream s3ObjectInputStream = s3Object.getObjectContent();
-
-            profileImage = IOUtils.toByteArray(s3ObjectInputStream);
-        } catch (IOException exception) {
-            throw new ProfileImageIOException("프로필 이미지를 불러오지 못했습니다.");
-        } catch (AmazonS3Exception exception) {
-            throw new ProfileImageIOException("저장된 프로필 이미지가 없습니다.");
-        }
-
         // JWT 토큰 생성
         String userEmail = signInRequestDTO.getEmail();
 
@@ -152,19 +133,10 @@ public class UserServiceImpl implements UserService {
                         .refreshToken(refreshToken)
                         .build());
 
-        List<String> likeCategories = Arrays.asList(user.getLikeCategories().split(","));
-        List<String> dislikeCategories = Arrays.asList(user.getDislikeCategories().split(","));
-
         // 로그인 응답 정보 생성
         SignInResponseDTO signInResponseDTO = SignInResponseDTO.builder()
-                .nickname(user.getNickname())
-                .likeCategories(likeCategories)
-                .dislikeCategories(dislikeCategories)
-                .height(user.getHeight())
-                .weight(user.getWeight())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .profileImage(profileImage)
                 .build();
 
         return ResponseEntity.status(HttpStatus.OK).body(signInResponseDTO);
@@ -261,4 +233,50 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("유저 정보가 삭제되었습니다.");
     }
 
+
+    @Override
+    @Transactional
+    public ResponseEntity<GetUserResponse> getUser() {
+
+
+        String userid = JWTUtil.findEmailByToken();
+        User user = userRepository.findByEmail(userid)
+                .orElseThrow(() -> new EmailNotFoundException("사용자를 찾을 수 없습니다."));
+
+        String storeFilePath = user.getProfileImage();
+        byte[] userProfileImage = getUserProfileImageFromS3(bucket, storeFilePath);
+
+        GetUserResponseDTO getUserResponseDTO = GetUserResponseDTO.builder()
+                .nickname(user.getNickname())
+                .likeCategories(Collections.singletonList(user.getLikeCategories()))
+                .dislikeCategories(Collections.singletonList(user.getDislikeCategories()))
+                .height(user.getHeight())
+                .weight(user.getWeight())
+                .profileImage(userProfileImage)
+                .introduce(user.getIntroduce())
+                .instagram(user.getInstagram())
+                .youtube(user.getYoutube())
+                .build();
+
+        GetUserResponse response = GetUserResponse.creategetUserResponse(
+                "Success",
+                getUserResponseDTO
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+
+    public byte[] getUserProfileImageFromS3(String bucket, String storeFilePath) throws FeedImageIOException {
+        try {
+            GetObjectRequest getObjectRequest = new GetObjectRequest(bucket, storeFilePath);
+            S3Object s3Object = amazonS3Client.getObject(getObjectRequest);
+            S3ObjectInputStream s3ObjectInputStream = s3Object.getObjectContent();
+            return IOUtils.toByteArray(s3ObjectInputStream);
+        } catch (IOException exception) {
+            throw new ProfileImageIOException("유저 프로필을 불러오지 못했습니다.");
+        } catch (AmazonS3Exception exception) {
+            throw new ProfileImageIOException("저장된 유저 프로필이 없습니다.");
+        }
+    }
 }
