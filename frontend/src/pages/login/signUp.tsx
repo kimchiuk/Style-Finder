@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import useLoginStore from '../../shared/store/useLoginStore';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../widgets/nav/navbar';
+import api from '../../entities/user/user-apis';
+import { axiosError } from '../../shared/utils/axiosError';
 import './signup.css';
 
 const SignUp = () => {
@@ -96,12 +98,43 @@ const SignUp = () => {
   };
 
   const onClickConfirmButton = () => {
-    if (!notAllow) {
-      alert('회원가입 성공');
-      navigate('/login');
-    } else {
+    if (notAllow) {
       setError('입력한 정보를 다시 확인해주세요.');
+      return;
     }
+
+    const request: any = new FormData()
+
+    console.log(image)
+
+    const profileImage = image
+    const signUpRequest = new Blob(
+      [
+        JSON.stringify({
+          email: email,
+          password: pw,
+          nickname: nickname,
+          height: Number(height),
+          weight: Number(weight),
+          likeCategories: [],
+          dislikeCategories: [],
+        })
+      ],
+      { type: 'application/json' }
+    )
+    
+    request.append('profileImage', profileImage)
+    request.append('signUpRequest', signUpRequest)
+
+    api.signUp(request)
+    .then((response) => {
+      const message = response.data
+      alert(message)
+      navigate('/login')
+    })
+    .catch((error) => {
+      axiosError(error);
+    })
   };
 
   return (
