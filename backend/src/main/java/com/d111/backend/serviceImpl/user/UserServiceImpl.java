@@ -51,8 +51,8 @@ public class UserServiceImpl implements UserService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket; // 버킷 이름
 
-    private int accessTokenMinute = 10;
-    private int refreshTokenMinute = 30;
+    private int accessTokenMinute = 60;
+    private int refreshTokenMinute = 300;
 
     @Override
     @Transactional
