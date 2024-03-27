@@ -53,18 +53,10 @@ spring:
     mongodb:
       host: localhost
       port: 27017
-      database: stylefinder
+      database: ENC(nAtMAGnjiOgP+4zXKoQZMbdo1e0jQ4xV)
       authentication-database: admin
       username: ENC(XMuvhXavk+NtW/BSZGAxoB/yKn/aS5YO)
       password: ENC(C2LsI8gi+gRi4p/4fzsJHt21/9dSJqpxAQtkH6agGuU=)
----
-# Server MongoDB
-#spring:
-#  data:
-#    mongodb:
-#      uri: mongodb+srv://style-finder-admin:ydwchTQJfvFmU6K1@stylefinder-cluster.vjzqtb2.mongodb.net/stylefinder?retryWrites=true&w=majority&appName=stylefinder-cluster
-#
-#
 ---
 # mongoDB 충돌나서 임시조치
 spring:
