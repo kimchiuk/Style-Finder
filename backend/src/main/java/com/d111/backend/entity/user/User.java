@@ -47,6 +47,18 @@ public class User {
     private Integer weight;
 
     @Builder.Default
+    @Column(name = "user_introduce")
+    private String introduce = "";
+
+    @Builder.Default
+    @Column(name = "user_instagram")
+    private String instagram = "";
+
+    @Builder.Default
+    @Column(name = "user_youtube")
+    private String youtube = "";
+
+    @Builder.Default
     @OneToMany(mappedBy = "userId")
     private List<Closet> closets = new ArrayList<>();
 
@@ -73,6 +85,16 @@ public class User {
     public void updateWeight(int weight) {
         this.weight = weight;
     }
+
+    public void updateIntroduce(String introduce) {
+        this.introduce = introduce;
+    }
+
+    public void updateInstagram(String instagram) {
+        this.instagram = instagram;
+    }
+
+    public void updateYoutube(String youtube) { this.youtube = youtube; }
 
     public void addCloset(Closet closet) {
         closets.add(closet);

@@ -84,16 +84,15 @@ public class FeedController {
         return ResponseEntity.ok(searchResult);
     }
 
-//
-//    @GetMapping("/myfeed")
-//    public ResponseEntity<FeedListReadResponse> searchMyFeed() {
-//        Long currentUserId = getCurrentUserId(); // 현재 로그인한 사용자의 ID를 가져오는 메서드를 호출
-//
-//        ResponseEntity<FeedListReadResponse> responseEntity = feedService.searchMyFeed(currentUserId);
-//
-//        return responseEntity;
-//    }
+    
+    // 내가 쓴 피드 조회
+    @GetMapping("/myfeed")
+    public ResponseEntity<FeedListReadResponse> searchMyFeed() {
+        Optional<User> currentUserId = getCurrentUserId();
+        ResponseEntity<FeedListReadResponse> responseEntity = feedService.searchMyFeed(currentUserId);
 
+        return responseEntity;
+    }
 
 
 //
@@ -109,7 +108,7 @@ public class FeedController {
 
 
 
-    private Long getCurrentUserId() {
+    private Optional<User> getCurrentUserId() {
         // 현재 로그인한 유저 정보 받아오기
         String userid = JWTUtil.findEmailByToken();
         Optional<User> currentUser = userRepository.findByEmail(userid);
@@ -117,8 +116,6 @@ public class FeedController {
         if (currentUser.isEmpty()) {
             throw new EmailNotFoundException("사용자를 찾을 수 없습니다.");
         }
-
-        Long userId = currentUser.get().getId();
-        return userId;
+        return currentUser;
     }
 }

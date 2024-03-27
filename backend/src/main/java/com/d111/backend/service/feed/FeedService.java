@@ -1,14 +1,17 @@
 package com.d111.backend.service.feed;
 
 import com.d111.backend.dto.coordi.request.CoordiCreateRequest;
-import com.d111.backend.dto.feed.response.*;
 import com.d111.backend.dto.feed.request.FeedCreateRequest;
 import com.d111.backend.dto.feed.request.FeedUpdateRequest;
+import com.d111.backend.dto.feed.response.*;
 import com.d111.backend.entity.feed.Feed;
+import com.d111.backend.entity.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Optional;
 
 public interface FeedService {
 
@@ -29,7 +32,8 @@ public interface FeedService {
 
     Page<Feed> searchByTitle(String title, Pageable pageable);
 
-//    ResponseEntity<FeedListReadResponse> searchMyFeed(Long userId);
+    ResponseEntity<FeedListReadResponse> searchMyFeed(Optional<User> userId);
+
 }
 
 

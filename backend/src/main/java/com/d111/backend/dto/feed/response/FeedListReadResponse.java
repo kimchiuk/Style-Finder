@@ -2,6 +2,7 @@ package com.d111.backend.dto.feed.response;
 
 import com.d111.backend.dto.coordi.response.dto.CoordiContainer;
 import com.d111.backend.entity.feed.Feed;
+import com.d111.backend.entity.user.User;
 import com.d111.backend.repository.mongo.MongoCoordiRepository;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -30,7 +31,7 @@ public class FeedListReadResponse {
                 .map(feed -> {
                     CoordiContainer coordiContainer = createMongoContainer(feed.getCoordiId(), mongoCoordiRepository);
 
-                    return new FeedInfo(feed.getId(), feed.getUserId().getId(), feed.getFeedTitle(), feed.getFeedThumbnail().getBytes(), feed.getFeedLikes(), coordiContainer);
+                    return new FeedInfo(feed.getId(), feed.getUserId(), feed.getFeedTitle(), feed.getFeedThumbnail().getBytes(), feed.getFeedLikes(), coordiContainer);
                 })
                 .collect(Collectors.toList());
 
@@ -41,12 +42,21 @@ public class FeedListReadResponse {
     }
 
     @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UserInfo {
+        @Schema(description = "닉네임")
+        String nickname;
+    }
+
+    @Data
     @NoArgsConstructor
     public static class FeedInfo {
         @Schema(description = "피드 번호", example = "1")
         private Long feedId;
         @Schema(description = "유저 번호", example = "1")
-        private Long userId;
+        private User user;
         @Schema(description = "피드 제목", example = "멋있는 코디")
         private String feedTitle;
         @Schema(description = "피드 내용", example = "example.com")
@@ -57,9 +67,9 @@ public class FeedListReadResponse {
 
         private CoordiContainer coordiContainer;
 
-        public FeedInfo(Long feedId, Long userId, String feedTitle, byte[] feedThumbnail, Long feedLikes,CoordiContainer coordiContainer) {
+        public FeedInfo(Long feedId, User user, String feedTitle, byte[] feedThumbnail, Long feedLikes, CoordiContainer coordiContainer) {
             this.feedId = feedId;
-            this.userId = userId;
+            this.user = user;
             this.feedTitle = feedTitle;
             this.feedThumbnail = feedThumbnail;
             this.feedLikes = feedLikes;

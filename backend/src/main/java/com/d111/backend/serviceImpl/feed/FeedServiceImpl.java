@@ -343,32 +343,30 @@ public class FeedServiceImpl implements FeedService {
         }
     }
 
-//    @Override
-//    public ResponseEntity<FeedListReadResponse> searchMyFeed(Long userId) {
-//
-//        List<Feed> feedList = feedRepository.findAllByUserId(userId);
-//
-//        if (feedList.isEmpty()) {
-//            throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
-//        }
-//
-//        // 각 피드의 이미지를 가져와서 리스트에 추가
-//        for (Feed feed : feedList) {
-//            // 피드 썸네일 읽어오기
-//            String storeFilePath = feed.getFeedThumbnail();
-//            byte[] feedThumbnail = getFeedThumbnailFromS3(bucket, storeFilePath);
-//            feed.setFeedThumbnail(Arrays.toString(feedThumbnail));
-//        }
-//
-//        FeedListReadResponse response = FeedListReadResponse.createFeedListReadResponse(
-//                "Success",
-//                feedList,
-//                mongoCoordiRepository
-//        );
-//
-//        return ResponseEntity.status(HttpStatus.OK).body(response);
-//    }
+    // 내가 쓴 피드 조회
+    @Override
+    public ResponseEntity<FeedListReadResponse> searchMyFeed(Optional<User> userId) {
 
+        List<Feed> MyFeedList = feedRepository.findAllByuserId(userId);
+
+        if (MyFeedList.isEmpty()) {
+            throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
+        }
+
+        for (Feed feed : MyFeedList) {
+            String storeFilePath = feed.getFeedThumbnail();
+            byte[] feedThumbnail = getFeedThumbnailFromS3(bucket, storeFilePath);
+            feed.setFeedThumbnail(Arrays.toString(feedThumbnail));
+        }
+
+        FeedListReadResponse response = FeedListReadResponse.createFeedListReadResponse(
+                "Success",
+                MyFeedList,
+                mongoCoordiRepository
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 
     public byte[] getFeedThumbnailFromS3(String bucket, String storeFilePath) throws FeedImageIOException {
         try {
