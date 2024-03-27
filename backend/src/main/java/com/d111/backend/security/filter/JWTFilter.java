@@ -32,12 +32,17 @@ public class JWTFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
 
         String path = request.getRequestURI();
+        String method = request.getMethod();
 
         if (path.startsWith("/api/user/signIn")) {
             return true;
         }
 
         if (path.startsWith("/api/user/signUp")) {
+            return true;
+        }
+
+        if (path.startsWith("/api/feed") && method.equals("GET")) {
             return true;
         }
 
