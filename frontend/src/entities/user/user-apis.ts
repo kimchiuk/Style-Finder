@@ -3,7 +3,10 @@ import { SignInRequestDTO, SignUpRequestDTO, TokenReissueRequestDTO, UpdateUserI
 
 const url = '/api/user';
 const api = {
-  signUp: (request: SignUpRequestDTO, profileImage: File[]) => axiosInstance.post(`${url}/signUp`, { request, profileImage }),
+  signUp: (request: SignUpRequestDTO) => {
+    const headers = { "Content-Type": "multipart/form-data" }
+    return axiosInstance.post(`${url}/signUp`, request, { headers })
+  },
   signIn: (request: SignInRequestDTO) => axiosInstance.post(`${url}/signIn`, request),
 
   tokenReissue: (request: TokenReissueRequestDTO) => axiosInstance.post(`${url}/token`, request),
