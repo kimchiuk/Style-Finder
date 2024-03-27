@@ -1,25 +1,21 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 export interface UserStore {
-  id: number;
-  email: string;
-  nickname: string;
-  image: string;
-  likes: string[];
-  dislikes: string[];
-  height: number;
-  weight: number;
+  userId: number;
+  setUserId: (newUserId: number) => void;
 }
 
-const useUserStore = create<UserStore>(() => ({
-  id: 0,
-  email: '',
-  nickname: '',
-  image: '',
-  likes: [],
-  dislikes: [],
-  height: 0,
-  weight: 0,
-}));
+const useUserStore = create(
+  persist<UserStore>(
+    (set) => ({
+      userId: 0,
+      setUserId: (newUserId) => set({ userId: newUserId }),
+    }),
+    {
+      name: 'userIdStorage',
+    },
+  ),
+);
 
 export default useUserStore;
