@@ -2,9 +2,9 @@ spring:
   # MySQL
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/sample
-    username: sample
-    password: sample
+    url: ENC(f2wkijzdrQnxzxCZYH+lniBL7ndYX2J5EeEU0AUPmwthb0h6lcz7Ko/yu8h+DqX2SKKvWUWJSFt05ivvE++0Lw==)
+    username: ENC(EOlfe4WYsqJbHOJuHickcw==)
+    password: ENC(chxyvNmguj+G1w3wCHN4TA==)
 
   # redis
   data:
@@ -32,10 +32,10 @@ spring:
 cloud:
   aws:
     s3:
-      bucket: ENC(pwgGGwQF55dmqyPA1/ppvRruzWfbnZXMihe6tT/5hZc=)
+      bucket: ENC(5+puSTEJWGaV9iB5TF79dT/leVOHSqunB/EsigmI+14=)
       credentials:
-        access-key: ENC(RkqjDt4Me0UiBJ/DOywtFy24yPiBZFXFqMVYfea6Ln8=)
-        secret-key: ENC(jULgi4BF9ZtwsmyZsfiI/OVXmQbaXMt+l58Io7p7WuukbVcAEA2bx0kqhlNsvOA2Vq2nQpcHY2Q=)
+        access-key: ENC(iprZe9KTXii9++3h2vSGstpVMeYK4PL6mLFB+Oh4AbQ=)
+        secret-key: ENC(uOXn54tQBSwNr+uPjA+6YS+wV+q2/CkabsM6BwTEJDH4r1HsN9iaosAJF9msxPHHBTOSnSDZAls=)
       region: ap-northeast-2
     stack:
       auto: false # EC2의 Spring Cloud 자동 구성 해제
@@ -44,7 +44,7 @@ jasypt:
   encryptor:
     bean: jasyptStringEncryptor
 
-DEFAULT_PROFILE_URL: ENC(GkdPwE281MXookWfHzd1rYPlOsqptuohVklnzz2GuEk4V++5bzMsJ1QB/2yXTznn)
+DEFAULT_PROFILE_URL: ENC(jgqAgtjThvOP37bgwQv9hF+pBgojgdPMl/N7rCu0BjtXNhhb/FfsmCN2olI3olWN)
 
 # local MongoDB
 ---
@@ -53,10 +53,10 @@ spring:
     mongodb:
       host: localhost
       port: 27017
-      database: ENC(nAtMAGnjiOgP+4zXKoQZMbdo1e0jQ4xV)
+      database: ENC(ph20AB5KkD9X1/UJolVMDBf8syZGBhIV)
       authentication-database: admin
-      username: ENC(XMuvhXavk+NtW/BSZGAxoB/yKn/aS5YO)
-      password: ENC(C2LsI8gi+gRi4p/4fzsJHt21/9dSJqpxAQtkH6agGuU=)
+      username: ENC(Cr6At/hSMGio73wdc9LXZWQ8/LZDMKvy)
+      password: ENC(k0z0uWp1RbqsSkkzj732wS0eV/52qExwa+sWCZyLX5A=)
 ---
 # mongoDB 충돌나서 임시조치
 spring:
