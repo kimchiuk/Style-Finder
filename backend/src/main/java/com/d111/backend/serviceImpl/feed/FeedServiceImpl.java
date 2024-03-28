@@ -6,6 +6,7 @@ import com.amazonaws.util.IOUtils;
 import com.d111.backend.dto.coordi.request.CoordiCreateRequest;
 import com.d111.backend.dto.feed.request.FeedCreateRequest;
 import com.d111.backend.dto.feed.request.FeedUpdateRequest;
+import com.d111.backend.dto.feed.request.FittingRequest;
 import com.d111.backend.dto.feed.response.*;
 import com.d111.backend.dto.feed.response.dto.FeedUpdateResponseDTO;
 import com.d111.backend.entity.comment.Comment;
@@ -40,7 +41,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -365,6 +369,42 @@ public class FeedServiceImpl implements FeedService {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @Override
+    public ResponseEntity<?> fitting(FittingRequest fittingRequest) {
+
+        Long feedId = fittingRequest.getFeedId();
+        String newFeedTitle = fittingRequest.getNewFeedTitle();
+        String newFeedContent = fittingRequest.getNewFeedContent();
+
+        // 기존 피드 정보 가져오기
+        Feed originFeed = feedRepository.findById(feedId)
+                .orElseThrow(() -> new FeedNotFoundException("피드를 찾을 수 없습니다."));
+
+        // 현재 로그인한 유저 정보 받아오기
+        String userid = JWTUtil.findEmailByToken();
+        Optional<User> currentUser = userRepository.findByEmail(userid);
+
+        if (currentUser.isEmpty()) {
+            throw new EmailNotFoundException("사용자를 찾을 수 없습니다.");
+        }
+
+        // 새로운 피드 생성
+        Feed newFeed = Feed.builder()
+                .userId(currentUser.get())
+                .feedTitle(newFeedTitle)
+                .feedContent(newFeedContent)
+                .coordiId(originFeed.getCoordiId())
+                .originWriter(originFeed.getOriginWriter())
+                .feedThumbnail(originFeed.getFeedThumbnail())
+                .feedCreatedDate(LocalDate.now(ZoneId.of("UTC")))
+                .feedUpdatedDate(LocalDate.now(ZoneId.of("UTC")))
+                .build();
+
+        feedRepository.save(newFeed);
+
+        return ResponseEntity.ok("피드가 생성되었습니다.");
+    }
+
     public byte[] getFeedThumbnailFromS3(String bucket, String storeFilePath) throws FeedImageIOException {
         try {
             GetObjectRequest getObjectRequest = new GetObjectRequest(bucket, storeFilePath);
@@ -378,6 +418,3 @@ public class FeedServiceImpl implements FeedService {
         }
     }
 }
-
-
-

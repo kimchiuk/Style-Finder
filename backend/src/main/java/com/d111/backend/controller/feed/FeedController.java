@@ -2,6 +2,7 @@ package com.d111.backend.controller.feed;
 
 import com.d111.backend.dto.feed.request.FeedCoordiCreateRequest;
 import com.d111.backend.dto.feed.request.FeedUpdateRequest;
+import com.d111.backend.dto.feed.request.FittingRequest;
 import com.d111.backend.dto.feed.response.FeedDeleteResponse;
 import com.d111.backend.dto.feed.response.FeedListReadResponse;
 import com.d111.backend.dto.feed.response.FeedReadResponse;
@@ -106,6 +107,11 @@ public class FeedController {
 //            return ResponseEntity.ok(searchResult);
 //        }
 
+    // 피팅해보기
+    @PostMapping(value = "/{feedId}/fitting")
+    public ResponseEntity<?> fitting(@RequestBody FittingRequest fittingRequest){
+        return feedService.fitting(fittingRequest);
+    }
 
 
     private Optional<User> getCurrentUserId() {
