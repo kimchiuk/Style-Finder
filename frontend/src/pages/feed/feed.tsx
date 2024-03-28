@@ -1,8 +1,8 @@
 import Navbar from '../../widgets/nav/navbar';
 
 import { useEffect, useRef, useState } from 'react';
-//import useLoginStore from '../../shared/store/useLoginStore';
-//import useUserStore from '../../shared/store/useUserStore';
+// import useLoginStore from '../../shared/store/useLoginStore';
+// import useUserStore from '../../shared/store/useUserStore';
 import { Link } from 'react-router-dom'; // Link import
 import './feed.css';
 import api from '../../entities/feed/feed-apis';
@@ -10,8 +10,8 @@ import api from '../../entities/feed/feed-apis';
 import { axiosError } from '../../shared/utils/axiosError';
 
 const Feed = () => {
-  //const loginStore = useLoginStore();
-  //const userStore = useUserStore();
+  // const loginStore = useLoginStore();
+  // const userStore = useUserStore();
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
   const [ModalOpen, setModalOpen] = useState(false);
   //const [feeds, setFeeds] = useState([])
@@ -48,7 +48,7 @@ const Feed = () => {
         <div className="p-4">
           <div>
             <div>피드</div>
-            <div>id: {userStore.userId}</div>
+
             <div>
               <button className={'modal-open-btn'} onClick={() => setModalOpen(true)}>
                 <div className="flex items-center justify-center flex-grow">
@@ -57,7 +57,6 @@ const Feed = () => {
                       <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
                     </div>
                   </div>
-                  <div className="pl-2">{userStore.userId}</div>
                 </div>
               </button>
             </div>
