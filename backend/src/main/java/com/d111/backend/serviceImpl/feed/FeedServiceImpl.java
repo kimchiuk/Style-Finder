@@ -338,6 +338,7 @@ public class FeedServiceImpl implements FeedService {
 
             feedListReadResponseDTOList.add(
                     FeedListReadResponseDTO.builder()
+                            .user(feed.getUserId())
                             .feedId(feed.getId())
                             .feedTitle(feed.getFeedTitle())
                             .feedThumbnail(feedThumbnail)
