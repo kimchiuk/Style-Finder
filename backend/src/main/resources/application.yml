@@ -2,15 +2,16 @@ spring:
   # MySQL
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/sample
-    username: sample
-    password: sample
+    url: ENC(f2wkijzdrQnxzxCZYH+lniBL7ndYX2J5EeEU0AUPmwthb0h6lcz7Ko/yu8h+DqX2SKKvWUWJSFt05ivvE++0Lw==)
+    username: ENC(EOlfe4WYsqJbHOJuHickcw==)
+    password: ENC(chxyvNmguj+G1w3wCHN4TA==)
 
   # redis
   data:
     redis:
-      host: 127.0.0.1
+      host: ENC(9hP63pD3WAIs+4sg6muJbuKU/Ie7BdR14pFduMfzpl8=)
       port: 6379
+      password: ENC(kqyVDX/z7enC3fMN/f9twJnibSCyfdA0)
 
   # jpa
   jpa:
@@ -32,10 +33,10 @@ spring:
 cloud:
   aws:
     s3:
-      bucket: ENC(pwgGGwQF55dmqyPA1/ppvRruzWfbnZXMihe6tT/5hZc=)
+      bucket: ENC(5+puSTEJWGaV9iB5TF79dT/leVOHSqunB/EsigmI+14=)
       credentials:
-        access-key: ENC(RkqjDt4Me0UiBJ/DOywtFy24yPiBZFXFqMVYfea6Ln8=)
-        secret-key: ENC(jULgi4BF9ZtwsmyZsfiI/OVXmQbaXMt+l58Io7p7WuukbVcAEA2bx0kqhlNsvOA2Vq2nQpcHY2Q=)
+        access-key: ENC(iprZe9KTXii9++3h2vSGstpVMeYK4PL6mLFB+Oh4AbQ=)
+        secret-key: ENC(uOXn54tQBSwNr+uPjA+6YS+wV+q2/CkabsM6BwTEJDH4r1HsN9iaosAJF9msxPHHBTOSnSDZAls=)
       region: ap-northeast-2
     stack:
       auto: false # EC2의 Spring Cloud 자동 구성 해제
@@ -44,31 +45,24 @@ jasypt:
   encryptor:
     bean: jasyptStringEncryptor
 
-DEFAULT_PROFILE_URL: ENC(GkdPwE281MXookWfHzd1rYPlOsqptuohVklnzz2GuEk4V++5bzMsJ1QB/2yXTznn)
+DEFAULT_PROFILE_URL: ENC(jgqAgtjThvOP37bgwQv9hF+pBgojgdPMl/N7rCu0BjtXNhhb/FfsmCN2olI3olWN)
 
 # local MongoDB
 ---
 spring:
   data:
     mongodb:
-      host: localhost
+      host: ENC(c/ECBd/OfzjAMwMHNkjajVsEViEIZvuZLOKKuZLrnl8=)
       port: 27017
-      database: stylefinder
+      database: ENC(ph20AB5KkD9X1/UJolVMDBf8syZGBhIV)
       authentication-database: admin
-      username: ENC(XMuvhXavk+NtW/BSZGAxoB/yKn/aS5YO)
-      password: ENC(C2LsI8gi+gRi4p/4fzsJHt21/9dSJqpxAQtkH6agGuU=)
----
-# Server MongoDB
-#spring:
-#  data:
-#    mongodb:
-#      uri: mongodb+srv://style-finder-admin:ydwchTQJfvFmU6K1@stylefinder-cluster.vjzqtb2.mongodb.net/stylefinder?retryWrites=true&w=majority&appName=stylefinder-cluster
-#
-#
+      username: ENC(5uXWeieZVQXaVxHIhSzKhA==)
+      password: ENC(6l+429SST+jR2bowaARaG6F2dFLzVjA0)
 ---
 # mongoDB 충돌나서 임시조치
 spring:
   main:
     allow-bean-definition-overriding: true
+
 ---
 

@@ -1,6 +1,7 @@
 package com.d111.backend.dto.user.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import lombok.*;
 
 import java.util.List;
@@ -27,5 +28,14 @@ public class UpdateUserInfoRequestDTO {
 
     @Schema(description = "몸무게", nullable = true)
     Integer weight;
+
+    @Schema(description = "한 줄 소개")
+    private String introduce;
+
+    @Schema(description = "인스타그램 주소")
+    private String instagram;
+
+    @Schema(description = "유튜브 주소")
+    private String youtube;
 
 }
