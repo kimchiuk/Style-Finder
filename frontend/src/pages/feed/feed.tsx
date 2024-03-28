@@ -118,27 +118,6 @@ const Feed = () => {
               </div>
             </div>
           )}
-          <div className="relative shadow-xl card w-96 bg-base-100" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-            <figure>
-              <img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" />
-            </figure>
-            <div className="card-body">
-              <h2 className="card-title">Shoes!</h2>
-              <p>If a dog chews shoes whose shoes does he choose?</p>
-            </div>
-            <Link to="/feeddetail">
-              {isOverlayVisible && (
-                <div className="absolute inset-0 bg-black opacity-50">
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-                    <p>This is the overlay text.</p>
-                    <p>This is the overlay text.</p>
-                    <p>This is the overlay text.</p>
-                    <p>This is the overlay text.</p>
-                  </div>
-                </div>
-              )}
-            </Link>
-          </div>
         </div>
       </div>
     </>

@@ -13,7 +13,7 @@ const Main = () => {
   const loginStore = useLoginStore();
   const userStore = useUserStore();
 
-  const images = [main1, main2, main3];
+  const images = [main3, main2, main1];
 
   const settings = {
     dots: true,
@@ -44,7 +44,6 @@ const Main = () => {
 
               ))}
             </Slider>
-
           </div>
         </div>
 
