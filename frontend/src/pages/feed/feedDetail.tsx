@@ -1,10 +1,27 @@
 import Navbar from '../../widgets/nav/navbar';
 import useLoginStore from '../../shared/store/useLoginStore';
+import { useEffect } from 'react';
+import api from '../../entities/feed/feed-apis';
+import { useParams } from 'react-router';
+import { axiosError } from '../../shared/utils/axiosError';
 //import useUserStore from '../shared/store/useUserStore';
 
 const FeedDetail = () => {
+  const { feedId } = useParams();
   const loginStore = useLoginStore();
   //const userStore = useUserStore();
+
+  const deleteFeed = () => {}
+
+  useEffect(() => {
+    api.readFeed(Number(feedId))
+    .then((response) => {
+      console.log(response)
+    })
+    .catch((error: any) => {
+      axiosError(error)
+    })
+  }, [])
 
   return (
     <>
