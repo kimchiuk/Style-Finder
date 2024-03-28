@@ -11,7 +11,6 @@ const Recommendation = () => {
 
   return (
     <>
-      <Navbar></Navbar>
       <div>
         {!loginStore.isLogin ? (
           // 로그아웃 상태
@@ -25,7 +24,7 @@ const Recommendation = () => {
           // 로그인 상태
           <div>
             <div>추천</div>
-            <div>id: {userStore.id}</div>
+            <div>id: {userStore.userId}</div>
           </div>
         )}
       </div>
