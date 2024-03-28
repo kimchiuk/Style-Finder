@@ -1,11 +1,11 @@
 // import useLoginStore from '../../shared/store/useLoginStore';
 // import useUserStore from '../../shared/store/useUserStore';
 
-import My from '../my/my';
-
 // import { Link } from 'react-router-dom';
+import MyClosetAnalysis from './myClosetAnalysis';
+import MyCloset from './myCloset';
 
-const Recommendation = () => {
+const Closet = () => {
   // const loginStore = useLoginStore();
   // const userStore = useUserStore();
 
@@ -23,9 +23,10 @@ const Recommendation = () => {
         ) : (
           // 로그인 상태 */}
         <div>
-          <div>추천</div>
-
-          <My></My>
+          <div>취향 분석</div>
+          <MyClosetAnalysis></MyClosetAnalysis>
+          <div>내 옷장</div>
+          <MyCloset></MyCloset>
         </div>
         {/* )} */}
       </div>
@@ -33,4 +34,4 @@ const Recommendation = () => {
   );
 };
 
-export default Recommendation;
+export default Closet;
