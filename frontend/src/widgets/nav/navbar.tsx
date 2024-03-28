@@ -9,7 +9,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     // 로그아웃 버튼 클릭 시 로그아웃 처리
-    loginStore.setLogout(); 
+    loginStore.setLogout();
     localStorage.removeItem('isLoggedIn');
     setUserNickname(''); // 사용자 닉네임 초기화
   };
@@ -23,8 +23,8 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className="navbar flex flex-row h-20">
-      <div className="navbar-start flex items-center">
+    <div className="navbar flex flex-row h-20 bg-[#161A30]">
+      <div className="navbar-start flex items-center justify-center bg-[#F0ECE5] rounded-full m-5 w-36">
         <div className="logo flex items-center">
           <Link to="/" replace={true}>
             <img className="w-10 h-10" src={logo} alt="" />
@@ -35,8 +35,8 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="navbar-center flex items-center justify-center flex-grow ">
-        <div className="flex justify-between menu menu-sm dropdown-content mt-3 z-[1] p-2  bg-base-100 rounded-box w-1/3">
+      <div className="navbar-center flex items-center justify-center flex-grow m-5">
+        <div className="flex justify-between menu menu-sm dropdown-content mt-3 z-[1] p-2 m-5  bg-[#F0ECE5] rounded-full w-1/2">
           <Link to="/coordi" replace={true} className='mr-8'>
             코디
           </Link>
@@ -49,19 +49,21 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="navbar-end flex items-center">
+      <div className="navbar-end flex items-center justify-center text-center m-5 bg-[#F0ECE5] rounded-full w-20">
         {!loginStore.isLogin ? (
           <Link to="/login" replace={true} className="mr-2">
             로그인
           </Link>
         ) : (
-          <div className="flex items-center">
-            <button onClick={handleLogout} className='mr-3'>로그아웃</button>
+          <div className="flex flex items-center justify-center">
+            <button onClick={handleLogout}>로그아웃</button>
             <span className="mr-2">{userNickname}님</span>
           </div>
         )}
       </div>
+
     </div>
+
   );
 };
 
