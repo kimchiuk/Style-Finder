@@ -5,7 +5,7 @@ import { FeedCreateRequestDTO, FeedUpdateRequestDTO } from './feed-types';
 const url = '/api/feed';
 const api = {
   readFeedList: () => axiosInstance.get(`${url}`),
-  createFeedCoordi: (request: FeedCreateRequestDTO, feedThumbnail: File[]) => axiosInstance.post(`${url}/create`, { request, feedThumbnail }),
+  createFeedCoordi: (request: FeedCreateRequestDTO, feedThumbnail: File) => axiosInstance.post(`${url}/create`, { request, feedThumbnail }),
 
   readFeed: (feedId: number) => axiosInstance.get(`${url}/${feedId}`),
   deleteFeed: (feedId: number) => axiosInstance.delete(`${url}/${feedId}`),

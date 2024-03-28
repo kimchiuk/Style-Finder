@@ -19,7 +19,7 @@ const Main = () => {
           <div className="">
             메인 페이지
             <br />
-            id: {userStore.id}
+            id: {userStore.userId}
           </div>
         )}
       </div>
