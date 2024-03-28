@@ -38,8 +38,16 @@ public class JWTFilter extends OncePerRequestFilter {
             return true;
         }
 
+        if (path.startsWith("/api/user/token")) {
+            return true;
+        }
+
         if (path.startsWith("/api/user/signUp")) {
             return true;
+        }
+
+        if (path.startsWith("/api/feed/myfeed")) {
+            return false;
         }
 
         if (path.startsWith("/api/feed") && method.equals("GET")) {

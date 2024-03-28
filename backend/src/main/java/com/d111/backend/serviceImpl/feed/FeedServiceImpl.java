@@ -228,8 +228,6 @@ public class FeedServiceImpl implements FeedService {
     // 피드 좋아요
     @Override
     public ResponseEntity<?> feedLikes(Long feedId) {
-
-
         Optional<Feed> optionalFeed = feedRepository.findById(feedId);
 
         if (optionalFeed.isEmpty()) {
