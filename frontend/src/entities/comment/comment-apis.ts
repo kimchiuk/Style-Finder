@@ -1,4 +1,3 @@
-import axiosInstance from '../../shared/utils/axiosInstance';
 import jwtAxiosInstance from '../../shared/utils/jwtAxiosInstance';
 
 const url = '/api/comment';
