@@ -14,7 +14,7 @@ const api = {
 
   readPopularFeedList: () => axiosInstance.get(`${url}/popularity`),
   readMyFeed: () => jwtAxiosInstance.get(`${url}/myfeed`),
-  //searchByTitle: (title: string, pageable: number) => axiosInstance.get(`${url}/search`, { title, pageable }),
+  searchByTitle: (title: string, pageable: number) => axiosInstance.get(`${url}/search?title=${title}&pageable=p=${pageable}`),
 
   uploadFile: (multipartFile: File[]) => jwtAxiosInstance.post(`$/file`, multipartFile),
 };
