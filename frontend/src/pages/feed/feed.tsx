@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Navbar from '../../widgets/nav/navbar';
 
 import { useEffect, useRef, useState } from 'react';
@@ -40,7 +41,7 @@ const Feed = () => {
       .then((response) => {
         const data = response.data.data;
         setFeeds(data);
-        setFeedListType('all')
+        setFeedListType('all');
 
         const totalPage = response.data.totalPage
         return totalPage;
@@ -64,7 +65,7 @@ const Feed = () => {
       .then((response) => {
         const data = response.data.data;
         setFeeds(data);
-        setFeedListType('popular')
+        setFeedListType('popular');
 
         const totalPage = response.data.totalPage;
         return totalPage;
@@ -88,7 +89,7 @@ const Feed = () => {
       .then((response) => {
         const data = response.data.data;
         setFeeds(data);
-        setFeedListType('my')
+        setFeedListType('my');
 
         const totalPage = response.data.totalPage
         return totalPage;
@@ -136,7 +137,7 @@ const Feed = () => {
   };
 
   const updatePageList = (endPage: number) => {
-    let numberArray = [];
+    const numberArray = [];
     let count = 0;
 
     for (let i = endPage; ; i--) {
@@ -166,14 +167,14 @@ const Feed = () => {
       <Navbar></Navbar>
       <div>
         <div className="flex justify-around">
-          <button className="border-2 m-2 p-2" onClick={getPopularFeed}>
+          <button className="p-2 m-2 border-2" onClick={getPopularFeed}>
             인기순 조회
           </button>
           <div className="w-100">
-            <input className="border-2 m-2 p-2" value={query} onChange={(event) => setQuery(event.target.value)} required></input>
+            <input className="p-2 m-2 border-2" value={query} onChange={(event) => setQuery(event.target.value)} required></input>
             <button onClick={searchFeed}>검색</button>
           </div>
-          <button className="border-2 m-2 p-2" onClick={getMyFeed}>
+          <button className="p-2 m-2 border-2" onClick={getMyFeed}>
             내 피드 조회
           </button>
         </div>
@@ -238,7 +239,7 @@ const Feed = () => {
             </div>
           ))}
         </div>
-        <div className="flex items-center gap-4 justify-center my-10">
+        <div className="flex items-center justify-center gap-4 my-10">
           <div className="flex items-center gap-2">
             {pageList.map((pageNumber) => (
               <button key={pageNumber} className={page === pageNumber ? selected : unselected} type="button" value={pageNumber} onClick={() => setPage(pageNumber)}>

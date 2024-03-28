@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Navbar from '../../widgets/nav/navbar';
 import useLoginStore from '../../shared/store/useLoginStore';
 import { useEffect } from 'react';
@@ -11,17 +12,18 @@ const FeedDetail = () => {
   const loginStore = useLoginStore();
   //const userStore = useUserStore();
 
-  const deleteFeed = () => {}
+  // const deleteFeed = () => {}
 
   useEffect(() => {
-    api.readFeed(Number(feedId))
-    .then((response) => {
-      console.log(response)
-    })
-    .catch((error: any) => {
-      axiosError(error)
-    })
-  }, [])
+    api
+      .readFeed(Number(feedId))
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error: any) => {
+        axiosError(error);
+      });
+  }, []);
 
   return (
     <>
@@ -30,10 +32,10 @@ const FeedDetail = () => {
         {!loginStore.isLogin ? (
           // 로그아웃 상태
           <div>
-            <div className='flex justify-center'>ITEMS</div>
-            <div className='flex justify-center'>
-              <div className="hero max-h-screen-xl max-w-screen-xl bg-base-200 flex flex-col">
-                <div className="hero-content flex-col lg:flex-row">
+            <div className="flex justify-center">ITEMS</div>
+            <div className="flex justify-center">
+              <div className="flex flex-col max-w-screen-xl hero max-h-screen-xl bg-base-200">
+                <div className="flex-col hero-content lg:flex-row">
                   <img src="https://daisyui.com/images/stock/photo-1635805737707-575885ab0820.jpg" className="max-w-sm rounded-lg shadow-2xl" />
                 </div>
                 <div>
@@ -44,34 +46,34 @@ const FeedDetail = () => {
                 </div>
               </div>
             </div>
-            <div className='flex justify-center items-center'>
-              <div className="hero max-h-screen-xl max-w-screen-xl bg-base-200 flex flex-grow items-start mt-5 ">
+            <div className="flex items-center justify-center">
+              <div className="flex items-start flex-grow max-w-screen-xl mt-5 hero max-h-screen-xl bg-base-200 ">
                 <div className="avatar">
                   <div className="w-10 h-10 rounded-full">
                     <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
                   </div>
                 </div>
-                <div className='flex justify-between flex-grow'>
+                <div className="flex justify-between flex-grow">
                   <div>
-                    <div className='ml-3'>userid</div>
-                    <div className='ml-3'>feedcontent</div>
+                    <div className="ml-3">userid</div>
+                    <div className="ml-3">feedcontent</div>
                   </div>
-                  <div className='mr-3 flex justify-end'>feedCreatedDate</div>
+                  <div className="flex justify-end mr-3">feedCreatedDate</div>
                 </div>
               </div>
             </div>
             <div>Comments</div>
-            <div className='flex justify-center items-center'>
-              <div className="hero max-h-screen-xl max-w-screen-xl bg-base-200 flex flex-grow items-start mt-5 ">
+            <div className="flex items-center justify-center">
+              <div className="flex items-start flex-grow max-w-screen-xl mt-5 hero max-h-screen-xl bg-base-200 ">
                 <div className="avatar">
                   <div className="w-10 h-10 rounded-full">
                     <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
                   </div>
                 </div>
-                <div className='flex justify-between flex-grow'>
+                <div className="flex justify-between flex-grow">
                   <div>
-                    <div className='ml-3'>userid</div>
-                    <div className='ml-3'>feedcontent</div>
+                    <div className="ml-3">userid</div>
+                    <div className="ml-3">feedcontent</div>
                   </div>
                 </div>
               </div>
@@ -84,7 +86,7 @@ const FeedDetail = () => {
           </div>
         )}
       </div>
-{/* <Footer /> */}
+      {/* <Footer /> */}
     </>
   );
 };
