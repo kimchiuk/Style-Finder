@@ -23,7 +23,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className="navbar bg-[#d1d5db]">
+    <div className="navbar flex flex-row h-20">
       <div className="navbar-start flex items-center">
         <div className="logo flex items-center">
           <Link to="/" replace={true}>
@@ -35,8 +35,8 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="navbar-center flex items-center justify-center flex-grow">
-        <div className="flex justify-between">
+      <div className="navbar-center flex items-center justify-center flex-grow ">
+        <div className="flex justify-between menu menu-sm dropdown-content mt-3 z-[1] p-2  bg-base-100 rounded-box w-1/3">
           <Link to="/coordi" replace={true} className='mr-8'>
             코디
           </Link>
