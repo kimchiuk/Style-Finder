@@ -189,11 +189,10 @@ const Coordi = () => {
 
   // 피드 등록 버튼
   const handleSearchItems = () => {
-    // 각각의 search api
-    setOuterClothes([Image, Image, Image, Image, Image]);
-    setUpperBodys([Image, Image, Image, Image, Image]);
-    setLowerBodys([Image, Image, Image, Image, Image]);
-    setDresses([Image, Image, Image, Image, Image]);
+    setOuterClothes([Image, Image, Image, Image, Image]); // outer api
+    setUpperBodys([Image, Image, Image, Image, Image]); // upper api
+    setLowerBodys([Image, Image, Image, Image, Image]); // lower api
+    setDresses([Image, Image, Image, Image, Image]); // dress api
 
     setOuterList(outerClothes.slice(0, outerClothes.length < 4 ? outerClothes.length : 4));
     setUpperList(upperBodys.slice(0, upperBodys.length < 4 ? upperBodys.length : 4));

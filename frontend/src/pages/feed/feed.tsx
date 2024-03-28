@@ -1,20 +1,20 @@
 import Navbar from '../../widgets/nav/navbar';
 
 import { useEffect, useRef, useState } from 'react';
-import useLoginStore from '../../shared/store/useLoginStore';
-import useUserStore from '../../shared/store/useUserStore';
+//import useLoginStore from '../../shared/store/useLoginStore';
+//import useUserStore from '../../shared/store/useUserStore';
 import { Link } from 'react-router-dom'; // Link import
 import './feed.css';
 import api from '../../entities/feed/feed-apis';
-import { error } from 'console';
+//import { error } from 'console';
 import { axiosError } from '../../shared/utils/axiosError';
 
 const Feed = () => {
-  const loginStore = useLoginStore();
-  const userStore = useUserStore();
+  //const loginStore = useLoginStore();
+  //const userStore = useUserStore();
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
   const [ModalOpen, setModalOpen] = useState(false);
-  const [feeds, setFeeds] = useState([])
+  //const [feeds, setFeeds] = useState([])
 
   const modalBackground = useRef(null);
 
@@ -27,18 +27,19 @@ const Feed = () => {
   };
 
   const getFeeds = () => {
-    api.readFeedList()
-    .then((response) => {
-      console.log(response)
-    })
-    .catch((error) => {
-      axiosError(error)
-    })
-  }
+    api
+      .readFeedList()
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        axiosError(error);
+      });
+  };
 
   useEffect(() => {
-    getFeeds()
-  }, [])
+    getFeeds();
+  }, []);
 
   return (
     <>
