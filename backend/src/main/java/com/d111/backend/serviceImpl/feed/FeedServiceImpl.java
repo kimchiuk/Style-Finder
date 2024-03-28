@@ -10,6 +10,7 @@ import com.d111.backend.dto.feed.request.FeedUpdateRequest;
 import com.d111.backend.dto.feed.request.FittingRequest;
 import com.d111.backend.dto.feed.response.*;
 import com.d111.backend.dto.feed.response.dto.FeedListReadResponseDTO;
+import com.d111.backend.dto.feed.response.dto.FeedListUserDTO;
 import com.d111.backend.dto.feed.response.dto.FeedUpdateResponseDTO;
 import com.d111.backend.entity.comment.Comment;
 import com.d111.backend.entity.coordi.Coordi;
@@ -31,6 +32,7 @@ import com.d111.backend.repository.user.UserRepository;
 import com.d111.backend.service.feed.FeedService;
 import com.d111.backend.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,6 +50,7 @@ import java.util.*;
 import static com.d111.backend.dto.coordi.response.dto.CoordiContainer.createMongoContainer;
 
 @Service
+@Log4j2
 @RequiredArgsConstructor
 public class FeedServiceImpl implements FeedService {
 
@@ -130,8 +133,8 @@ public class FeedServiceImpl implements FeedService {
 
     // 피드 전체 조회
     @Override
-    public ResponseEntity<FeedListReadResponse> readList() {
-        List<Feed> feedList = feedRepository.findAll();
+    public ResponseEntity<FeedListReadResponse> readList(Pageable pageable) {
+        Page<Feed> feedList = feedRepository.findAll(pageable);
 
         if (feedList.isEmpty()) {
             throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
@@ -147,9 +150,20 @@ public class FeedServiceImpl implements FeedService {
 
             CoordiContainer coordiContainer = createMongoContainer(feed.getCoordiId(), mongoCoordiRepository);
 
+            User user = feed.getUserId();
+            FeedListUserDTO feedListUserDTO = FeedListUserDTO.builder()
+                    .nickname(user.getNickname())
+                    .profileImage(getFeedThumbnailFromS3(bucket, user.getProfileImage()))
+                    .likeCategories(Arrays.asList(user.getLikeCategories().split(",")))
+                    .dislikeCategories(Arrays.asList(user.getDislikeCategories().split(",")))
+                    .introduce(user.getIntroduce())
+                    .instagram(user.getInstagram())
+                    .youtube(user.getYoutube())
+                    .build();
+
             feedListReadResponseDTOList.add(
                     FeedListReadResponseDTO.builder()
-                            .user(feed.getUserId())
+                            .user(feedListUserDTO)
                             .feedId(feed.getId())
                             .feedTitle(feed.getFeedTitle())
                             .feedThumbnail(feedThumbnail)
@@ -163,6 +177,7 @@ public class FeedServiceImpl implements FeedService {
         FeedListReadResponse response = FeedListReadResponse.builder()
                 .message("Success")
                 .data(feedListReadResponseDTOList)
+                .totalPage(feedList.getTotalPages())
                 .build();
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -317,8 +332,123 @@ public class FeedServiceImpl implements FeedService {
     }
 
     @Override
-    public ResponseEntity<FeedListReadResponse> readPopularList() {
-        List<Feed> feedList = feedRepository.findAllByOrderByFeedLikesDesc();
+    public ResponseEntity<FeedListReadResponse> readPopularList(Pageable pageable) {
+        Page<Feed> feedList = feedRepository.findAllByOrderByFeedLikesDesc(pageable);
+
+        if (feedList.isEmpty()) {
+            throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
+        }
+
+        List<FeedListReadResponseDTO> feedListReadResponseDTOList = new ArrayList<>();
+
+        // 각 피드의 이미지를 가져와서 리스트에 추가
+        for (Feed feed : feedList) {
+            // 피드 썸네일 읽어오기
+            String storeFilePath = feed.getFeedThumbnail();
+            byte[] feedThumbnail = getFeedThumbnailFromS3(bucket, storeFilePath);
+
+            CoordiContainer coordiContainer = createMongoContainer(feed.getCoordiId(), mongoCoordiRepository);
+
+            User user = feed.getUserId();
+            FeedListUserDTO feedListUserDTO = FeedListUserDTO.builder()
+                    .nickname(user.getNickname())
+                    .profileImage(getFeedThumbnailFromS3(bucket, user.getProfileImage()))
+                    .likeCategories(Arrays.asList(user.getLikeCategories().split(",")))
+                    .dislikeCategories(Arrays.asList(user.getDislikeCategories().split(",")))
+                    .introduce(user.getIntroduce())
+                    .instagram(user.getInstagram())
+                    .youtube(user.getYoutube())
+                    .build();
+
+            feedListReadResponseDTOList.add(
+                    FeedListReadResponseDTO.builder()
+                            .user(feedListUserDTO)
+                            .feedId(feed.getId())
+                            .feedTitle(feed.getFeedTitle())
+                            .feedThumbnail(feedThumbnail)
+                            .feedLikes(feed.getFeedLikes())
+                            .coordiContainer(coordiContainer)
+                            .build()
+            );
+        }
+
+        // 응답 생성
+        FeedListReadResponse response = FeedListReadResponse.builder()
+                .message("Success")
+                .data(feedListReadResponseDTOList)
+                .totalPage(feedList.getTotalPages())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @Override
+    public ResponseEntity<FeedListReadResponse> searchByTitle(String title, Pageable pageable) {
+        // 검색어가 없으면 빈 문자열로 설정, trim으로 검색어 공백 제거
+        title = (title == null) ? "" : title.trim();
+
+        Page<Feed> feedList;
+
+        // 검색어가 없는 경우 모든 피드 반환
+        if (title.isEmpty()) {
+            feedList = feedRepository.findAll(pageable);
+        } else {
+            // 제목에 검색어를 포함하는 피드를 반환
+            feedList = feedRepository.findByfeedTitleContaining(title, pageable);
+        }
+
+        if (feedList.isEmpty()) {
+            throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
+        }
+
+        List<FeedListReadResponseDTO> feedListReadResponseDTOList = new ArrayList<>();
+
+        // 각 피드의 이미지를 가져와서 리스트에 추가
+        for (Feed feed : feedList) {
+            // 피드 썸네일 읽어오기
+            String storeFilePath = feed.getFeedThumbnail();
+            byte[] feedThumbnail = getFeedThumbnailFromS3(bucket, storeFilePath);
+
+            CoordiContainer coordiContainer = createMongoContainer(feed.getCoordiId(), mongoCoordiRepository);
+
+            User user = feed.getUserId();
+            FeedListUserDTO feedListUserDTO = FeedListUserDTO.builder()
+                    .nickname(user.getNickname())
+                    .profileImage(getFeedThumbnailFromS3(bucket, user.getProfileImage()))
+                    .likeCategories(Arrays.asList(user.getLikeCategories().split(",")))
+                    .dislikeCategories(Arrays.asList(user.getDislikeCategories().split(",")))
+                    .introduce(user.getIntroduce())
+                    .instagram(user.getInstagram())
+                    .youtube(user.getYoutube())
+                    .build();
+
+            feedListReadResponseDTOList.add(
+                    FeedListReadResponseDTO.builder()
+                            .user(feedListUserDTO)
+                            .feedId(feed.getId())
+                            .feedTitle(feed.getFeedTitle())
+                            .feedThumbnail(feedThumbnail)
+                            .feedLikes(feed.getFeedLikes())
+                            .coordiContainer(coordiContainer)
+                            .build()
+            );
+        }
+
+        // 응답 생성
+        FeedListReadResponse response = FeedListReadResponse.builder()
+                .message("Success")
+                .data(feedListReadResponseDTOList)
+                .totalPage(feedList.getTotalPages())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    // 내가 쓴 피드 조회
+    @Override
+    public ResponseEntity<FeedListReadResponse> searchMyFeed(Optional<User> userId, Pageable pageable) {
+
+        Page<Feed> feedList = feedRepository.findAllByuserId(userId, pageable);
 
         if (feedList.isEmpty()) {
             throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
@@ -336,7 +466,6 @@ public class FeedServiceImpl implements FeedService {
 
             feedListReadResponseDTOList.add(
                     FeedListReadResponseDTO.builder()
-                            .user(feed.getUserId())
                             .feedId(feed.getId())
                             .feedTitle(feed.getFeedTitle())
                             .feedThumbnail(feedThumbnail)
@@ -350,59 +479,7 @@ public class FeedServiceImpl implements FeedService {
         FeedListReadResponse response = FeedListReadResponse.builder()
                 .message("Success")
                 .data(feedListReadResponseDTOList)
-                .build();
-
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    @Override
-    public Page<Feed> searchByTitle(String title, Pageable pageable) {
-        // 검색어가 없으면 빈 문자열로 설정, trim으로 검색어 공백 제거
-        title = (title == null) ? "" : title.trim();
-        // 검색어가 없는 경우 모든 피드 반환
-        if (title.isEmpty()) {
-            return feedRepository.findAll(pageable);
-        } else {
-            // 제목에 검색어를 포함하는 피드를 반환
-            return feedRepository.findByfeedTitleContaining(title, pageable);
-        }
-    }
-
-    // 내가 쓴 피드 조회
-    @Override
-    public ResponseEntity<FeedListReadResponse> searchMyFeed(Optional<User> userId) {
-
-        List<Feed> MyFeedList = feedRepository.findAllByuserId(userId);
-
-        if (MyFeedList.isEmpty()) {
-            throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
-        }
-
-        List<FeedListReadResponseDTO> feedListReadResponseDTOList = new ArrayList<>();
-
-        // 각 피드의 이미지를 가져와서 리스트에 추가
-        for (Feed feed : MyFeedList) {
-            // 피드 썸네일 읽어오기
-            String storeFilePath = feed.getFeedThumbnail();
-            byte[] feedThumbnail = getFeedThumbnailFromS3(bucket, storeFilePath);
-
-            CoordiContainer coordiContainer = createMongoContainer(feed.getCoordiId(), mongoCoordiRepository);
-
-            feedListReadResponseDTOList.add(
-                    FeedListReadResponseDTO.builder()
-                            .feedId(feed.getId())
-                            .feedTitle(feed.getFeedTitle())
-                            .feedThumbnail(feedThumbnail)
-                            .feedLikes(feed.getFeedLikes())
-                            .coordiContainer(coordiContainer)
-                            .build()
-            );
-        }
-
-        // 응답 생성
-        FeedListReadResponse response = FeedListReadResponse.builder()
-                .message("Success")
-                .data(feedListReadResponseDTOList)
+                .totalPage(feedList.getTotalPages())
                 .build();
 
         return ResponseEntity.status(HttpStatus.OK).body(response);

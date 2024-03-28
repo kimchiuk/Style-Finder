@@ -36,16 +36,17 @@ const Feed = () => {
 
   const getFeeds = () => {
     api
-      .readFeedList()
+      .readFeedList(page - 1)
       .then((response) => {
         const data = response.data.data;
         setFeeds(data);
         setFeedListType('all')
 
-        return Math.trunc(data.length / 8);
+        const totalPage = response.data.totalPage
+        return totalPage;
       })
       .then((endPage) => {
-        updatePageList(endPage + 1);
+        updatePageList(endPage);
       })
       .catch((error) => {
         const errorCode = axiosError(error);
@@ -59,16 +60,17 @@ const Feed = () => {
 
   const getPopularFeed = () => {
     api
-      .readPopularFeedList()
+      .readPopularFeedList(page - 1)
       .then((response) => {
         const data = response.data.data;
         setFeeds(data);
         setFeedListType('popular')
 
-        return Math.trunc(data.length / 8);
+        const totalPage = response.data.totalPage;
+        return totalPage;
       })
       .then((endPage) => {
-        updatePageList(endPage + 1);
+        updatePageList(endPage);
       })
       .catch((error) => {
         const errorCode = axiosError(error);
@@ -82,16 +84,17 @@ const Feed = () => {
 
   const getMyFeed = () => {
     api
-      .readMyFeed()
+      .readMyFeed(page - 1)
       .then((response) => {
         const data = response.data.data;
         setFeeds(data);
         setFeedListType('my')
 
-        return Math.trunc(data.length / 8);
+        const totalPage = response.data.totalPage
+        return totalPage;
       })
       .then((endPage) => {
-        updatePageList(endPage + 1);
+        updatePageList(endPage);
       })
       .catch((error) => {
         const errorCode = axiosError(error);
@@ -109,12 +112,18 @@ const Feed = () => {
     }
 
     api
-      .searchByTitle(query, page)
+      .searchByTitle(query, page - 1)
       .then((response) => {
         // console.log(response.data.content)
-        const data = response.data.content;
+        const data = response.data.data;
         setFeeds(data);
         setFeedListType('search')
+
+        const totalPage = response.data.totalPage
+        return totalPage;
+      })
+      .then((endPage) => {
+        updatePageList(endPage);
       })
       .catch((error) => {
         const errorCode = axiosError(error);
@@ -136,8 +145,6 @@ const Feed = () => {
       numberArray.unshift(i);
       count++;
     }
-
-    console.log(numberArray, endPage);
 
     setPageList(numberArray);
   };
@@ -170,7 +177,7 @@ const Feed = () => {
             내 피드 조회
           </button>
         </div>
-        <div className="grid grid-flow-row-dense grid-cols-4 grid-rows-2">
+        <div className="grid grid-flow-row-dense grid-cols-4">
           {feeds.map((feed: any) => (
             <div key={feed?.feedId}>
               <div className="p-4">
