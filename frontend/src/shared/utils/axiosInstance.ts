@@ -2,9 +2,12 @@ import axios from 'axios';
 import qs from 'qs';
 
 const axiosInstance = axios.create({
-  baseURL: process.env.API_BASE_URL,
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 60000,
-  headers: { accept: '*/*' },
+  headers: { 
+    accept: '*/*',
+    "Content-Type": "application/json;charset=UTF-8"
+  },
   withCredentials: true,
 });
 

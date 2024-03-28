@@ -1,16 +1,13 @@
 import Navbar from '../../widgets/nav/navbar';
 
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useLoginStore from '../../shared/store/useLoginStore';
+import api from '../../entities/user/user-apis';
 //import useUserStore from '../shared/store/useUserStore';
 
-const User = {
-  email: 'test@example.com',
-  pw: 'test2323@',
-};
-
 const SignIn = () => {
+  const navigate = useNavigate();
   const loginStore = useLoginStore();
   //const userStore = useUserStore();
 
@@ -34,14 +31,26 @@ const SignIn = () => {
   };
 
   const onClickConfirmButton = () => {
-    if (email === User.email && pw === User.pw) {
-      // 로그인 성공 시 로컬 스토리지에 로그인 정보 저장
+    const request = {
+      email: email,
+      password: pw
+    }
+
+    api.signIn(request)
+    .then((response) => {
+      localStorage.setItem('userInfo', JSON.stringify(response.data))
       localStorage.setItem('isLoggedIn', 'true');
       loginStore.setLogin();
       alert('로그인 성공');
-    } else {
-      alert('등록되지 않은 사용자입니다.');
-    }
+      navigate('/');
+    })
+    .catch((error: any) => {
+      const errorCode = error.response.status
+      const errorMessage = error.response.data.message
+      console.log(error)
+      console.log(errorCode, errorMessage)
+      alert(errorMessage);
+    })
   };
 
   useEffect(() => {

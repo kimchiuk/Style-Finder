@@ -4,9 +4,12 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
 import com.d111.backend.dto.coordi.request.CoordiCreateRequest;
+import com.d111.backend.dto.coordi.response.dto.CoordiContainer;
 import com.d111.backend.dto.feed.request.FeedCreateRequest;
 import com.d111.backend.dto.feed.request.FeedUpdateRequest;
+import com.d111.backend.dto.feed.request.FittingRequest;
 import com.d111.backend.dto.feed.response.*;
+import com.d111.backend.dto.feed.response.dto.FeedListReadResponseDTO;
 import com.d111.backend.dto.feed.response.dto.FeedUpdateResponseDTO;
 import com.d111.backend.entity.comment.Comment;
 import com.d111.backend.entity.coordi.Coordi;
@@ -41,6 +44,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
+
+import static com.d111.backend.dto.coordi.response.dto.CoordiContainer.createMongoContainer;
 
 @Service
 @RequiredArgsConstructor
@@ -132,21 +137,33 @@ public class FeedServiceImpl implements FeedService {
             throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
         }
 
+        List<FeedListReadResponseDTO> feedListReadResponseDTOList = new ArrayList<>();
+
         // 각 피드의 이미지를 가져와서 리스트에 추가
         for (Feed feed : feedList) {
             // 피드 썸네일 읽어오기
             String storeFilePath = feed.getFeedThumbnail();
             byte[] feedThumbnail = getFeedThumbnailFromS3(bucket, storeFilePath);
-            feed.setFeedThumbnail(Arrays.toString(feedThumbnail));
 
+            CoordiContainer coordiContainer = createMongoContainer(feed.getCoordiId(), mongoCoordiRepository);
+
+            feedListReadResponseDTOList.add(
+                    FeedListReadResponseDTO.builder()
+                            .user(feed.getUserId())
+                            .feedId(feed.getId())
+                            .feedTitle(feed.getFeedTitle())
+                            .feedThumbnail(feedThumbnail)
+                            .feedLikes(feed.getFeedLikes())
+                            .coordiContainer(coordiContainer)
+                            .build()
+            );
         }
 
         // 응답 생성
-        FeedListReadResponse response = FeedListReadResponse.createFeedListReadResponse(
-                "Success",
-                feedList,
-                mongoCoordiRepository
-        );
+        FeedListReadResponse response = FeedListReadResponse.builder()
+                .message("Success")
+                .data(feedListReadResponseDTOList)
+                .build();
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -179,13 +196,10 @@ public class FeedServiceImpl implements FeedService {
 
         // 현재 로그인한 유저 정보 받아오기
         String userid = JWTUtil.findEmailByToken();
-        Optional<User> currentUser = userRepository.findByEmail(userid);
+        User user = userRepository.findByEmail(userid)
+                .orElseThrow(() -> new EmailNotFoundException("사용자를 찾을 수 없습니다."));
 
-        if (currentUser.isEmpty()) {
-            throw new EmailNotFoundException("사용자를 찾을 수 없습니다.");
-        }
-
-        Long userId = currentUser.get().getId();
+        Long userId = user.getId();
         Optional<Feed> optionalFeed = feedRepository.findById(feedId);
 
         if (optionalFeed.isEmpty()) {
@@ -193,7 +207,7 @@ public class FeedServiceImpl implements FeedService {
         }
         Feed feed = optionalFeed.get();
 
-        if (!userId.equals(feed.getUserId())) {
+        if (!userId.equals(feed.getUserId().getId())) {
             throw new UnauthorizedAccessException("피드를 삭제할 권한이 없습니다.");
         }
 
@@ -312,20 +326,33 @@ public class FeedServiceImpl implements FeedService {
             throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
         }
 
+        List<FeedListReadResponseDTO> feedListReadResponseDTOList = new ArrayList<>();
+
         // 각 피드의 이미지를 가져와서 리스트에 추가
         for (Feed feed : feedList) {
-
             // 피드 썸네일 읽어오기
             String storeFilePath = feed.getFeedThumbnail();
             byte[] feedThumbnail = getFeedThumbnailFromS3(bucket, storeFilePath);
-            feed.setFeedThumbnail(Arrays.toString(feedThumbnail));
+
+            CoordiContainer coordiContainer = createMongoContainer(feed.getCoordiId(), mongoCoordiRepository);
+
+            feedListReadResponseDTOList.add(
+                    FeedListReadResponseDTO.builder()
+                            .user(feed.getUserId())
+                            .feedId(feed.getId())
+                            .feedTitle(feed.getFeedTitle())
+                            .feedThumbnail(feedThumbnail)
+                            .feedLikes(feed.getFeedLikes())
+                            .coordiContainer(coordiContainer)
+                            .build()
+            );
         }
 
-        FeedListReadResponse response = FeedListReadResponse.createFeedListReadResponse(
-                "Success",
-                feedList,
-                mongoCoordiRepository
-        );
+        // 응답 생성
+        FeedListReadResponse response = FeedListReadResponse.builder()
+                .message("Success")
+                .data(feedListReadResponseDTOList)
+                .build();
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -353,19 +380,69 @@ public class FeedServiceImpl implements FeedService {
             throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
         }
 
+        List<FeedListReadResponseDTO> feedListReadResponseDTOList = new ArrayList<>();
+
+        // 각 피드의 이미지를 가져와서 리스트에 추가
         for (Feed feed : MyFeedList) {
+            // 피드 썸네일 읽어오기
             String storeFilePath = feed.getFeedThumbnail();
             byte[] feedThumbnail = getFeedThumbnailFromS3(bucket, storeFilePath);
-            feed.setFeedThumbnail(Arrays.toString(feedThumbnail));
+
+            CoordiContainer coordiContainer = createMongoContainer(feed.getCoordiId(), mongoCoordiRepository);
+
+            feedListReadResponseDTOList.add(
+                    FeedListReadResponseDTO.builder()
+                            .feedId(feed.getId())
+                            .feedTitle(feed.getFeedTitle())
+                            .feedThumbnail(feedThumbnail)
+                            .feedLikes(feed.getFeedLikes())
+                            .coordiContainer(coordiContainer)
+                            .build()
+            );
         }
 
-        FeedListReadResponse response = FeedListReadResponse.createFeedListReadResponse(
-                "Success",
-                MyFeedList,
-                mongoCoordiRepository
-        );
+        // 응답 생성
+        FeedListReadResponse response = FeedListReadResponse.builder()
+                .message("Success")
+                .data(feedListReadResponseDTOList)
+                .build();
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @Override
+    public ResponseEntity<?> fitting(FittingRequest fittingRequest, Long feedId) {
+
+        String newFeedTitle = fittingRequest.getNewFeedTitle();
+        String newFeedContent = fittingRequest.getNewFeedContent();
+
+        // 기존 피드 정보 가져오기
+        Feed originFeed = feedRepository.findById(feedId)
+                .orElseThrow(() -> new FeedNotFoundException("피드를 찾을 수 없습니다."));
+
+        // 현재 로그인한 유저 정보 받아오기
+        String userid = JWTUtil.findEmailByToken();
+        Optional<User> currentUser = userRepository.findByEmail(userid);
+
+        if (currentUser.isEmpty()) {
+            throw new EmailNotFoundException("사용자를 찾을 수 없습니다.");
+        }
+
+        // 새로운 피드 생성
+        Feed newFeed = Feed.builder()
+                .userId(currentUser.get())
+                .feedTitle(newFeedTitle)
+                .feedContent(newFeedContent)
+                .coordiId(originFeed.getCoordiId())
+                .originWriter(originFeed.getOriginWriter())
+                .feedThumbnail(originFeed.getFeedThumbnail())
+                .feedCreatedDate(LocalDate.now(ZoneId.of("UTC")))
+                .feedUpdatedDate(LocalDate.now(ZoneId.of("UTC")))
+                .build();
+
+        feedRepository.save(newFeed);
+
+        return ResponseEntity.ok("피드가 생성되었습니다.");
     }
 
     public byte[] getFeedThumbnailFromS3(String bucket, String storeFilePath) throws FeedImageIOException {
@@ -381,6 +458,3 @@ public class FeedServiceImpl implements FeedService {
         }
     }
 }
-
-
-

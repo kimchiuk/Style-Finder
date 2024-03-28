@@ -9,8 +9,9 @@ spring:
   # redis
   data:
     redis:
-      host: 127.0.0.1
+      host: ENC(9hP63pD3WAIs+4sg6muJbuKU/Ie7BdR14pFduMfzpl8=)
       port: 6379
+      password: ENC(kqyVDX/z7enC3fMN/f9twJnibSCyfdA0)
 
   # jpa
   jpa:
@@ -51,12 +52,12 @@ DEFAULT_PROFILE_URL: ENC(jgqAgtjThvOP37bgwQv9hF+pBgojgdPMl/N7rCu0BjtXNhhb/FfsmCN
 spring:
   data:
     mongodb:
-      host: localhost
+      host: ENC(c/ECBd/OfzjAMwMHNkjajVsEViEIZvuZLOKKuZLrnl8=)
       port: 27017
       database: ENC(ph20AB5KkD9X1/UJolVMDBf8syZGBhIV)
       authentication-database: admin
-      username: ENC(Cr6At/hSMGio73wdc9LXZWQ8/LZDMKvy)
-      password: ENC(k0z0uWp1RbqsSkkzj732wS0eV/52qExwa+sWCZyLX5A=)
+      username: ENC(5uXWeieZVQXaVxHIhSzKhA==)
+      password: ENC(6l+429SST+jR2bowaARaG6F2dFLzVjA0)
 ---
 # mongoDB 충돌나서 임시조치
 spring:

@@ -3,6 +3,7 @@ package com.d111.backend.service.feed;
 import com.d111.backend.dto.coordi.request.CoordiCreateRequest;
 import com.d111.backend.dto.feed.request.FeedCreateRequest;
 import com.d111.backend.dto.feed.request.FeedUpdateRequest;
+import com.d111.backend.dto.feed.request.FittingRequest;
 import com.d111.backend.dto.feed.response.*;
 import com.d111.backend.entity.feed.Feed;
 import com.d111.backend.entity.user.User;
@@ -34,6 +35,7 @@ public interface FeedService {
 
     ResponseEntity<FeedListReadResponse> searchMyFeed(Optional<User> userId);
 
+    ResponseEntity<?> fitting(FittingRequest fittingRequest, Long feedId);
 }
 
 
