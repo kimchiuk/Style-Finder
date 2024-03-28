@@ -18,7 +18,7 @@ const Feed = () => {
     'relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-full bg-gray-900 text-center align-middle font-sans text-xs font-medium uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none';
 
   const [isOverlayVisible, setIsOverlayVisible] = useState('0');
-  const [ModalOpen, setModalOpen] = useState(false);
+  const [ModalOpen, setModalOpen] = useState(0);
   const [feeds, setFeeds] = useState([]);
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
@@ -40,10 +40,17 @@ const Feed = () => {
       .readFeedList(page - 1)
       .then((response) => {
         const data = response.data.data;
+
+        if (feedListType != 'all') {
+          setPage(1);
+        }
+
         setFeeds(data);
         setFeedListType('all');
 
-        const totalPage = response.data.totalPage
+        console.log(data);
+
+        const totalPage = response.data.totalPage;
         return totalPage;
       })
       .then((endPage) => {
@@ -64,6 +71,11 @@ const Feed = () => {
       .readPopularFeedList(page - 1)
       .then((response) => {
         const data = response.data.data;
+
+        if (feedListType != 'popular') {
+          setPage(1);
+        }
+
         setFeeds(data);
         setFeedListType('popular');
 
@@ -88,10 +100,15 @@ const Feed = () => {
       .readMyFeed(page - 1)
       .then((response) => {
         const data = response.data.data;
+
+        if (feedListType != 'my') {
+          setPage(1);
+        }
+
         setFeeds(data);
         setFeedListType('my');
 
-        const totalPage = response.data.totalPage
+        const totalPage = response.data.totalPage;
         return totalPage;
       })
       .then((endPage) => {
@@ -115,12 +132,16 @@ const Feed = () => {
     api
       .searchByTitle(query, page - 1)
       .then((response) => {
-        // console.log(response.data.content)
         const data = response.data.data;
-        setFeeds(data);
-        setFeedListType('search')
 
-        const totalPage = response.data.totalPage
+        if (feedListType != 'search') {
+          setPage(1);
+        }
+
+        setFeeds(data);
+        setFeedListType('search');
+
+        const totalPage = response.data.totalPage;
         return totalPage;
       })
       .then((endPage) => {
@@ -172,7 +193,14 @@ const Feed = () => {
           </button>
           <div className="w-100">
             <input className="p-2 m-2 border-2" value={query} onChange={(event) => setQuery(event.target.value)} required></input>
-            <button onClick={searchFeed}>검색</button>
+            <button
+              onClick={() => {
+                searchFeed();
+                setPage(1);
+              }}
+            >
+              검색
+            </button>
           </div>
           <button className="p-2 m-2 border-2" onClick={getMyFeed}>
             내 피드 조회
@@ -183,39 +211,37 @@ const Feed = () => {
             <div key={feed?.feedId}>
               <div className="p-4">
                 <div className="relative card bg-base-100" onMouseEnter={() => handleMouseEnter(feed.feedId)} onMouseLeave={handleMouseLeave}>
-                  <figure>
-                    <img src={`data:image/png;base64,${feed?.feedThumbnail}`} alt="feedImage" />
-                  </figure>
                   <div className="card-body">
-                    <div>
-                      <button className={'modal-open-btn'} onClick={() => setModalOpen(true)}>
-                        <div className="flex items-center justify-center flex-grow">
-                          <div className="avatar">
-                            <div className="w-12 rounded-full">
-                              <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-                            </div>
-                          </div>
-                          <div className="flex flex-col">
-                            <div className="pl-2">유저이름</div>
-                            <h2 className="card-title">{feed?.feedTitle}</h2>
-                          </div>
-                          <div>{feed.feedLikes}</div>
-                        </div>
-                      </button>
-                    </div>
-                    {ModalOpen && (
+                    <figure>
+                      <img src={`data:image/png;base64,${feed?.feedThumbnail}`} alt="feedImage" />
+                    </figure>
+                    {ModalOpen === feed.feedId && (
                       <div
                         className={'modal-container'}
                         ref={modalBackground}
                         onClick={(e) => {
                           if (e.target === modalBackground.current) {
-                            setModalOpen(false);
+                            setModalOpen(0);
                           }
                         }}
                       >
                         <div className={'modal-content'}>
-                          <p>리액트로 모달 구현하기</p>
-                          <button className={'modal-close-btn'} onClick={() => setModalOpen(false)}>
+                          <img src={`data:image/png;base64,${feed?.feedThumbnail}`} alt="feedImage" className="w-20" />
+                          <p>{feed.user.nickname}</p>
+                          <div className='flex'>
+                            {feed.user.likeCategories.map((category: string) => (
+                              <p className='p-2'>{category}</p>
+                            ))}
+                          </div>
+                          <div className='flex'>
+                            {feed.user.dislikeCategories.map((category: string) => (
+                              <p className='p-2'>{category}</p>
+                            ))}
+                          </div>
+                          <p>{feed.user.introduce}</p>
+                          <p>{feed.user.instagram}</p>
+                          <p>{feed.user.youtube}</p>
+                          <button className={'modal-close-btn'} onClick={() => setModalOpen(0)}>
                             모달 닫기
                           </button>
                         </div>
@@ -226,14 +252,30 @@ const Feed = () => {
                     {isOverlayVisible == feed.feedId && (
                       <div className="absolute inset-0 bg-black opacity-50">
                         <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-                          <p>This is the overlay text.</p>
-                          <p>This is the overlay text.</p>
-                          <p>This is the overlay text.</p>
-                          <p>This is the overlay text.</p>
+                          {feed.coordiContainer.outerCloth && <p>아우터: {feed.coordiContainer.outerCloth}</p>}
+                          {feed.coordiContainer.upperBody && <p>상의: {feed.coordiContainer.upperBody}</p>}
+                          {feed.coordiContainer.lowerBody && <p>하의: {feed.coordiContainer.lowerBody}</p>}
+                          {feed.coordiContainer.dress && <p>드레스: {feed.coordiContainer.dress}</p>}
                         </div>
                       </div>
                     )}
                   </Link>
+                </div>
+                <div>
+                  <button className={'modal-open-btn'} onClick={() => setModalOpen(feed.feedId)}>
+                    <div className="flex items-center justify-center flex-grow">
+                      <div className="avatar">
+                        <div className="w-12 rounded-full">
+                          <img src={`data:image/png;base64,${feed.user.profileImage}`} />
+                        </div>
+                      </div>
+                      <div className="flex flex-col">
+                        <div className="pl-2">{feed.user.nickname}</div>
+                        <h2 className="card-title">{feed?.feedTitle}</h2>
+                      </div>
+                      <div>{feed.feedLikes}</div>
+                    </div>
+                  </button>
                 </div>
               </div>
             </div>

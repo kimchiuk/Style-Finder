@@ -37,9 +37,8 @@ const SignUp = () => {
   };
 
   const handleOptionRemove = (option: string) => {
-    setSelectedOptions(selectedOptions.filter(item => item !== option));
+    setSelectedOptions(selectedOptions.filter((item) => item !== option));
   };
-
 
   useEffect(() => {
     setNotAllow(!(emailValid && pwValid && confirmPwValid && heightValid && weightValid && nickname && gender && image));
@@ -103,11 +102,11 @@ const SignUp = () => {
       return;
     }
 
-    const request: any = new FormData()
+    const request: any = new FormData();
 
-    console.log(image)
+    console.log(image);
 
-    const profileImage = image
+    const profileImage = image;
     const signUpRequest = new Blob(
       [
         JSON.stringify({
@@ -118,23 +117,24 @@ const SignUp = () => {
           weight: Number(weight),
           likeCategories: [],
           dislikeCategories: [],
-        })
+        }),
       ],
-      { type: 'application/json' }
-    )
-    
-    request.append('profileImage', profileImage)
-    request.append('signUpRequest', signUpRequest)
+      { type: 'application/json' },
+    );
 
-    api.signUp(request)
-    .then((response) => {
-      const message = response.data
-      alert(message)
-      navigate('/login')
-    })
-    .catch((error) => {
-      axiosError(error);
-    })
+    request.append('profileImage', profileImage);
+    request.append('signUpRequest', signUpRequest);
+
+    api
+      .signUp(request)
+      .then((response) => {
+        const message = response.data;
+        alert(message);
+        navigate('/login');
+      })
+      .catch((error) => {
+        axiosError(error);
+      });
   };
 
   return (
@@ -143,7 +143,7 @@ const SignUp = () => {
       <div className="flex justify-center h-full ">
         {!loginStore.isLogin ? (
           <div className=" box-border w-2/5 p-4 border-4 overflow-y-auto rounded-lg bg-[#F5F5F5] mt-5">
-            <div className='flex justify-between'>
+            <div className="flex justify-between">
               <div>
                 <div className="inputWrap mb-5">
                   <input className="input" placeholder="이메일 입력" value={email} onChange={handleEmail} />
@@ -157,15 +157,17 @@ const SignUp = () => {
                 <div className="inputWrap mb-5">
                   <input type="password" className="input" placeholder="비밀번호 확인" value={confirmPw} onChange={handleConfirmPw} />
                 </div>
-                <div className='flex flex-row'>
+                <div className="flex flex-row">
                   <div>
                     <div className="inputWrap mr-5 mb-5">
-                      <input className="input w-16 mr-2" placeholder="키 입력" value={height} onChange={handleHeight} />cm
+                      <input className="input w-16 mr-2" placeholder="키 입력" value={height} onChange={handleHeight} />
+                      cm
                     </div>
                   </div>
                   <div>
                     <div className="inputWrap">
-                      <input className="input w-24 mr-2" placeholder="몸무게 입력" value={weight} onChange={handleWeight} />kg
+                      <input className="input w-24 mr-2" placeholder="몸무게 입력" value={weight} onChange={handleWeight} />
+                      kg
                     </div>
                   </div>
                 </div>
@@ -180,13 +182,12 @@ const SignUp = () => {
                 <div className="inputWrap mb-5 customInputWrap">
                   <input type="file" accept="image/*" onChange={handleImageUpload} className="customFileInput" />
                 </div>
-
               </div>
-              <div className='w-1/2'>
-                <select
-                  className="select select-bordered w-full max-w-xs"
-                  onChange={handleSelectChange}>
-                  <option disabled selected>당신의 취향을 골라주세요</option>
+              <div className="w-1/2">
+                <select className="select select-bordered w-full max-w-xs" onChange={handleSelectChange}>
+                  <option disabled selected>
+                    당신의 취향을 골라주세요
+                  </option>
                   <option value="재킷">재킷</option>
                   <option value="조거팬츠">조거팬츠</option>
                   <option value="짚업">짚업</option>
@@ -213,28 +214,30 @@ const SignUp = () => {
                 {/* 선택된 옵션들 표시 */}
                 {selectedOptions.length > 0 && (
                   <div>
-                    <p className='flex justify-center mt-3'>선택된 옵션들</p>
-                    {selectedOptions.reduce((rows: string[][], option, index) => {
-                      if (index % 2 === 0) rows.push([] as string[]);
-                      rows[rows.length - 1].push(option);
-                      return rows;
-                    }, []).map((row, rowIndex) => (
-                      <div className="option-box-container flex justify-between" key={rowIndex}>
-                        {row.map(option => (
-                          <div className="option-box" key={option}>
-                            {option}
-                            <button className="option-button" onClick={() => handleOptionRemove(option)}>취소</button>
-                          </div>
-                        ))}
-                      </div>
-                    ))}
-
+                    <p className="flex justify-center mt-3">선택된 옵션들</p>
+                    {selectedOptions
+                      .reduce((rows: string[][], option, index) => {
+                        if (index % 2 === 0) rows.push([] as string[]);
+                        rows[rows.length - 1].push(option);
+                        return rows;
+                      }, [])
+                      .map((row, rowIndex) => (
+                        <div className="option-box-container flex justify-between" key={rowIndex}>
+                          {row.map((option) => (
+                            <div className="option-box" key={option}>
+                              {option}
+                              <button className="option-button" onClick={() => handleOptionRemove(option)}>
+                                취소
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      ))}
                   </div>
-
                 )}
               </div>
             </div>
-            <div className='flex justify-center'>
+            <div className="flex justify-center">
               <button onClick={onClickConfirmButton} disabled={notAllow} className="bottomButton">
                 회원가입
               </button>

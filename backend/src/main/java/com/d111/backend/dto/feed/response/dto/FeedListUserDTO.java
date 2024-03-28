@@ -22,15 +22,15 @@ public class FeedListUserDTO {
     List<String> dislikeCategories;
 
     @Schema(description = "프로필 이미지", example = "binary")
-    private byte[] profileImage;
+    byte[] profileImage;
 
     @Schema(description = "유저 소개", example = "안녕")
-    private String introduce = "";
+    String introduce;
 
     @Schema(description = "유저 인스타그램", example = "instagram.com")
-    private String instagram = "";
+    String instagram;
 
     @Schema(description = "유저 유튜브", example = "youtube.com")
-    private String youtube = "";
+    String youtube;
 
 }

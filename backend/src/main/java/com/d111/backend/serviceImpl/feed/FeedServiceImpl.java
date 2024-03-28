@@ -9,9 +9,7 @@ import com.d111.backend.dto.feed.request.FeedCreateRequest;
 import com.d111.backend.dto.feed.request.FeedUpdateRequest;
 import com.d111.backend.dto.feed.request.FittingRequest;
 import com.d111.backend.dto.feed.response.*;
-import com.d111.backend.dto.feed.response.dto.FeedListReadResponseDTO;
-import com.d111.backend.dto.feed.response.dto.FeedListUserDTO;
-import com.d111.backend.dto.feed.response.dto.FeedUpdateResponseDTO;
+import com.d111.backend.dto.feed.response.dto.*;
 import com.d111.backend.entity.comment.Comment;
 import com.d111.backend.entity.coordi.Coordi;
 import com.d111.backend.entity.feed.Feed;
@@ -188,19 +186,68 @@ public class FeedServiceImpl implements FeedService {
     @Override
     public ResponseEntity<FeedReadResponse> read(Long feedId) {
         Optional<Feed> optionalFeed = feedRepository.findById(feedId);
+
         Feed feed = optionalFeed.orElseThrow(() -> new FeedNotFoundException("피드를 찾을 수 없습니다."));
+
         Coordi coordi = mongoCoordiRepository.findById(feed.getCoordiId())
                 .orElseThrow(() -> new CoordiNotFoundException("코디를 찾을 수 없습니다."));
+
+        CoordiContainer coordiContainer = CoordiContainer.builder()
+                .id(coordi.get_id())
+                .outerCloth(coordi.getOuterCloth())
+                .upperBody(coordi.getUpperBody())
+                .lowerBody(coordi.getLowerBody())
+                .dress(coordi.getDress())
+                .build();
 
         // 피드 썸네일 읽어오기
         String storeFilePath = feed.getFeedThumbnail();
         byte[] feedThumbnail = getFeedThumbnailFromS3(bucket, storeFilePath);
-        feed.setFeedThumbnail(Arrays.toString(feedThumbnail));
 
         List<Comment> comments = commentRepository.findAllByFeedId(feed);
 
-        FeedReadResponse response = FeedReadResponse.createFeedReadResponse(
-                "success", feed, mongoCoordiRepository, comments);
+        byte[] userProfileImage = getFeedThumbnailFromS3(bucket, feed.getUserId().getProfileImage());
+
+        FeedUserDTO feedUserDTO = FeedUserDTO.builder()
+                .nickname(feed.getUserId().getNickname())
+                .profileImage(userProfileImage)
+                .build();
+
+        List<FeedCommentDTO> feedCommentDTOList = new ArrayList<>();
+
+        for (Comment comment: comments) {
+            User user = comment.getUserId();
+
+            byte[] commenterProfileImage = getFeedThumbnailFromS3(bucket, user.getProfileImage());
+
+            FeedCommentDTO commentInfo = FeedCommentDTO.builder()
+                    .nickname(user.getNickname())
+                    .profileImage(commenterProfileImage)
+                    .content(comment.getContent())
+                    .commentCreatedDate(comment.getCreatedDate())
+                    .commentUpdatedDate(comment.getUpdatedDate())
+                    .build();
+
+            feedCommentDTOList.add(commentInfo);
+        }
+
+        FeedReadResponseDTO feedReadResponseDTO = FeedReadResponseDTO.builder()
+                .user(feedUserDTO)
+                .feedTitle(feed.getFeedTitle())
+                .feedContent(feed.getFeedContent())
+                .feedThumbnail(feedThumbnail)
+                .feedLikes(feed.getFeedLikes())
+                .originWriter(feed.getOriginWriter())
+                .coordiContainer(coordiContainer)
+                .feedCreatedDate(feed.getFeedCreatedDate())
+                .feedUpdatedDate(feed.getFeedUpdatedDate())
+                .comments(feedCommentDTOList)
+                .build();
+
+        FeedReadResponse response = FeedReadResponse.builder()
+                .message("success")
+                .data(feedReadResponseDTO)
+                .build();
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -397,10 +444,6 @@ public class FeedServiceImpl implements FeedService {
             feedList = feedRepository.findByfeedTitleContaining(title, pageable);
         }
 
-        if (feedList.isEmpty()) {
-            throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
-        }
-
         List<FeedListReadResponseDTO> feedListReadResponseDTOList = new ArrayList<>();
 
         // 각 피드의 이미지를 가져와서 리스트에 추가
@@ -449,10 +492,6 @@ public class FeedServiceImpl implements FeedService {
     public ResponseEntity<FeedListReadResponse> searchMyFeed(Optional<User> userId, Pageable pageable) {
 
         Page<Feed> feedList = feedRepository.findAllByuserId(userId, pageable);
-
-        if (feedList.isEmpty()) {
-            throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
-        }
 
         List<FeedListReadResponseDTO> feedListReadResponseDTOList = new ArrayList<>();
 
