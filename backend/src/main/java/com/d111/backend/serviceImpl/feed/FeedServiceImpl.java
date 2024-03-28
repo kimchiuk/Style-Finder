@@ -409,9 +409,8 @@ public class FeedServiceImpl implements FeedService {
     }
 
     @Override
-    public ResponseEntity<?> fitting(FittingRequest fittingRequest) {
+    public ResponseEntity<?> fitting(FittingRequest fittingRequest, Long feedId) {
 
-        Long feedId = fittingRequest.getFeedId();
         String newFeedTitle = fittingRequest.getNewFeedTitle();
         String newFeedContent = fittingRequest.getNewFeedContent();
 

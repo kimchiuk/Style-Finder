@@ -109,8 +109,8 @@ public class FeedController {
 
     // 피팅해보기
     @PostMapping(value = "/{feedId}/fitting")
-    public ResponseEntity<?> fitting(@RequestBody FittingRequest fittingRequest){
-        return feedService.fitting(fittingRequest);
+    public ResponseEntity<?> fitting(@RequestBody FittingRequest fittingRequest, @PathVariable Long feedId){
+        return feedService.fitting(fittingRequest, feedId);
     }
 
 

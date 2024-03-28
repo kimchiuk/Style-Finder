@@ -35,7 +35,7 @@ public interface FeedService {
 
     ResponseEntity<FeedListReadResponse> searchMyFeed(Optional<User> userId);
 
-    ResponseEntity<?> fitting(FittingRequest fittingRequest);
+    ResponseEntity<?> fitting(FittingRequest fittingRequest, Long feedId);
 }
 
 
