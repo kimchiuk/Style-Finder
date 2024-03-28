@@ -1,4 +1,5 @@
 import axiosInstance from '../../shared/utils/axiosInstance';
+import jwtAxiosInstance from '../../shared/utils/jwtAxiosInstance';
 import { SignInRequestDTO, SignUpRequestDTO, TokenReissueRequestDTO, UpdateUserInfoRequestDTO } from './user-types';
 
 const url = '/api/user';
@@ -10,8 +11,8 @@ const api = {
   signIn: (request: SignInRequestDTO) => axiosInstance.post(`${url}/signIn`, request),
 
   tokenReissue: (request: TokenReissueRequestDTO) => axiosInstance.post(`${url}/token`, request),
-  updateUserInfo: (request: UpdateUserInfoRequestDTO, profileImage: File[]) => axiosInstance.put(`${url}/update`, { request, profileImage }),
-  removeUserInfo: () => axiosInstance.delete(`${url}/remove`),
+  updateUserInfo: (request: UpdateUserInfoRequestDTO, profileImage: File[]) => jwtAxiosInstance.put(`${url}/update`, { request, profileImage }),
+  removeUserInfo: () => jwtAxiosInstance.delete(`${url}/remove`),
 };
 
 export default api;
