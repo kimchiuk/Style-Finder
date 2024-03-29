@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,11 +37,12 @@ public class RecommendServiceImpl implements RecommendService {
     private String bucket; // 버킷 이름
 
     @Override
-    public ResponseEntity<List<ItemRecommendResponseDTO>> recommendItems(String itemCategory) {
+    public ResponseEntity<List<ItemRecommendResponseDTO>> recommendItems() {
         List<String> fileNames = new ArrayList<>();
 
-        String encodedCategory = URLEncoder.encode(itemCategory, StandardCharsets.UTF_8);
-        String apiUrl = "http://j10d111.p.ssafy.io:8000/get_outer_items/?outer_category=" + encodedCategory;
+        String apiUrl = "http://j10d111.p.ssafy.io:8000/get_outer_items/?outer_category=%ED%8C%A8%EB%94%A9";
+//        String encodedCategory = URLEncoder.encode(itemCategory, StandardCharsets.UTF_8);
+//        String apiUrl = "http://j10d111.p.ssafy.io:8000/get_outer_items/?outer_category=" + encodedCategory;
         try {
             URL url = new URL(apiUrl);
 

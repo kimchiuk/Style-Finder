@@ -15,9 +15,9 @@ public class RecommendController {
 
     private final RecommendService recommendService;
 
-    @GetMapping("/outer/{itemCategory}")
-    public ResponseEntity<List<ItemRecommendResponseDTO>> recommend(@RequestParam String itemCategory) {
-        return recommendService.recommendItems(itemCategory);
+    @GetMapping("/outercloth")
+    public ResponseEntity<List<ItemRecommendResponseDTO>> recommend() {
+        return recommendService.recommendItems();
     }
 
 }
