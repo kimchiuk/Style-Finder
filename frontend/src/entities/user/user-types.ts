@@ -43,6 +43,15 @@ export interface User {
   closets: Closet[];
 }
 
+export interface UserInfo {
+  nickname: string;
+  profileImage: string;
+  likeCategories: string[];
+  dislikeCategories: string[];
+  height: number;
+  weight: number;
+}
+
 export interface RefreshToken {
   refreshToken: string;
   accessToken: string;
