@@ -146,7 +146,7 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<TokenReissueResponseDTO> tokenReissue(TokenReissueRequestDTO tokenReissueRequestDTO) {
         RefreshToken refreshToken =
                 refreshTokenRepository.findById(tokenReissueRequestDTO.getRefreshToken())
-                        .orElseThrow(() -> new RefreshTokenNotFoundException("리프레시 토큰이 유효하지 않습니다."));
+                        .orElseThrow(() -> new RefreshTokenNotFoundException("다시 로그인이 필요합니다."));
 
         String accessToken = JWTUtil.createToken(refreshToken.getEmail(), accessTokenMinute);
 

@@ -28,4 +28,7 @@ public class FeedListReadResponse {
     @Schema(description = "데이터")
     private List<FeedListReadResponseDTO> data;
 
+    @Schema(description = "총 페이지 수")
+    private int totalPage;
+
 }

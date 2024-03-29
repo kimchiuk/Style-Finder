@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable prefer-const */
 import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import axiosInstance from './axiosInstance';
 
@@ -67,7 +69,7 @@ const beforeRes = async (res: AxiosResponse): Promise<any> => {
 
     return await axios(originalRequest);
   } else if (data?.message === 'MALFORMED_TOKEN' || data?.message === 'INVALID_TOKEN' || data?.message === 'JWT_TOKEN_ERROR') {
-    return Promise.reject({ response: { status: 401, data : { message: '다시 로그인이 필요합니다.' } } });
+    return Promise.reject({ response: { status: 401, data: { message: '다시 로그인이 필요합니다.' } } });
   }
 
   return res;

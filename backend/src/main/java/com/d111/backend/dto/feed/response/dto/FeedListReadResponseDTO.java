@@ -16,7 +16,7 @@ public class FeedListReadResponseDTO {
     private Long feedId;
 
     @Schema(description = "유저 정보", example = "1")
-    private User user;
+    private FeedListUserDTO user;
 
     @Schema(description = "피드 제목", example = "멋있는 코디")
     private String feedTitle;

@@ -50,7 +50,7 @@ public class ClosetServiceImpl implements ClosetService {
     private final AmazonS3Client amazonS3Client;
 
     // FastAPI 서버의 엔드포인트 URL
-    private final String FAST_API_ENDPOINT = "http://localhost:8000/closet";
+    private final String FAST_API_ENDPOINT = "http://j10d111a.p.ssafy.io:8000/closet";
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket; // 버킷 이름
