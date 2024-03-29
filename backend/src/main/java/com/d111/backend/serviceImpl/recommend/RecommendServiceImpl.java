@@ -41,12 +41,9 @@ public class RecommendServiceImpl implements RecommendService {
     @Override
     public ResponseEntity<List<ItemRecommendResponseDTO>>recommendItems(String items, String detailCategory) {
 
-        System.out.println("이상하네");
-
         List<String> fileNames = new ArrayList<>();
         String encodedCategory = URLEncoder.encode(detailCategory, StandardCharsets.UTF_8);
         String apiUrl = "http://j10d111.p.ssafy.io:8000/get_" + items +"_items/?" + items + "_category=" + encodedCategory;
-
 
         try {
             URL url = new URL(apiUrl);
@@ -91,8 +88,6 @@ public class RecommendServiceImpl implements RecommendService {
 
         List<ItemRecommendResponseDTO> itemRecommendResponseDTOList = new ArrayList<>();
 
-        System.out.println(fileNames);
-
         for (String fileName : fileNames) {
             byte[] outerImage;
 
@@ -122,6 +117,5 @@ public class RecommendServiceImpl implements RecommendService {
 
         return ResponseEntity.status(HttpStatus.OK).body(itemRecommendResponseDTOList);
     }
-
 
 }
