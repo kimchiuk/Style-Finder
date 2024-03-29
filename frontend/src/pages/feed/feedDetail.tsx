@@ -28,6 +28,7 @@ const FeedDetail = () => {
       .catch((error: any) => {
         axiosError(error);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

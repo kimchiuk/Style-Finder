@@ -181,6 +181,7 @@ const Feed = () => {
     } else if (feedListType === 'search') {
       searchFeed();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   return (
@@ -228,14 +229,14 @@ const Feed = () => {
                         <div className={'modal-content'}>
                           <img src={`data:image/png;base64,${feed?.feedThumbnail}`} alt="feedImage" className="w-20" />
                           <p>{feed.user.nickname}</p>
-                          <div className='flex'>
+                          <div className="flex">
                             {feed.user.likeCategories.map((category: string) => (
-                              <p className='p-2'>{category}</p>
+                              <p className="p-2">{category}</p>
                             ))}
                           </div>
-                          <div className='flex'>
+                          <div className="flex">
                             {feed.user.dislikeCategories.map((category: string) => (
-                              <p className='p-2'>{category}</p>
+                              <p className="p-2">{category}</p>
                             ))}
                           </div>
                           <p>{feed.user.introduce}</p>

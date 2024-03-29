@@ -1,5 +1,5 @@
 import Navbar from '../../widgets/nav/navbar';
-import Button from '../../shared/ui/button/Button';
+import Button from '../../shared/ui/button/button';
 import Image from '../../assets/images/aimodel.png';
 
 import { useEffect, useState } from 'react';
