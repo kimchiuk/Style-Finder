@@ -3,6 +3,7 @@ import Button from '../../shared/ui/button/Button';
 import Image from '../../assets/images/aimodel.png';
 
 import { useEffect, useState } from 'react';
+import './cordi.css'
 
 // import useLoginStore from '../../shared/store/useLoginStore';
 
@@ -67,7 +68,7 @@ const Coordi = () => {
   ];
   const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'white', 'black'];
 
-  useEffect(() => {});
+  useEffect(() => { });
 
   // 부위별 리스트 새로 고침
   const handleClickRefresh = (part: string, direction: number) => {
@@ -118,7 +119,7 @@ const Coordi = () => {
   };
 
   // 내 옷장 모달 열기
-  const handleClickCloset = () => {};
+  const handleClickCloset = () => { };
 
   const handleTitleChange = (newTitle: string) => {
     setTitle(newTitle);
@@ -154,7 +155,7 @@ const Coordi = () => {
   };
 
   // 카카오톡 공유 버튼
-  const handleShareToKakao = () => {};
+  const handleShareToKakao = () => { };
 
   // 검색 설정 화면 토글 버튼
   const toggleScreen = () => {
@@ -215,21 +216,10 @@ const Coordi = () => {
         {/* // 로그인 상태 */}
         <div>
           <div>코디</div>
-          <div className="">
-            <div className="p-2 m-2 bg-gray-100 rounded-lg">
-              <div>
-                <div>
-                  <label>제목</label>
-                  <br />
-                  <input type="text" id="title" value={title} onChange={() => handleTitleChange} />
-                </div>
-                <div>
-                  <label>내용</label>
-                  <br />
-                  <textarea id="content" value={content} onChange={() => handleContentChange} rows={4} cols={50}></textarea>
-                </div>
-
-                <div>
+          <div className="mx-auto px-36">
+            <div className="p-2 m-2 bg-gray-100 rounded-lg ">
+              <div className='  '>
+                <div className='w-auto'>
                   <button onClick={toggleScreen}>검색 설정</button>
                   {isScreenVisible && (
                     <div>
@@ -237,10 +227,13 @@ const Coordi = () => {
                         <h2>카테고리 선택</h2>
                         <div className="flex flex-wrap">
                           {categories.map((category) => (
-                            <label className={`bg-white rounded-full px-4 py-2 m-2 shadow-md cursor-pointer ${selectedCategories.includes(category) ? 'bg-red-500' : 'bg-black'}`}>
-                              <input type="checkbox" className="hidden" checked={selectedCategories.includes(category)} onChange={() => toggleCategory(category)} onClick={handlesUpdateCategories} />
+                            <button
+                              key={category}
+                              className={`rounded-full px-4 py-2 m-2 shadow-md cursor-pointer ${selectedCategories.includes(category) ? 'selected' : 'button'}`}
+                              onClick={() => toggleCategory(category)}
+                            >
                               {category}
-                            </label>
+                            </button>
                           ))}
                         </div>
                       </div>
@@ -248,31 +241,22 @@ const Coordi = () => {
                         <h2>색상 선택</h2>
                         <div className="flex flex-wrap">
                           {colors.map((color) => (
-                            <label className={`bg-white rounded-full px-4 py-2 m-2 shadow-md cursor-pointer ${selectedColors.includes(color) ? 'bg-red-500' : 'bg-black'}`}>
-                              <input type="checkbox" className="hidden" checked={selectedColors.includes(color)} onChange={() => toggleColor(color)} onClick={handleUpdateColors} />
+                            <button
+                              key={color}
+                              className={`rounded-full px-4 py-2 m-2 shadow-md cursor-pointer ${selectedColors.includes(color) ? 'selected' : 'button'}`}
+                              onClick={() => toggleColor(color)}
+                            >
                               {color}
-                            </label>
+                            </button>
                           ))}
                         </div>
                       </div>
-                      <div>
-                        <h2>선택된 항목 </h2>
-                        <div className="flex flex-wrap">
-                          {selectedColors.map((color) => (
-                            <label className={`bg-white rounded-full px-4 py-2 m-2 shadow-md cursor-pointer`}>{color}</label>
-                          ))}
-                          {selectedCategories.map((category) => (
-                            <label className={`bg-white rounded-full px-4 py-2 m-2 shadow-md cursor-pointer`}>{category}</label>
-                          ))}
-                        </div>
-                      </div>
-
                       <Button value="검색" onClick={() => handleSearchItems} />
                     </div>
                   )}
                 </div>
               </div>
-              <div>
+              <div className='flex flex-col'>
                 <label>아우터</label>
                 <div className="flex">
                   <img id="outer" src={outerCloth} onClick={() => handleClickCloset} />
@@ -394,14 +378,34 @@ const Coordi = () => {
                     value=">"
                   />
                 </div>
+                <div>
+                  <label className='mr-3 text'>제목</label>
+                  <input
+                    type="text"
+                    id="title"
+                    value={title}
+                    onChange={(event) => handleTitleChange(event.target.value)}
+                    className="rounded-full border border-gray-300 p-2"
+                  />
+                </div>
 
+                <div className="textarea-container mr-4">
+                  <label className="textarea-label">내용</label>
+                  <textarea
+                    id="content"
+                    value={content}
+                    onChange={(event) => handleContentChange(event.target.value)}
+                    rows={4}
+                    cols={50}
+                    className="textarea-field"
+                  ></textarea>
+                </div>
                 <Button value="피드 등록" onClick={() => handleCreateFeed} />
                 <Button value="카카오톡 공유" onClick={() => handleShareToKakao} />
               </div>
             </div>
           </div>
         </div>
-        {/* )} */}
       </div>
     </>
   );
