@@ -1,5 +1,4 @@
 import Navbar from '../../widgets/nav/navbar';
-import Button from '../../shared/ui/button/button';
 import Image from '../../assets/images/aimodel.png';
 
 import { useEffect, useState } from 'react';
@@ -241,7 +240,7 @@ const Coordi = () => {
                           ))}
                         </div>
                       </div>
-                      <Button value="검색" onClick={() => handleSearchItems} />
+                      <button value="검색" onClick={() => handleSearchItems} />
                     </div>
                   )}
                 </div>
@@ -255,7 +254,7 @@ const Coordi = () => {
                     {outerList.map((item) => (
                       <div>
                         <img className="p-2 m-2 bg-gray-200 rounded-lg" src={item} alt="" />
-                        <Button
+                        <button
                           onClick={() => {
                             handleClickItem('outer', item);
                           }}
@@ -264,13 +263,13 @@ const Coordi = () => {
                       </div>
                     ))}
                   </div>
-                  <Button
+                  <button
                     onClick={() => {
                       handleClickRefresh('outer', -1);
                     }}
                     value="<"
                   />
-                  <Button
+                  <button
                     onClick={() => {
                       handleClickRefresh('outer', 1);
                     }}
@@ -286,7 +285,7 @@ const Coordi = () => {
                     {upperList.map((item) => (
                       <div>
                         <img className="p-2 m-2 bg-gray-200 rounded-lg" src={item} alt="" />
-                        <Button
+                        <button
                           onClick={() => {
                             handleClickItem('upper', item);
                           }}
@@ -295,13 +294,13 @@ const Coordi = () => {
                       </div>
                     ))}
                   </div>
-                  <Button
+                  <button
                     onClick={() => {
                       handleClickRefresh('upper', -1);
                     }}
                     value="<"
                   />
-                  <Button
+                  <button
                     onClick={() => {
                       handleClickRefresh('upper', 1);
                     }}
@@ -316,7 +315,7 @@ const Coordi = () => {
                     {lowerList.map((item) => (
                       <div>
                         <img className="p-2 m-2 bg-gray-200 rounded-lg" src={item} alt="" />
-                        <Button
+                        <button
                           onClick={() => {
                             handleClickItem('lower', item);
                           }}
@@ -325,13 +324,13 @@ const Coordi = () => {
                       </div>
                     ))}
                   </div>
-                  <Button
+                  <button
                     onClick={() => {
                       handleClickRefresh('lower', -1);
                     }}
                     value="<"
                   />
-                  <Button
+                  <button
                     onClick={() => {
                       handleClickRefresh('lower', 1);
                     }}
@@ -346,7 +345,7 @@ const Coordi = () => {
                     {dressList.map((item) => (
                       <div>
                         <img className="p-2 m-2 bg-gray-200 rounded-lg" src={item} alt="" />
-                        <Button
+                        <button
                           onClick={() => {
                             handleClickItem('dress', item);
                           }}
@@ -355,13 +354,13 @@ const Coordi = () => {
                       </div>
                     ))}
                   </div>
-                  <Button
+                  <button
                     onClick={() => {
                       handleClickRefresh('dress', -1);
                     }}
                     value="<"
                   />
-                  <Button
+                  <button
                     onClick={() => {
                       handleClickRefresh('dress', 1);
                     }}
@@ -377,8 +376,8 @@ const Coordi = () => {
                   <label className="textarea-label">내용</label>
                   <textarea id="content" value={content} onChange={(event) => handleContentChange(event.target.value)} rows={4} cols={50} className="textarea-field"></textarea>
                 </div>
-                <Button value="피드 등록" onClick={() => handleCreateFeed} />
-                <Button value="카카오톡 공유" onClick={() => handleShareToKakao} />
+                <button value="피드 등록" onClick={() => handleCreateFeed} />
+                <button value="카카오톡 공유" onClick={() => handleShareToKakao} />
               </div>
             </div>
           </div>
