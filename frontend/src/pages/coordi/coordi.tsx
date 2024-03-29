@@ -2,7 +2,7 @@ import Navbar from '../../widgets/nav/navbar';
 import Image from '../../assets/images/aimodel.png';
 
 import { useEffect, useState } from 'react';
-import './cordi.css';
+import './coordi.css';
 
 // import useLoginStore from '../../shared/store/useLoginStore';
 

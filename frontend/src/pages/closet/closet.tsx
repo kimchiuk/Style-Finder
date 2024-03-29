@@ -2,8 +2,8 @@
 // import useUserStore from '../../shared/store/useUserStore';
 
 // import { Link } from 'react-router-dom';
-import MyClosetAnalysis from './myClosetAnalysis';
 import MyCloset from './myCloset';
+import MyClosetAnalysis from './myClosetAnalysis';
 
 const Closet = () => {
   // const loginStore = useLoginStore();
