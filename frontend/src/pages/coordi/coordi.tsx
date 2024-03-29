@@ -1,8 +1,8 @@
 import Navbar from '../../widgets/nav/navbar';
-import Button from '../../shared/ui/button/Button';
 import Image from '../../assets/images/aimodel.png';
 
 import { useEffect, useState } from 'react';
+import './cordi.css';
 
 // import useLoginStore from '../../shared/store/useLoginStore';
 
@@ -161,22 +161,12 @@ const Coordi = () => {
     setIsScreenVisible(!isScreenVisible);
   };
 
-  // 검색 설정 카테고리 업데이트
-  const handlesUpdateCategories = () => {
-    setSelectedCategories([...selectedCategories]);
-  };
-
   const toggleCategory = (category: string) => {
     if (selectedCategories.includes(category)) {
       setSelectedCategories(selectedCategories.filter((item) => item !== category));
     } else {
       setSelectedCategories([...selectedCategories, category]);
     }
-  };
-
-  // 검색 설정 색상 업데이트
-  const handleUpdateColors = () => {
-    setSelectedColors([...selectedColors]);
   };
 
   const toggleColor = (color: string) => {
@@ -215,21 +205,10 @@ const Coordi = () => {
         {/* // 로그인 상태 */}
         <div>
           <div>코디</div>
-          <div className="">
-            <div className="p-2 m-2 bg-gray-100 rounded-lg">
-              <div>
-                <div>
-                  <label>제목</label>
-                  <br />
-                  <input type="text" id="title" value={title} onChange={() => handleTitleChange} />
-                </div>
-                <div>
-                  <label>내용</label>
-                  <br />
-                  <textarea id="content" value={content} onChange={() => handleContentChange} rows={4} cols={50}></textarea>
-                </div>
-
-                <div>
+          <div className="mx-auto px-36">
+            <div className="p-2 m-2 bg-gray-100 rounded-lg ">
+              <div className="">
+                <div className="w-auto">
                   <button onClick={toggleScreen}>검색 설정</button>
                   {isScreenVisible && (
                     <div>
@@ -237,10 +216,13 @@ const Coordi = () => {
                         <h2>카테고리 선택</h2>
                         <div className="flex flex-wrap">
                           {categories.map((category) => (
-                            <label className={`bg-white rounded-full px-4 py-2 m-2 shadow-md cursor-pointer ${selectedCategories.includes(category) ? 'bg-red-500' : 'bg-black'}`}>
-                              <input type="checkbox" className="hidden" checked={selectedCategories.includes(category)} onChange={() => toggleCategory(category)} onClick={handlesUpdateCategories} />
+                            <button
+                              key={category}
+                              className={`rounded-full px-4 py-2 m-2 shadow-md cursor-pointer ${selectedCategories.includes(category) ? 'selected' : 'button'}`}
+                              onClick={() => toggleCategory(category)}
+                            >
                               {category}
-                            </label>
+                            </button>
                           ))}
                         </div>
                       </div>
@@ -248,31 +230,22 @@ const Coordi = () => {
                         <h2>색상 선택</h2>
                         <div className="flex flex-wrap">
                           {colors.map((color) => (
-                            <label className={`bg-white rounded-full px-4 py-2 m-2 shadow-md cursor-pointer ${selectedColors.includes(color) ? 'bg-red-500' : 'bg-black'}`}>
-                              <input type="checkbox" className="hidden" checked={selectedColors.includes(color)} onChange={() => toggleColor(color)} onClick={handleUpdateColors} />
+                            <button
+                              key={color}
+                              className={`rounded-full px-4 py-2 m-2 shadow-md cursor-pointer ${selectedColors.includes(color) ? 'selected' : 'button'}`}
+                              onClick={() => toggleColor(color)}
+                            >
                               {color}
-                            </label>
+                            </button>
                           ))}
                         </div>
                       </div>
-                      <div>
-                        <h2>선택된 항목 </h2>
-                        <div className="flex flex-wrap">
-                          {selectedColors.map((color) => (
-                            <label className={`bg-white rounded-full px-4 py-2 m-2 shadow-md cursor-pointer`}>{color}</label>
-                          ))}
-                          {selectedCategories.map((category) => (
-                            <label className={`bg-white rounded-full px-4 py-2 m-2 shadow-md cursor-pointer`}>{category}</label>
-                          ))}
-                        </div>
-                      </div>
-
-                      <Button value="검색" onClick={() => handleSearchItems} />
+                      <button value="검색" onClick={() => handleSearchItems} />
                     </div>
                   )}
                 </div>
               </div>
-              <div>
+              <div className="flex flex-col">
                 <label>아우터</label>
                 <div className="flex">
                   <img id="outer" src={outerCloth} onClick={() => handleClickCloset} />
@@ -281,7 +254,7 @@ const Coordi = () => {
                     {outerList.map((item) => (
                       <div>
                         <img className="p-2 m-2 bg-gray-200 rounded-lg" src={item} alt="" />
-                        <Button
+                        <button
                           onClick={() => {
                             handleClickItem('outer', item);
                           }}
@@ -290,13 +263,13 @@ const Coordi = () => {
                       </div>
                     ))}
                   </div>
-                  <Button
+                  <button
                     onClick={() => {
                       handleClickRefresh('outer', -1);
                     }}
                     value="<"
                   />
-                  <Button
+                  <button
                     onClick={() => {
                       handleClickRefresh('outer', 1);
                     }}
@@ -312,7 +285,7 @@ const Coordi = () => {
                     {upperList.map((item) => (
                       <div>
                         <img className="p-2 m-2 bg-gray-200 rounded-lg" src={item} alt="" />
-                        <Button
+                        <button
                           onClick={() => {
                             handleClickItem('upper', item);
                           }}
@@ -321,13 +294,13 @@ const Coordi = () => {
                       </div>
                     ))}
                   </div>
-                  <Button
+                  <button
                     onClick={() => {
                       handleClickRefresh('upper', -1);
                     }}
                     value="<"
                   />
-                  <Button
+                  <button
                     onClick={() => {
                       handleClickRefresh('upper', 1);
                     }}
@@ -342,7 +315,7 @@ const Coordi = () => {
                     {lowerList.map((item) => (
                       <div>
                         <img className="p-2 m-2 bg-gray-200 rounded-lg" src={item} alt="" />
-                        <Button
+                        <button
                           onClick={() => {
                             handleClickItem('lower', item);
                           }}
@@ -351,13 +324,13 @@ const Coordi = () => {
                       </div>
                     ))}
                   </div>
-                  <Button
+                  <button
                     onClick={() => {
                       handleClickRefresh('lower', -1);
                     }}
                     value="<"
                   />
-                  <Button
+                  <button
                     onClick={() => {
                       handleClickRefresh('lower', 1);
                     }}
@@ -372,7 +345,7 @@ const Coordi = () => {
                     {dressList.map((item) => (
                       <div>
                         <img className="p-2 m-2 bg-gray-200 rounded-lg" src={item} alt="" />
-                        <Button
+                        <button
                           onClick={() => {
                             handleClickItem('dress', item);
                           }}
@@ -381,27 +354,34 @@ const Coordi = () => {
                       </div>
                     ))}
                   </div>
-                  <Button
+                  <button
                     onClick={() => {
                       handleClickRefresh('dress', -1);
                     }}
                     value="<"
                   />
-                  <Button
+                  <button
                     onClick={() => {
                       handleClickRefresh('dress', 1);
                     }}
                     value=">"
                   />
                 </div>
+                <div>
+                  <label className="mr-3 text">제목</label>
+                  <input type="text" id="title" value={title} onChange={(event) => handleTitleChange(event.target.value)} className="p-2 border border-gray-300 rounded-full" />
+                </div>
 
-                <Button value="피드 등록" onClick={() => handleCreateFeed} />
-                <Button value="카카오톡 공유" onClick={() => handleShareToKakao} />
+                <div className="mr-4 textarea-container">
+                  <label className="textarea-label">내용</label>
+                  <textarea id="content" value={content} onChange={(event) => handleContentChange(event.target.value)} rows={4} cols={50} className="textarea-field"></textarea>
+                </div>
+                <button value="피드 등록" onClick={() => handleCreateFeed} />
+                <button value="카카오톡 공유" onClick={() => handleShareToKakao} />
               </div>
             </div>
           </div>
         </div>
-        {/* )} */}
       </div>
     </>
   );

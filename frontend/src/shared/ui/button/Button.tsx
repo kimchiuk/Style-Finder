@@ -13,8 +13,3 @@ const Button = (props: ButtonProps) => {
 };
 
 export default Button;
-
-// 사용법: 사용하고자 하는 페이지에서 import 후 하단 코드 형태로 작성
-// <Button value="Hello World" onClick={() => console.log("Button Clicked")}>
-//   Button
-// </Button>

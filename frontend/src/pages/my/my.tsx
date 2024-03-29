@@ -7,8 +7,6 @@ import { UserInfo } from '../../entities/user/user-types';
 import useLoginStore from '../../shared/store/useLoginStore';
 import { useNavigate } from 'react-router';
 
-// import { ResponsivePieCanvas } from '@nivo/pie';
-
 const style = [
   '레트로',
   '로맨틱',

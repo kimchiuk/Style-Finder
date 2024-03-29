@@ -54,6 +54,8 @@ dependencies {
 
 	// Google Gson
 	implementation 'com.google.code.gson:gson:2.10.1'
+	implementation 'org.json:json:20210307'
+
 
 	// Spring Security
 	implementation 'org.springframework.boot:spring-boot-starter-security'

@@ -1,3 +1,5 @@
+/* eslint-disable no-useless-escape */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Navbar from '../../widgets/nav/navbar';
 
 import { useEffect, useState } from 'react';
@@ -33,24 +35,25 @@ const SignIn = () => {
   const onClickConfirmButton = () => {
     const request = {
       email: email,
-      password: pw
-    }
+      password: pw,
+    };
 
-    api.signIn(request)
-    .then((response) => {
-      localStorage.setItem('userInfo', JSON.stringify(response.data))
-      localStorage.setItem('isLoggedIn', 'true');
-      loginStore.setLogin();
-      alert('로그인 성공');
-      navigate('/');
-    })
-    .catch((error: any) => {
-      const errorCode = error.response.status
-      const errorMessage = error.response.data.message
-      console.log(error)
-      console.log(errorCode, errorMessage)
-      alert(errorMessage);
-    })
+    api
+      .signIn(request)
+      .then((response) => {
+        localStorage.setItem('userInfo', JSON.stringify(response.data));
+        localStorage.setItem('isLoggedIn', 'true');
+        loginStore.setLogin();
+        alert('로그인 성공');
+        navigate('/');
+      })
+      .catch((error: any) => {
+        const errorCode = error.response.status;
+        const errorMessage = error.response.data.message;
+        console.log(error);
+        console.log(errorCode, errorMessage);
+        alert(errorMessage);
+      });
   };
 
   useEffect(() => {
