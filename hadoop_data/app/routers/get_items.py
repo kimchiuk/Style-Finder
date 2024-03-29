@@ -1,16 +1,11 @@
+from fastapi import APIRouter
 from typing import Optional
-from fastapi import FastAPI
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import col
+from app.main import spark
 import pandas as pd
 
-app = FastAPI()
 
+router = APIRouter()
 
-spark = SparkSession.builder \
-    .appName("FastAPISparkIntegration") \
-    .master("yarn") \
-    .getOrCreate()
 
 def outer_query_data(
         outer_category: str,
@@ -61,10 +56,21 @@ def outer_query_data(
     return filtered_df.toPandas()
     
 
-@app.get("/get_outer_items/")
-async def process_and_get_data(category: str):
+@router.get("/get_outer_items/")
+async def process_and_get_data(
+        outer_category: str,
+        outer_color: Optional[str] = None,
+        outer_sub_color: Optional[str] = None,
+        outer_material: Optional[str] = None,
+        outer_detail: Optional[str] = None,
+        outer_print: Optional[str] = None,
+        outer_length: Optional[str] = None,
+        outer_neck_line: Optional[str] = None,
+        outer_collar: Optional[str] = None,
+        outer_fit: Optional[str] = None,
+    ):
     """FastAPI 엔드포인트 함수"""
-    result_pd_df = outer_query_data(category)
+    result_pd_df = outer_query_data(outer_category, outer_color, outer_sub_color, outer_material, outer_detail, outer_print, outer_length, outer_neck_line, outer_collar, outer_fit)
     return result_pd_df.to_dict(orient="records")
 
 
@@ -103,7 +109,7 @@ def top_query_data(
         if user_input:  # 사용자 입력값이 있는 경우
             match_found = False  # 매칭되는 데이터가 있는지 추적
             for i in range(11):  # 가능한 필드 이름 순회
-                field_name = f"데이터셋 정보_데이터셋 상세설명_상의_아우터_0_{attr}_{i}"
+                field_name = f"데이터셋 정보_데이터셋 상세설명_라벨링_상의_0_{attr}_{i}"
                 if field_name in df.columns:
                     # 해당 필드가 존재하며 사용자 입력값과 일치하는지 확인
                     filter_condition = filter_condition | (df[field_name] == user_input)
@@ -117,12 +123,22 @@ def top_query_data(
     return filtered_df.toPandas()
 
 
-@app.get("/get_bottom_items/")
-async def process_and_get_data(category: str):
+@router.get("/get_top_items/")
+async def process_and_get_data(
+        top_category: str,
+        top_color: Optional[str] = None,
+        top_sub_color: Optional[str] = None,
+        top_material: Optional[str] = None,
+        top_detail: Optional[str] = None,
+        top_print: Optional[str] = None,
+        top_length: Optional[str] = None,
+        top_neck_line: Optional[str] = None,
+        top_collar: Optional[str] = None,
+        top_fit: Optional[str] = None,
+    ):
     """FastAPI 엔드포인트 함수"""
-    result_pd_df = bottom_query_data(category)
+    result_pd_df = top_query_data(top_category, top_color, top_sub_color, top_material, top_detail, top_print, top_length, top_neck_line, top_collar, top_fit)
     return result_pd_df.to_dict(orient="records")
-
 
 
 def bottom_query_data(
@@ -154,7 +170,7 @@ def bottom_query_data(
         if user_input:  # 사용자 입력값이 있는 경우
             match_found = False  # 매칭되는 데이터가 있는지 추적
             for i in range(11):  # 가능한 필드 이름 순회
-                field_name = f"데이터셋 정보_데이터셋 상세설명_하의_아우터_0_{attr}_{i}"
+                field_name = f"데이터셋 정보_데이터셋 상세설명_라벨링_하의_0_{attr}_{i}"
                 if field_name in df.columns:
                     # 해당 필드가 존재하며 사용자 입력값과 일치하는지 확인
                     filter_condition = filter_condition | (df[field_name] == user_input)
@@ -168,12 +184,20 @@ def bottom_query_data(
     return filtered_df.toPandas()
 
 
-@app.get("/get_dress_items/")
-async def process_and_get_data(category: str):
+@router.get("/get_bottom_items/")
+async def process_and_get_data(
+        bottom_category: str,
+        bottom_color: Optional[str] = None,
+        bottom_sub_color: Optional[str] = None,
+        bottom_material: Optional[str] = None,
+        bottom_detail: Optional[str] = None,
+        bottom_print: Optional[str] = None,
+        bottom_length: Optional[str] = None,
+        bottom_fit: Optional[str] = None,
+):
     """FastAPI 엔드포인트 함수"""
-    result_pd_df = dress_query_data(category)
+    result_pd_df = bottom_query_data(bottom_category, bottom_color, bottom_sub_color, bottom_material, bottom_detail, bottom_print, bottom_length, bottom_fit)
     return result_pd_df.to_dict(orient="records")
-
 
 
 def dress_query_data(
@@ -225,7 +249,19 @@ def dress_query_data(
     return filtered_df.toPandas()
 
 
-@app.on_event("shutdown")
-def shutdown_event():
-    """애플리케이션 종료 시 SparkSession 종료"""
-    spark.stop()
+@router.get("/get_bottom_items/")
+async def process_and_get_data(
+        dress_category: str,
+        dress_color: Optional[str] = None,
+        dress_sub_color: Optional[str] = None,
+        dress_material: Optional[str] = None,
+        dress_detail: Optional[str] = None,
+        dress_print: Optional[str] = None,
+        dress_length: Optional[str] = None,
+        dress_neck_line: Optional[str] = None,
+        dress_collar: Optional[str] = None,
+        dress_fit: Optional[str] = None,
+):
+    """FastAPI 엔드포인트 함수"""
+    result_pd_df = dress_query_data(dress_category, dress_color, dress_sub_color, dress_material, dress_detail, dress_print, dress_length, dress_neck_line, dress_collar, dress_fit)
+    return result_pd_df.to_dict(orient="records")
