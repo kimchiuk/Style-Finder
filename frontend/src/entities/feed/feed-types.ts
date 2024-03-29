@@ -1,5 +1,3 @@
-import { Comment } from '../comment/comment-types';
-
 export interface FeedCreateRequestDTO extends FeedContent {
   coordiId: string;
 }
@@ -8,22 +6,49 @@ export interface FeedUpdateRequestDTO extends FeedContent {}
 
 export interface FeedUpdateResponseDTO extends FeedContent {}
 
+export interface FeedUser {
+  nickname: string;
+  profileImage: string;
+}
+
+
 export interface FeedContent {
   feedTitle: string;
   feedContent: string;
 }
 
-export interface Feed extends FeedContent {
-  id: number;
+export interface FeedComment {
+    nickname: string;
+    profileImage: string;
+    content: string;
+    commentCreatedDate: Date;
+    commentUpdatedDate: Date;
+}
 
-  userId: number;
+export interface CoordiContainer {
+  id: string;
+  outerCloth: string;
+  upperBody: string;
+  lowerBody: string;
+  dress: string;
+}
+
+export interface FeedInfo extends FeedContent {
+  feedId: number;
+
+  user: FeedUser;
   feedThumbnail: string;
   feedCreatedDate: Date;
   feedUpdatedDate: Date;
 
-  coordiId: number;
+  outerCloth: string;
+  upperBody: string;
+  lowerBody: string;
+  dress: string;
+
   feedLikes: number;
   originWriter: string;
 
-  comments: Comment[];
+  coordiContainer: CoordiContainer;
+  comments: FeedComment[];
 }

@@ -1,19 +1,18 @@
-import Navbar from '../../widgets/nav/navbar';
+// import useLoginStore from '../../shared/store/useLoginStore';
+// import useUserStore from '../../shared/store/useUserStore';
 
-import useLoginStore from '../../shared/store/useLoginStore';
-import useUserStore from '../../shared/store/useUserStore';
+import My from '../my/my';
 
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
 const Recommendation = () => {
-  const loginStore = useLoginStore();
-  const userStore = useUserStore();
+  // const loginStore = useLoginStore();
+  // const userStore = useUserStore();
 
   return (
     <>
-      <Navbar></Navbar>
       <div>
-        {!loginStore.isLogin ? (
+        {/* {!loginStore.isLogin ? (
           // 로그아웃 상태
           <div>
             <div>추천</div>
@@ -22,12 +21,13 @@ const Recommendation = () => {
             </Link>
           </div>
         ) : (
-          // 로그인 상태
-          <div>
-            <div>추천</div>
-            <div>id: {userStore.id}</div>
-          </div>
-        )}
+          // 로그인 상태 */}
+        <div>
+          <div>추천</div>
+
+          <My></My>
+        </div>
+        {/* )} */}
       </div>
     </>
   );

@@ -13,11 +13,11 @@ import java.util.Optional;
 @Repository
 public interface FeedRepository extends JpaRepository<Feed, Long> {
 
-    List<Feed> findAllByOrderByFeedLikesDesc();
+    Page<Feed> findAllByOrderByFeedLikesDesc(Pageable pageable);
 
     Page<Feed> findByfeedTitleContaining(String title, Pageable pageable);
 
-    List<Feed> findAllByuserId(Optional<User> userId);
+    Page<Feed> findAllByuserId(Optional<User> userId, Pageable pageable);
 }
 
 

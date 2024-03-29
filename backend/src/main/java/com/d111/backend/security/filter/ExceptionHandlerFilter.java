@@ -36,7 +36,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
     public void setErrorResponse(HttpServletResponse response,
                                  Throwable throwable) throws IOException {
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setStatus(HttpStatus.OK.value());
         response.setContentType("application/json; charset=UTF-8");
 
         Map<String, Object> responseData = new HashMap<>();

@@ -2,9 +2,11 @@ package com.d111.backend.controller.feed;
 
 import com.d111.backend.dto.feed.request.FeedCoordiCreateRequest;
 import com.d111.backend.dto.feed.request.FeedUpdateRequest;
+import com.d111.backend.dto.feed.request.FittingRequest;
 import com.d111.backend.dto.feed.response.FeedDeleteResponse;
 import com.d111.backend.dto.feed.response.FeedListReadResponse;
 import com.d111.backend.dto.feed.response.FeedReadResponse;
+import com.d111.backend.dto.feed.response.dto.FeedListReadResponseDTO;
 import com.d111.backend.entity.feed.Feed;
 import com.d111.backend.entity.user.User;
 import com.d111.backend.exception.user.EmailNotFoundException;
@@ -14,6 +16,7 @@ import com.d111.backend.util.JWTUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +36,9 @@ public class FeedController {
 
     // 피드 전체 조회
     @GetMapping
-    public ResponseEntity<FeedListReadResponse> readFeedList() {
-        return feedService.readList();
+    public ResponseEntity<FeedListReadResponse> readFeedList(@RequestParam(value = "page", defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 8);
+        return feedService.readList(pageable);
     }
 
     // 피드 및 코디 생성
@@ -72,40 +76,39 @@ public class FeedController {
 
     // 피드 인기순 조회
     @GetMapping("/popularity")
-    public ResponseEntity<FeedListReadResponse> readPopularFeedList() {
-        return feedService.readPopularList();
+    public ResponseEntity<FeedListReadResponse> readPopularFeedList(@RequestParam(value = "page", defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 8);
+        return feedService.readPopularList(pageable);
     }
 
 
     // 피드 서치
-    @GetMapping("/search")
-    public ResponseEntity<Page<Feed>> searchByTitle(@RequestParam(value = "title") String title, Pageable pageable) {
-        Page<Feed> searchResult = feedService.searchByTitle(title, pageable);
-        return ResponseEntity.ok(searchResult);
-    }
+//    @GetMapping("/search")
+//    public ResponseEntity<FeedListReadResponse> searchByTitle(@RequestParam(value = "title") String title, Pageable pageable) {
+//        return feedService.searchByTitle(title, pageable);
+//    }
 
     
     // 내가 쓴 피드 조회
     @GetMapping("/myfeed")
-    public ResponseEntity<FeedListReadResponse> searchMyFeed() {
+    public ResponseEntity<FeedListReadResponse> searchMyFeed(@RequestParam(value = "page", defaultValue = "0") int page) {
         Optional<User> currentUserId = getCurrentUserId();
-        ResponseEntity<FeedListReadResponse> responseEntity = feedService.searchMyFeed(currentUserId);
-
-        return responseEntity;
+        Pageable pageable = PageRequest.of(page, 8);
+        return feedService.searchMyFeed(currentUserId, pageable);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<FeedListReadResponse> searchByTitle(@RequestParam(value = "title") String title,
+                                                              @RequestParam(value = "page", defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 8);
+        return feedService.searchByTitle(title, pageable);
+    }
 
-//
-//      // 피드 서치 페이지설정
-//        @GetMapping("/search")
-//        public ResponseEntity<Page<Feed>> searchByTitle(@RequestParam(value = "title") String title,
-//                                                        @RequestParam(value = "page", defaultValue = "0") int page,
-//                                                        @RequestParam(value = "size", defaultValue = "10") int size) {
-//            Pageable pageable = PageRequest.of(page, size);
-//            Page<Feed> searchResult = feedService.searchByTitle(title, pageable);
-//            return ResponseEntity.ok(searchResult);
-//        }
-
+    // 피팅해보기
+    @PostMapping(value = "/{feedId}/fitting")
+    public ResponseEntity<?> fitting(@RequestBody FittingRequest fittingRequest, @PathVariable Long feedId){
+        return feedService.fitting(fittingRequest, feedId);
+    }
 
 
     private Optional<User> getCurrentUserId() {
