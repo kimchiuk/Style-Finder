@@ -1,9 +1,8 @@
 import Navbar from '../../widgets/nav/navbar';
-import Button from '../../shared/ui/button/Button';
 import Image from '../../assets/images/aimodel.png';
 
 import { useEffect, useState } from 'react';
-import './cordi.css'
+import './coordi.css';
 
 // import useLoginStore from '../../shared/store/useLoginStore';
 
@@ -68,7 +67,7 @@ const Coordi = () => {
   ];
   const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'white', 'black'];
 
-  useEffect(() => { });
+  useEffect(() => {});
 
   // 부위별 리스트 새로 고침
   const handleClickRefresh = (part: string, direction: number) => {
@@ -119,7 +118,7 @@ const Coordi = () => {
   };
 
   // 내 옷장 모달 열기
-  const handleClickCloset = () => { };
+  const handleClickCloset = () => {};
 
   const handleTitleChange = (newTitle: string) => {
     setTitle(newTitle);
@@ -155,16 +154,11 @@ const Coordi = () => {
   };
 
   // 카카오톡 공유 버튼
-  const handleShareToKakao = () => { };
+  const handleShareToKakao = () => {};
 
   // 검색 설정 화면 토글 버튼
   const toggleScreen = () => {
     setIsScreenVisible(!isScreenVisible);
-  };
-
-  // 검색 설정 카테고리 업데이트
-  const handlesUpdateCategories = () => {
-    setSelectedCategories([...selectedCategories]);
   };
 
   const toggleCategory = (category: string) => {
@@ -173,11 +167,6 @@ const Coordi = () => {
     } else {
       setSelectedCategories([...selectedCategories, category]);
     }
-  };
-
-  // 검색 설정 색상 업데이트
-  const handleUpdateColors = () => {
-    setSelectedColors([...selectedColors]);
   };
 
   const toggleColor = (color: string) => {
@@ -218,8 +207,8 @@ const Coordi = () => {
           <div>코디</div>
           <div className="mx-auto px-36">
             <div className="p-2 m-2 bg-gray-100 rounded-lg ">
-              <div className='  '>
-                <div className='w-auto'>
+              <div className="">
+                <div className="w-auto">
                   <button onClick={toggleScreen}>검색 설정</button>
                   {isScreenVisible && (
                     <div>
@@ -251,12 +240,12 @@ const Coordi = () => {
                           ))}
                         </div>
                       </div>
-                      <Button value="검색" onClick={() => handleSearchItems} />
+                      <button value="검색" onClick={() => handleSearchItems} />
                     </div>
                   )}
                 </div>
               </div>
-              <div className='flex flex-col'>
+              <div className="flex flex-col">
                 <label>아우터</label>
                 <div className="flex">
                   <img id="outer" src={outerCloth} onClick={() => handleClickCloset} />
@@ -265,7 +254,7 @@ const Coordi = () => {
                     {outerList.map((item) => (
                       <div>
                         <img className="p-2 m-2 bg-gray-200 rounded-lg" src={item} alt="" />
-                        <Button
+                        <button
                           onClick={() => {
                             handleClickItem('outer', item);
                           }}
@@ -274,13 +263,13 @@ const Coordi = () => {
                       </div>
                     ))}
                   </div>
-                  <Button
+                  <button
                     onClick={() => {
                       handleClickRefresh('outer', -1);
                     }}
                     value="<"
                   />
-                  <Button
+                  <button
                     onClick={() => {
                       handleClickRefresh('outer', 1);
                     }}
@@ -296,7 +285,7 @@ const Coordi = () => {
                     {upperList.map((item) => (
                       <div>
                         <img className="p-2 m-2 bg-gray-200 rounded-lg" src={item} alt="" />
-                        <Button
+                        <button
                           onClick={() => {
                             handleClickItem('upper', item);
                           }}
@@ -305,13 +294,13 @@ const Coordi = () => {
                       </div>
                     ))}
                   </div>
-                  <Button
+                  <button
                     onClick={() => {
                       handleClickRefresh('upper', -1);
                     }}
                     value="<"
                   />
-                  <Button
+                  <button
                     onClick={() => {
                       handleClickRefresh('upper', 1);
                     }}
@@ -326,7 +315,7 @@ const Coordi = () => {
                     {lowerList.map((item) => (
                       <div>
                         <img className="p-2 m-2 bg-gray-200 rounded-lg" src={item} alt="" />
-                        <Button
+                        <button
                           onClick={() => {
                             handleClickItem('lower', item);
                           }}
@@ -335,13 +324,13 @@ const Coordi = () => {
                       </div>
                     ))}
                   </div>
-                  <Button
+                  <button
                     onClick={() => {
                       handleClickRefresh('lower', -1);
                     }}
                     value="<"
                   />
-                  <Button
+                  <button
                     onClick={() => {
                       handleClickRefresh('lower', 1);
                     }}
@@ -356,7 +345,7 @@ const Coordi = () => {
                     {dressList.map((item) => (
                       <div>
                         <img className="p-2 m-2 bg-gray-200 rounded-lg" src={item} alt="" />
-                        <Button
+                        <button
                           onClick={() => {
                             handleClickItem('dress', item);
                           }}
@@ -365,13 +354,13 @@ const Coordi = () => {
                       </div>
                     ))}
                   </div>
-                  <Button
+                  <button
                     onClick={() => {
                       handleClickRefresh('dress', -1);
                     }}
                     value="<"
                   />
-                  <Button
+                  <button
                     onClick={() => {
                       handleClickRefresh('dress', 1);
                     }}
@@ -379,29 +368,16 @@ const Coordi = () => {
                   />
                 </div>
                 <div>
-                  <label className='mr-3 text'>제목</label>
-                  <input
-                    type="text"
-                    id="title"
-                    value={title}
-                    onChange={(event) => handleTitleChange(event.target.value)}
-                    className="rounded-full border border-gray-300 p-2"
-                  />
+                  <label className="mr-3 text">제목</label>
+                  <input type="text" id="title" value={title} onChange={(event) => handleTitleChange(event.target.value)} className="p-2 border border-gray-300 rounded-full" />
                 </div>
 
-                <div className="textarea-container mr-4">
+                <div className="mr-4 textarea-container">
                   <label className="textarea-label">내용</label>
-                  <textarea
-                    id="content"
-                    value={content}
-                    onChange={(event) => handleContentChange(event.target.value)}
-                    rows={4}
-                    cols={50}
-                    className="textarea-field"
-                  ></textarea>
+                  <textarea id="content" value={content} onChange={(event) => handleContentChange(event.target.value)} rows={4} cols={50} className="textarea-field"></textarea>
                 </div>
-                <Button value="피드 등록" onClick={() => handleCreateFeed} />
-                <Button value="카카오톡 공유" onClick={() => handleShareToKakao} />
+                <button value="피드 등록" onClick={() => handleCreateFeed} />
+                <button value="카카오톡 공유" onClick={() => handleShareToKakao} />
               </div>
             </div>
           </div>

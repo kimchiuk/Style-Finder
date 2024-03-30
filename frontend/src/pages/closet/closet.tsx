@@ -2,8 +2,8 @@
 // import useUserStore from '../../shared/store/useUserStore';
 
 // import { Link } from 'react-router-dom';
-import MyClosetAnalysis from './myClosetAnalysis';
-import MyCloset from './myCloset';
+// import MyCloset from './myCloset';
+// import MyClosetAnalysis from './myClosetAnalysis';
 
 const Closet = () => {
   // const loginStore = useLoginStore();
@@ -23,10 +23,10 @@ const Closet = () => {
         ) : (
           // 로그인 상태 */}
         <div>
-          <div>취향 분석</div>
+          {/* <div>취향 분석</div>
           <MyClosetAnalysis></MyClosetAnalysis>
           <div>내 옷장</div>
-          <MyCloset></MyCloset>
+          <MyCloset></MyCloset> */}
         </div>
         {/* )} */}
       </div>

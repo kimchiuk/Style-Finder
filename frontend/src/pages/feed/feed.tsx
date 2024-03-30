@@ -181,6 +181,7 @@ const Feed = () => {
     } else if (feedListType === 'search') {
       searchFeed();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   return (
