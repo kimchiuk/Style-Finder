@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Keywords from '../../features/analysis/kewords';
 import useUserStore from '../../shared/store/useUserStore';
 import api from '../../entities/user/user-apis';
@@ -62,31 +62,75 @@ const My = () => {
   const loginStore = useLoginStore();
   const navigate = useNavigate();
 
+  const modalBackground = useRef(null);
+
   const [userInfo, setUserInfo] = useState<UserInfo>();
 
   const [isUpdate, setIsUpdate] = useState(false);
-  const [updateImgage, setUpdateImage] = useState<File | null>();
 
   const [height, setHeight] = useState(0);
   const [weight, setWeight] = useState(0);
   const [nickname, setNickname] = useState('');
-  const [likeCategories, setLikeCategories] = useState<string[]>([]);
+  const [image, setImage] = useState<File | null>(null);
   const [dislikeCategories, setDislikeCategories] = useState<string[]>([]);
 
   const [heightValid, setHeightValid] = useState(true);
   const [weightValid, setWeightValid] = useState(true);
+  const [notAllow, setNotAllow] = useState(true);
+
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    if (!selectedOptions.includes(value)) {
+      setSelectedOptions([...selectedOptions, value]);
+    }
+  };
+
+  const handleOptionRemove = (option: string) => {
+    setSelectedOptions(selectedOptions.filter((item) => item !== option));
+  };
+
+  useEffect(() => {
+    setNotAllow(!(heightValid && weightValid && nickname));
+  }, [heightValid, weightValid, nickname]);
+
+  const validateNumber = (value: string) => {
+    return /^[0-9]*$/.test(value) && value.length > 0;
+  };
+
+  const handleHeight = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setHeight(Number(value));
+    setHeightValid(validateNumber(value));
+  };
+
+  const handleWeight = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setWeight(Number(value));
+    setWeightValid(validateNumber(value));
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setImage(file);
+    }
+  };
 
   const modifyUserInfo = () => {
+    if (notAllow) return;
+
     const request: any = new FormData();
 
-    const profileImage = updateImgage;
-    const signUpRequest = new Blob(
+    const profileImage = image;
+    const updateUserInfoRequest = new Blob(
       [
         JSON.stringify({
           nickname: nickname,
           height: height,
           weight: weight,
-          likeCategories: likeCategories,
+          likeCategories: selectedOptions,
           dislikeCategories: dislikeCategories,
         }),
       ],
@@ -94,12 +138,14 @@ const My = () => {
     );
 
     request.append('profileImage', profileImage);
-    request.append('signUpRequest', signUpRequest);
+    request.append('updateUserInfoRequest', updateUserInfoRequest);
 
     api
       .updateUserInfo(request)
       .then((response) => {
         console.log(response);
+        setIsUpdate(false);
+        getUserInfo();
       })
       .catch((error) => {
         const errorCode = axiosError(error);
@@ -111,34 +157,7 @@ const My = () => {
       });
   };
 
-  const convertIsUpdate = () => {
-    setIsUpdate(!isUpdate);
-  };
-
-  const validateNumber = (value: string) => {
-    return /^[0-9]*$/.test(value) && value.length > 0;
-  };
-
-  const handleHeight = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    // setHeight(value);
-    setHeightValid(validateNumber(value));
-  };
-
-  const handleWeight = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    // setWeight(value);
-    setWeightValid(validateNumber(value));
-  };
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setUpdateImage(file);
-    }
-  };
-
-  useEffect(() => {
+  const getUserInfo = () => {
     api
       .getUserInfo()
       .then((response) => {
@@ -148,8 +167,16 @@ const My = () => {
         setHeight(data.height);
         setWeight(data.weight);
         setNickname(data.nickname);
-        setLikeCategories(data.likeCategories);
-        setDislikeCategories(data.dislikeCategories);
+
+        let likeCategories: string[] = [];
+
+        data.likeCategories.forEach((category) => {
+          if (category !== '') {
+            likeCategories.push(category);
+          }
+        });
+
+        setSelectedOptions(likeCategories);
       })
       .catch((error: any) => {
         const errorCode = axiosError(error);
@@ -159,6 +186,10 @@ const My = () => {
           navigate('/login');
         }
       });
+  };
+
+  useEffect(() => {
+    getUserInfo();
   }, []);
 
   return (
@@ -168,35 +199,114 @@ const My = () => {
         <div className="card-body">
           <div className="flex flex-row">
             <div className="avatar">
-              <div className="w-12 rounded-full">
-                <img src={`data:image/png;base64,${userInfo?.profileImage}`} />
-                {isUpdate && (
-                  <div className="inputWrap mb-5 customInputWrap">
-                    <input type="file" accept="image/*" onChange={handleImageUpload} className="customFileInput" />
-                  </div>
-                )}
-              </div>
+              <div className="w-12 rounded-full">{userInfo?.profileImage && <img src={`data:image/png;base64,${userInfo?.profileImage}`} />}</div>
             </div>
             <div className="flex flex-col ml-4">
-              {isUpdate ? (
-                <div>
-                  <button onClick={modifyUserInfo}>저장</button>
-                  <button onClick={convertIsUpdate}>취소</button>
-                </div>
-              ) : (
-                <div>
-                  <button onClick={convertIsUpdate}>수정</button>
-                </div>
-              )}
+              <div>
+                <button onClick={() => setIsUpdate(true)}>수정</button>
+              </div>
               <div>{userInfo?.nickname} 님</div>
               <div>
                 키: {userInfo?.height}cm, 몸무게: {userInfo?.weight}kg
               </div>
+              <div>선호: {userInfo?.likeCategories.map((category) => <span className="border-2">{category}</span>)}</div>
+              {isUpdate && (
+                <div
+                  className={'modal-container'}
+                  ref={modalBackground}
+                  onClick={(e) => {
+                    if (e.target === modalBackground.current) {
+                      setIsUpdate(false);
+                    }
+                  }}
+                >
+                  <div className="flex justify-between bg-white">
+                    <div>
+                      <div className="inputWrap mb-5">
+                        <input className="input" placeholder="닉네임 입력" value={nickname} onChange={(e) => setNickname(e.target.value)} />
+                      </div>
+                      <div className="flex flex-row">
+                        <div>
+                          <div className="inputWrap mr-5 mb-5">
+                            <input className="input w-16 mr-2" placeholder="키 입력" value={height} onChange={handleHeight} />
+                            cm
+                          </div>
+                        </div>
+                        <div>
+                          <div className="inputWrap">
+                            <input className="input w-24 mr-2" placeholder="몸무게 입력" value={weight} onChange={handleWeight} />
+                            kg
+                          </div>
+                        </div>
+                      </div>
+                      <div className="inputTitle mb-2">프로필 이미지 수정</div>
+                      <div className="inputWrap mb-5 customInputWrap">
+                        <input type="file" accept="image/*" onChange={handleImageUpload} className="customFileInput" />
+                      </div>
+                      <select className="select select-bordered w-full max-w-xs" onChange={handleSelectChange}>
+                        <option disabled selected>
+                          당신의 취향을 골라주세요
+                        </option>
+                        <option value="재킷">재킷</option>
+                        <option value="조거팬츠">조거팬츠</option>
+                        <option value="짚업">짚업</option>
+                        <option value="스커트">스커트</option>
+                        <option value="가디건">가디건</option>
+                        <option value="점퍼">점퍼</option>
+                        <option value="티셔츠">티셔츠</option>
+                        <option value="셔츠">셔츠</option>
+                        <option value="팬츠">팬츠</option>
+                        <option value="드레스">드레스</option>
+                        <option value="패딩">패딩</option>
+                        <option value="청바지">청바지</option>
+                        <option value="점프수트">점프수트</option>
+                        <option value="니트웨어">니트웨어</option>
+                        <option value="베스트">베스트</option>
+                        <option value="코트">코트</option>
+                        <option value="브라탑">브라탑</option>
+                        <option value="블라우스">블라우스</option>
+                        <option value="탑">탑</option>
+                        <option value="후드티">후드티</option>
+                        <option value="래깅스">래깅스</option>
+                      </select>
+
+                      {/* 선택된 옵션들 표시 */}
+                      {selectedOptions.length > 0 && (
+                        <div>
+                          <p className="flex justify-center mt-3">선택된 옵션들</p>
+                          {selectedOptions
+                            .reduce((rows: string[][], option, index) => {
+                              if (index % 2 === 0) rows.push([] as string[]);
+                              rows[rows.length - 1].push(option);
+                              return rows;
+                            }, [])
+                            .map((row, rowIndex) => (
+                              <div className="option-box-container flex justify-between" key={rowIndex}>
+                                {row.map((option) => (
+                                  <div className="option-box" key={option}>
+                                    {option}
+                                    <button className="option-button" onClick={() => handleOptionRemove(option)}>
+                                      취소
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+                            ))}
+                        </div>
+                      )}
+                      <div>
+                        <button className="border-2 p-2 m-2" onClick={modifyUserInfo}>
+                          저장
+                        </button>
+                        <button className="border-2 p-2 m-2" onClick={() => setIsUpdate(false)}>
+                          취소
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-          <div>
-            <div>선호 : {userInfo?.likeCategories.map((category) => <span key={category}>{category} </span>)}</div>
-            <div>비선호 : {userInfo?.dislikeCategories.map((category) => <span key={category}>{category} </span>)}</div>
           </div>
         </div>
       </div>

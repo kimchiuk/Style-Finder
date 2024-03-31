@@ -1,16 +1,23 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import WordCloud from 'react-d3-cloud';
+import api from '../../entities/analysis/analysis-apis';
+import { axiosError } from '../../shared/utils/axiosError';
+import useLoginStore from '../../shared/store/useLoginStore';
+import { useNavigate } from 'react-router';
+import { Favor } from '../../entities/analysis/analysis-types';
 
 // 본인 코디 데이터 + 선호 카테고리 + 내 옷장 데이터
 const Keywords = () => {
-  const [totalValue, setTotalValue] = useState(100);
+  const loginStore = useLoginStore();
+  const navigate = useNavigate();
 
-  const datas = [
+  const [datas, setDates] = useState([
+    // 카테고리
     { text: '재킷', value: 10 },
     { text: '조거팬츠', value: 10 },
     { text: '짚업', value: 10 },
     { text: '스커트', value: 10 },
-    { text: '가디건', value: 100 },
+    { text: '가디건', value: 10 },
     { text: '점퍼', value: 10 },
     { text: '티셔츠', value: 10 },
     { text: '셔츠', value: 10 },
@@ -27,6 +34,7 @@ const Keywords = () => {
     { text: '탑', value: 10 },
     { text: '후드티', value: 10 },
     { text: '래깅스', value: 10 },
+    // 스타일
     { text: '레트로', value: 10 },
     { text: '로맨틱', value: 10 },
     { text: '리조트', value: 10 },
@@ -50,21 +58,61 @@ const Keywords = () => {
     { text: '프레피', value: 10 },
     { text: '히피', value: 10 },
     { text: '힙합', value: 10 },
-  ];
+  ]);
 
   useEffect(() => {
     let value = 0;
 
-    datas.forEach((data) => {
-      value += data.value;
-    });
+    api
+      .analysisFavor()
+      .then((response) => {
+        const data: Favor = response.data;
 
-    setTotalValue(value);
+        const likeCategories = data.likeCategories;
+        const closetCategories = data.closetCategories;
+        const feedStyles = data.feedStyles;
+        const feedCategories = data.feedCategories;
+
+        datas.forEach((data) => {
+          for (const category in likeCategories) {
+            if (data.text == category) {
+              console.log(category);
+              data.value += 100;
+            }
+          }
+
+          for (const category in closetCategories) {
+            if (data.text == category) {
+              data.value += 50;
+            }
+          }
+
+          for (const style in feedStyles) {
+            if (data.text == style) {
+              data.value += 50;
+            }
+          }
+
+          for (const category in feedCategories) {
+            if (data.text == category) {
+              data.value += 20;
+            }
+          }
+        });
+      })
+      .catch((error) => {
+        const errorCode = axiosError(error);
+
+        if (errorCode == 401) {
+          loginStore.setLogout();
+          navigate('/login');
+        }
+      });
   }, []);
 
   return (
     <div>
-      <WordCloud data={datas} width={500} height={200} font="Times" fontWeight="bold" spiral="rectangular" rotate={(word) => word.value % 1} fontSize={(word) => Math.log2(word.value) * 5} />
+      <WordCloud data={datas} width={500} height={350} font="Times" fontWeight="bold" spiral="rectangular" rotate={(word) => word.value % 1} fontSize={(word) => Math.log2(word.value) * 5} />
     </div>
   );
 };

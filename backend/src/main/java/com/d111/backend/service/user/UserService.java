@@ -4,6 +4,7 @@ import com.d111.backend.dto.user.request.SignInRequestDTO;
 import com.d111.backend.dto.user.request.SignUpRequestDTO;
 import com.d111.backend.dto.user.request.TokenReissueRequestDTO;
 import com.d111.backend.dto.user.request.UpdateUserInfoRequestDTO;
+import com.d111.backend.dto.user.response.AnalysisFavorResponseDTO;
 import com.d111.backend.dto.user.response.GetUserResponse;
 import com.d111.backend.dto.user.response.SignInResponseDTO;
 import com.d111.backend.dto.user.response.TokenReissueResponseDTO;
@@ -23,4 +24,7 @@ public interface UserService {
     ResponseEntity<String> removeUserInfo();
 
     ResponseEntity<GetUserResponse> getUser();
+
+    ResponseEntity<AnalysisFavorResponseDTO> analysisFavor();
+
 }
