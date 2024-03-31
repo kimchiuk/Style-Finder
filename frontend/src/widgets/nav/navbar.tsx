@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react'; // useEffect 추가
-import useLoginStore from '../../shared/store/useLoginStore';
+import useLoginStore from '../../shared/store/use-login-store';
 import logo from '../../assets/logos/logo.png';
 
 const Navbar = () => {
@@ -37,10 +37,10 @@ const Navbar = () => {
 
       <div className="navbar-center flex items-center justify-center flex-grow m-5">
         <div className="flex justify-between menu menu-sm dropdown-content mt-3 z-[1] p-2 m-5  bg-[#F0ECE5] rounded-full w-1/2">
-          <Link to="/coordi" replace={true} className='mr-8'>
+          <Link to="/coordi" replace={true} className="mr-8">
             코디
           </Link>
-          <Link to="/feed" replace={true} className='mr-8'>
+          <Link to="/feed" replace={true} className="mr-8">
             피드
           </Link>
           <Link to="/analysis" replace={true}>
@@ -61,9 +61,7 @@ const Navbar = () => {
           </div>
         )}
       </div>
-
     </div>
-
   );
 };
 

@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom'; // Link import
 import './feed.css';
 import api from '../../entities/feed/feed-apis';
 import { axiosError } from '../../shared/utils/axiosError';
-import useLoginStore from '../../shared/store/useLoginStore';
+import useLoginStore from '../../shared/store/use-login-store';
 
 const Feed = () => {
   const navigate = useNavigate();

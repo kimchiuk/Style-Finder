@@ -4,7 +4,7 @@ import Navbar from '../../widgets/nav/navbar';
 
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import useLoginStore from '../../shared/store/useLoginStore';
+import useLoginStore from '../../shared/store/use-login-store';
 import api from '../../entities/user/user-apis';
 //import useUserStore from '../shared/store/useUserStore';
 

@@ -1,4 +1,4 @@
-import useUserStore from '../../shared/store/useUserStore';
+import useUserStore from '../../shared/store/use-user-store';
 
 // import { ResponsivePieCanvas } from '@nivo/pie';
 
