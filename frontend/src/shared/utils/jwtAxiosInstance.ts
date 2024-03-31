@@ -44,7 +44,6 @@ const requestFail = (err: AxiosError | Error): Promise<AxiosError> => {
 //before return response
 const beforeRes = async (res: AxiosResponse): Promise<any> => {
   const data = res.data;
-  console.log(data);
 
   if (data?.message === 'TOKEN_EXPIRED') {
     const userInfo: any = localStorage.getItem('userInfo');
