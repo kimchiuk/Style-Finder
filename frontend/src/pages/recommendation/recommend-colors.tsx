@@ -5,13 +5,12 @@ import Dropbox from '../../shared/ui/dropbox/dropbox';
 import Image from '../../assets/images/main2.png';
 // import { useParams } from 'react-router';
 
-export interface ColorResponse {
+interface ColorResponse {
   id: string;
   image: string;
 }
 
 const RecommendationColors = () => {
-  // URL 파라미터로 해당 아이템 값을 코디 해 보기로 넘길 예정
   // const { info } = useParams<{ id: string; image: string }>();
 
   const [color, setColor] = useState<string>('전체');

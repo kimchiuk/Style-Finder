@@ -1,19 +1,21 @@
 import Navbar from '../../widgets/nav/navbar';
 import Image from '../../assets/images/aimodel.png';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './coordi.css';
 
-// import useLoginStore from '../../shared/store/useLoginStore';
-
-// import { Link } from 'react-router-dom';
+// import { useParams } from 'react-router-dom';
 
 const Coordi = () => {
-  // const loginStore = useLoginStore();
+  // { part, id }
+  // 새로 작성하는 경우: part==new
+  // 피드에서 불러온 경우: part==all, feedId
+  // 추천 받아서 코디 해 보는 경우: part=={part}, clothId
+
+  // const { part, feedId, clothId } = useParams<{ part: string; id: string; clothId: string }>();
 
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
-
   const [coordiId, setCoordiId] = useState<string>('');
 
   const [outerCloth, setOuterCloth] = useState<string>(Image);
@@ -67,9 +69,65 @@ const Coordi = () => {
   ];
   const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'white', 'black'];
 
-  useEffect(() => {});
+  // useEffect(() => {
+  //   switch (part) {
+  //     case 'new':
+  //       break;
+  //     case 'all':
+  //       break;
+  //     case 'outer':
+  //       break;
+  //     case 'upper':
+  //       break;
+  //     case 'lower':
+  //       break;
+  //     case 'dress':
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // });
 
-  // 부위별 리스트 새로 고침
+  // // 해당 코디를 가져 오기
+  // const setTheCoordi = (id: string) => {
+  //   // 조회 api
+  //   const coordiReadResponseDTO = { _id: 'id', userId: 'userId', outerCloth: 'outerId' };
+
+  //   switch (itemPart) {
+  //     case '아우터':
+  //       setTheItem;
+  //       break;
+  //     case '상의':
+  //       break;
+  //     case '하의':
+  //       break;
+  //     case '드레스':
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // };
+
+  // // 해당 아이템을 가져 오기
+  // const setTheItem = (part: string, id: string) => {
+  //   // 조회 api
+
+  //   switch (itemPart) {
+  //     case '아우터':
+  //       setTheItem;
+  //       break;
+  //     case '상의':
+  //       break;
+  //     case '하의':
+  //       break;
+  //     case '드레스':
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // };
+
+  // 카테고리별 리스트 새로 고침
   const handleClickRefresh = (part: string, direction: number) => {
     const newList: string[] = [];
     let i: number = 0;

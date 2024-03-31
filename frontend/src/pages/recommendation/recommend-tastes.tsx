@@ -4,7 +4,7 @@ import Dropbox from '../../shared/ui/dropbox/dropbox';
 
 import Image from '../../assets/images/main1.png';
 
-export interface TasteResponse {
+interface TasteResponse {
   id: string;
   image: string;
 }

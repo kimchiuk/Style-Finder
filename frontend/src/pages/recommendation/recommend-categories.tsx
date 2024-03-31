@@ -4,7 +4,7 @@ import Dropbox from '../../shared/ui/dropbox/dropbox';
 
 import Image from '../../assets/images/main3.jpg';
 
-export interface CategoryResponse {
+interface CategoryResponse {
   id: string;
   image: string;
 }
