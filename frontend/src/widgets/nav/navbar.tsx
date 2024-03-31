@@ -57,7 +57,6 @@ const Navbar = () => {
         ) : (
           <div className="flex flex items-center justify-center">
             <button onClick={handleLogout}>로그아웃</button>
-            <span className="mr-2">{userNickname}님</span>
           </div>
         )}
       </div>

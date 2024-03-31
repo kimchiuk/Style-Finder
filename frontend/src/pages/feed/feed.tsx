@@ -187,8 +187,8 @@ const Feed = () => {
   return (
     <>
       <Navbar></Navbar>
-      <div>
-        <div className="flex justify-around">
+      <div className="mx-auto px-36 ">
+        <div className="flex justify-around ">
           <button className="p-2 m-2 border-2" onClick={getPopularFeed}>
             인기순 조회
           </button>
@@ -210,7 +210,7 @@ const Feed = () => {
         <div className="grid grid-flow-row-dense grid-cols-4">
           {feeds.map((feed: any) => (
             <div key={feed?.feedId}>
-              <div className="p-4">
+              <div className="p-2">
                 <div className="relative card bg-base-100" onMouseEnter={() => handleMouseEnter(feed.feedId)} onMouseLeave={handleMouseLeave}>
                   <div className="card-body">
                     <figure>
@@ -226,25 +226,33 @@ const Feed = () => {
                           }
                         }}
                       >
-                        <div className={'modal-content'}>
-                          <img src={`data:image/png;base64,${feed?.feedThumbnail}`} alt="feedImage" className="w-20" />
-                          <p>{feed.user.nickname}</p>
-                          <div className="flex">
-                            {feed.user.likeCategories.map((category: string) => (
-                              <p className="p-2">{category}</p>
-                            ))}
+                        <div className="modal-content w-1/2 h-2/5 flex justify-evenly items-center ">
+                          <div className="pr-5 pl-5 basis-1/3">
+                            <img src={`data:image/png;base64,${feed?.feedThumbnail}`} alt="feedImage" className="w-36 h-36 rounded-lg" />
+                            <p>{feed.user.instagram}</p>
+                            <p>{feed.user.youtube}</p>
                           </div>
-                          <div className="flex">
-                            {feed.user.dislikeCategories.map((category: string) => (
-                              <p className="p-2">{category}</p>
-                            ))}
+                          <div className="flex flex-col basis-2/3">
+                            <p className="text-xl pb-3">{feed.user.nickname}</p>
+                            <div className="introduction-box">
+                              <p>{feed.user.introduce}</p>
+                            </div>
+                            <div className="flex likebox">
+                              {feed.user.likeCategories.map((category: string) => (
+                                <p className="pt-2 pr-2">{category}</p>
+                              ))}
+                            </div>
+                            {/* <div className="flex likebox">
+                              {feed.user.dislikeCategories.map((category: string) => (
+                                <p className="pt-2 pr-2">{category}</p>
+                              ))}
+                            </div> */}
+                            <div>
+                              <button className="modal-close-btn closebutton" onClick={() => setModalOpen(0)}>
+                                모달 닫기
+                              </button>
+                            </div>
                           </div>
-                          <p>{feed.user.introduce}</p>
-                          <p>{feed.user.instagram}</p>
-                          <p>{feed.user.youtube}</p>
-                          <button className={'modal-close-btn'} onClick={() => setModalOpen(0)}>
-                            모달 닫기
-                          </button>
                         </div>
                       </div>
                     )}
@@ -262,19 +270,21 @@ const Feed = () => {
                     )}
                   </Link>
                 </div>
-                <div>
+                <div className="flex justify-between">
                   <button className={'modal-open-btn'} onClick={() => setModalOpen(feed.feedId)}>
-                    <div className="flex items-center justify-center flex-grow">
-                      <div className="avatar">
-                        <div className="w-12 rounded-full">
-                          <img src={`data:image/png;base64,${feed.user.profileImage}`} />
+                    <div className="flex justify-between pt-2">
+                      <div>
+                        <img src={`data:image/png;base64,${feed.user.profileImage}`} className="rounded-lg w-12 h-12" />
+                      </div>
+                      <div className="text-center">
+                        <div className="flex flex-row ml-4">
+                          <div className="flex flex-col">
+                            <div>{feed.user.nickname}</div>
+                            <h2>{feed?.feedTitle}</h2>
+                          </div>
                         </div>
                       </div>
-                      <div className="flex flex-col">
-                        <div className="pl-2">{feed.user.nickname}</div>
-                        <h2 className="card-title">{feed?.feedTitle}</h2>
-                      </div>
-                      <div>{feed.feedLikes}</div>
+                      {/* <div>{feed.feedLikes}</div> */}
                     </div>
                   </button>
                 </div>

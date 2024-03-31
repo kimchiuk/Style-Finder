@@ -28,3 +28,41 @@
   /* 기존 스타일 */
   z-index: 1000;
 }
+
+.introduction-box {
+  background-color: #F0ECE5;
+  padding: 10px;
+  border-radius: 10px;
+  width: 80%;
+}
+
+.likebox p {
+        border: 2px solid #F0ECE5;
+        padding: 8px;
+        margin: 4px;
+        display: inline-block;
+        border-radius: 20px;
+    }
+
+.closebutton{
+  border: 2px solid #F0ECE5;
+        padding: 8px;
+        margin: 4px;
+        display: inline-block;
+        border-radius: 20px;
+        background-color: #31304D;
+        color: white  ;
+}
+
+.custom-button {
+  background-color: #31304D;
+  border-radius: 8px;
+  width: 120px;
+  height: 30px;
+  color: white;
+}
+
+.author-name {
+  font-size: 1.2rem; 
+  font-weight: bold;
+}
