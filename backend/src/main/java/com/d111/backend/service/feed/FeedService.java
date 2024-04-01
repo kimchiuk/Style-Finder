@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public interface FeedService {
 
-    ResponseEntity<FeedCreateResponse> create(FeedCreateRequest feedCreateRequest, CoordiCreateRequest coordiCreateRequest, MultipartFile feedThumbnail);
+    ResponseEntity<FeedCreateResponse> create(FeedCreateRequest feedCreateRequest, CoordiCreateRequest coordiCreateRequest);
 
     ResponseEntity<FeedListReadResponse> readList(Pageable pageable);
 

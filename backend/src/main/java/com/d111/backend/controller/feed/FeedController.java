@@ -6,8 +6,6 @@ import com.d111.backend.dto.feed.request.FittingRequest;
 import com.d111.backend.dto.feed.response.FeedDeleteResponse;
 import com.d111.backend.dto.feed.response.FeedListReadResponse;
 import com.d111.backend.dto.feed.response.FeedReadResponse;
-import com.d111.backend.dto.feed.response.dto.FeedListReadResponseDTO;
-import com.d111.backend.entity.feed.Feed;
 import com.d111.backend.entity.user.User;
 import com.d111.backend.exception.user.EmailNotFoundException;
 import com.d111.backend.repository.user.UserRepository;
@@ -15,7 +13,6 @@ import com.d111.backend.service.feed.FeedService;
 import com.d111.backend.util.JWTUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -42,10 +39,9 @@ public class FeedController {
     }
 
     // 피드 및 코디 생성
-    @PostMapping(value = "/create",consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createFeedCoordi(@RequestPart(value = "feedcoordiCreateRequest") FeedCoordiCreateRequest request,
-                                                               @RequestPart(value = "feedThumbnail", required = false) MultipartFile feedThumbnail) {
-        return feedService.create(request.getFeedCreateRequest(), request.getCoordiCreateRequest(), feedThumbnail);
+    @PostMapping(value = "/create")
+    public ResponseEntity<?> createFeedCoordi(@RequestBody FeedCoordiCreateRequest request) {
+        return feedService.create(request.getFeedCreateRequest(), request.getCoordiCreateRequest());
     }
 
     // 피드 상세 조회
