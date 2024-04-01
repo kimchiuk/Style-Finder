@@ -1,8 +1,10 @@
+/* eslint-disable prefer-const */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useCallback, useEffect, useState } from 'react';
 import WordCloud from 'react-d3-cloud';
 import api from '../../entities/analysis/analysis-apis';
 import { axiosError } from '../../shared/utils/axiosError';
-import useLoginStore from '../../shared/store/useLoginStore';
+import useLoginStore from '../../shared/store/use-login-store';
 import { useNavigate } from 'react-router';
 import { Favor } from '../../entities/analysis/analysis-types';
 
