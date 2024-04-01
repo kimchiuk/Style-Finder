@@ -33,29 +33,31 @@ public class SecurityConfig {
     private final ExceptionHandlerFilter exceptionHandlerFilter;
 
     @Bean
-    public BCryptPasswordEncoder PasswordEncoder() { return new BCryptPasswordEncoder(); }
+    public BCryptPasswordEncoder PasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         // CORS 설정
-        httpSecurity.cors(httpSecurityCorsConfigurer ->
-                        httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()));
+        httpSecurity.cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer
+                .configurationSource(corsConfigurationSource()));
 
-        httpSecurity.sessionManagement(sessionConfig ->  sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        httpSecurity.sessionManagement(
+                sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable);
 
         httpSecurity.formLogin(AbstractHttpConfigurer::disable)
-                        .exceptionHandling(config -> {
-                            config.authenticationEntryPoint(((request, response, authException) ->
-                                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED)));
-                        });
+                .exceptionHandling(config -> {
+                    config.authenticationEntryPoint(((request, response, authException) -> response
+                            .sendError(HttpServletResponse.SC_UNAUTHORIZED)));
+                });
 
         httpSecurity.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/**").permitAll()
-                        .anyRequest().authenticated()
-        );
+                .requestMatchers("/**").permitAll()
+                .anyRequest().authenticated());
 
         httpSecurity
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
@@ -72,7 +74,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000", "http://j10d111a.p.ssafy.io"));
+        corsConfiguration.setAllowedOrigins(List.of("http://j10d111a.p.ssafy.io:3000", "http://j10d111a.p.ssafy.io"));
         corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
         corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
         corsConfiguration.setAllowCredentials(true);
