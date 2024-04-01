@@ -1,23 +1,16 @@
-from typing import Optional
 from fastapi import FastAPI
-from routers import color_recommend, item_recommend, style_recommend, test
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import col
-import pandas as pd
+from routers import color_recommend, item_recommend, style_recommend, test, get_items
+from data.spark_name import spark
+
 
 app = FastAPI()
 
 
-spark = SparkSession.builder \
-    .appName("FastAPISparkIntegration") \
-    .master("yarn") \
-    .getOrCreate()
-
-
-app.include_router(color_recommend.router, prefix="/")
-app.include_router(item_recommend.router, prefix="/")
-app.include_router(style_recommend.router, prefix="/")
-app.include_router(test.router, prefix="/")
+app.include_router(color_recommend.router, tags=["color"])
+app.include_router(item_recommend.router,  tags=["item"])
+app.include_router(style_recommend.router, tags=["style"])
+app.include_router(test.router, tags=["test"])
+app.include_router(get_items.router, tags=["get_items"])
 
 
 

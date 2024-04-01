@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from typing import Optional
-from app.main import spark
+from data.spark_name import spark
 
 
 router = APIRouter()

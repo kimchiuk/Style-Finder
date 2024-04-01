@@ -1,8 +1,7 @@
 from fastapi import APIRouter
 from typing import Optional
-from app.main import spark
-from label_data import csv_bottom, csv_dress, csv_outer, csv_top
-import pandas as pd 
+from data.spark_name import spark
+
 
 
 router = APIRouter()

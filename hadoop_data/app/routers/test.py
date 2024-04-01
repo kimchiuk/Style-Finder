@@ -1,18 +1,16 @@
 from fastapi import APIRouter
-from pyspark.sql import SparkSession, Column
 from pyspark.sql.functions import count, desc, col
 from typing import Optional
-import pandas as pd
-from label_data import csv_top, csv_bottom, csv_outer, csv_dress
-from app.main import spark
-
+from data.label_data import csv_top, csv_bottom, csv_outer, csv_dress
+from data.spark_name import spark
+from pyspark.sql import functions as F
 
 router = APIRouter()
 
 
 # 의상 대분류 4가지 상의, 하의, 아우터, 원피스 
 
-@router.get("search_best_combination")
+@router.get("/search_best_combination")
 async def get_items_user(
     main_category: str,
     detail_category: Optional[str] = None,
@@ -47,10 +45,11 @@ def apply_optional_filters(df, conditions):
     for condition, value in conditions:
         if value is not None:
             if condition[-1] == '_':
+                sub_conditions = []
                 for i in range(10):
                     name = f"{condition}{i}"
                     if name in df.columns: 
-                        df = df | df.filter(name == value)
+                        sub_conditions.append(F.col(name) == value)
             else:
                 df = df.filter(condition == value)
     return df
@@ -77,7 +76,7 @@ def top_recommend_item(
         (col(csv_top[3]), category_length),
         (col(csv_top[4]), category_neck_line),
         (col(csv_top[5]), category_collar),
-        (col(csv_top[6]), category_fit)
+        (col(csv_top[6]), category_fit),
         (col(csv_top[7]), category_material),
         (col(csv_top[8]), category_detail),
         (col(csv_top[9]), category_print),
@@ -136,7 +135,7 @@ def bottom_recommend_item(
         (col(csv_bottom[1]), category_color),
         (col(csv_bottom[2]), category_sub_color),
         (col(csv_bottom[3]), category_length),
-        (col(csv_bottom[4]), category_fit)
+        (col(csv_bottom[4]), category_fit),
         (col(csv_bottom[5]), category_material),
         (col(csv_bottom[6]), category_detail),
         (col(csv_bottom[7]), category_print),
@@ -201,7 +200,7 @@ def outer_recommend_item(
         (col(csv_outer[3]), category_length),
         (col(csv_outer[4]), category_neck_line),
         (col(csv_outer[5]), category_collar),
-        (col(csv_outer[6]), category_fit)
+        (col(csv_outer[6]), category_fit),
         (col(csv_outer[7]), category_material),
         (col(csv_outer[8]), category_detail),
         (col(csv_outer[9]), category_print),
@@ -277,7 +276,7 @@ def dress_recommend_item(
         (col(csv_dress[3]), category_length),
         (col(csv_dress[4]), category_neck_line),
         (col(csv_dress[5]), category_collar),
-        (col(csv_dress[6]), category_fit)
+        (col(csv_dress[6]), category_fit),
         (col(csv_dress[7]), category_material),
         (col(csv_dress[8]), category_detail),
         (col(csv_dress[9]), category_print),
