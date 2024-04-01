@@ -7,7 +7,7 @@ import MyClosetItem from './my-closet-Item';
 import MyClosetCreateForm from './my-closet-create-form';
 
 import Button from '../../shared/ui/button/button';
-import Modal from '../../shared/ui/modal/modal';
+import Modal from '../../shared/ui/modal/Modal';
 import useOpenModal from '../../shared/hooks/use-open-modal';
 import { useNavigate } from 'react-router';
 
@@ -73,7 +73,7 @@ const MyCloset = () => {
       </div>
       <div className="flex flex-wrap">
         {ItemList.map((item, index) => (
-          <MyClosetItem image={item} index={index} />
+          <MyClosetItem key={index} image={item} index={index} />
         ))}
       </div>
     </div>
