@@ -8,6 +8,7 @@ import com.d111.backend.dto.user.request.SignUpRequestDTO;
 import com.d111.backend.dto.user.request.TokenReissueRequestDTO;
 import com.d111.backend.dto.user.request.UpdateUserInfoRequestDTO;
 import com.d111.backend.dto.user.response.*;
+import com.d111.backend.entity.closet.Closet;
 import com.d111.backend.entity.multipart.S3File;
 import com.d111.backend.entity.user.RefreshToken;
 import com.d111.backend.entity.user.User;
@@ -29,9 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
         // S3 bucket에 프로필 이미지 저장
         String storeFilePath;
 
-        if (profileImage.isEmpty()) {
+        if (profileImage != null && !profileImage.isEmpty()) {
             storeFilePath = DEFAULT_PROFILE_URL;
         } else {
             ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -91,8 +91,12 @@ public class UserServiceImpl implements UserService {
         }
 
         // List<String> -> String
-        String likeCategories = String.join(",", signUpRequestDTO.getLikeCategories());
-        String dislikeCategories = String.join(",", signUpRequestDTO.getDislikeCategories());
+        String likeCategories = signUpRequestDTO.getLikeCategories().stream()
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.joining(","));
+        String dislikeCategories = signUpRequestDTO.getDislikeCategories().stream()
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.joining(","));
 
         User newUser = User.builder()
                 .email(signUpRequestDTO.getEmail())
@@ -167,7 +171,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new EmailNotFoundException("유저 정보가 존재하지 않습니다."));
 
         // 프로필 이미지 변경 요청이 있을 경우
-        if (!profileImage.isEmpty()) {
+        if (profileImage != null && !profileImage.isEmpty()) {
             String storeFilePath;
 
             ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -204,8 +208,13 @@ public class UserServiceImpl implements UserService {
         user.updateNickname(updateUserInfoRequestDTO.getNickname());
         
         // List<String> -> String
-        String likeCategories = String.join(",", updateUserInfoRequestDTO.getLikeCategories());
-        String dislikeCategories = String.join(",", updateUserInfoRequestDTO.getDislikeCategories());
+        String likeCategories = updateUserInfoRequestDTO.getLikeCategories().stream()
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.joining(","));
+        String dislikeCategories = updateUserInfoRequestDTO.getDislikeCategories().stream()
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.joining(","));
+
 
         user.updateLikeCategories(likeCategories);
         user.updateDislikeCategories(dislikeCategories);
@@ -248,8 +257,8 @@ public class UserServiceImpl implements UserService {
 
         GetUserResponseDTO getUserResponseDTO = GetUserResponseDTO.builder()
                 .nickname(user.getNickname())
-                .likeCategories(Collections.singletonList(user.getLikeCategories()))
-                .dislikeCategories(Collections.singletonList(user.getDislikeCategories()))
+                .likeCategories(Arrays.asList(user.getLikeCategories().split(",")))
+                .dislikeCategories(Arrays.asList(user.getDislikeCategories().split(",")))
                 .height(user.getHeight())
                 .weight(user.getWeight())
                 .profileImage(userProfileImage)
@@ -258,12 +267,50 @@ public class UserServiceImpl implements UserService {
                 .youtube(user.getYoutube())
                 .build();
 
+        log.info(getUserResponseDTO.getLikeCategories());
+
         GetUserResponse response = GetUserResponse.creategetUserResponse(
                 "Success",
                 getUserResponseDTO
         );
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @Override
+    public ResponseEntity<AnalysisFavorResponseDTO> analysisFavor() {
+        String email = JWTUtil.findEmailByToken();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EmailNotFoundException("유저 정보가 존재하지 않습니다."));
+
+        Map<String, Integer> likeCategories = new HashMap<>();
+
+        for (String category: user.getLikeCategories().split(",")) {
+            likeCategories.put(category, likeCategories.getOrDefault(category, 0) + 1);
+        }
+
+        Map<String, Integer> closetCategories = new HashMap<>();
+
+        for (Closet closet: user.getClosets()) {
+            String categories = closet.getCategories();
+
+            for (String category: categories.split(",")) {
+                closetCategories.put(category, closetCategories.getOrDefault(category, 0) + 1);
+            }
+        }
+
+        Map<String, Integer> feedStyles = new HashMap<>();
+        Map<String, Integer> feedCategories = new HashMap<>();
+
+        AnalysisFavorResponseDTO analysisFavorResponseDTO = AnalysisFavorResponseDTO.builder()
+                .likeCategories(likeCategories)
+                .closetCategories(closetCategories)
+                .feedStyles(feedStyles)
+                .feedCategories(feedCategories)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(analysisFavorResponseDTO);
     }
 
 

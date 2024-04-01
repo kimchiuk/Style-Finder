@@ -93,7 +93,6 @@ public class RecommendServiceImpl implements RecommendService {
 
             String storeFilePath = "big_date_image/" + fileName + ".jpg" ; // 수정된 부분
 
-            System.out.println(storeFilePath + "경로");
             try {
                 // 파일 이름을 사용하여 S3에서 이미지를 가져옴
                 GetObjectRequest getObjectRequest = new GetObjectRequest(bucket, storeFilePath);
