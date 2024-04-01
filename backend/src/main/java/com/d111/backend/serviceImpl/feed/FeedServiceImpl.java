@@ -186,11 +186,26 @@ public class FeedServiceImpl implements FeedService {
     @Override
     public ResponseEntity<FeedReadResponse> read(Long feedId) {
         Optional<Feed> optionalFeed = feedRepository.findById(feedId);
-
         Feed feed = optionalFeed.orElseThrow(() -> new FeedNotFoundException("피드를 찾을 수 없습니다."));
 
-        Coordi coordi = mongoCoordiRepository.findById(feed.getCoordiId())
-                .orElseThrow(() -> new CoordiNotFoundException("코디를 찾을 수 없습니다."));
+        Optional<Coordi> coordiOptional = mongoCoordiRepository.findById(feed.getCoordiId());
+
+        Coordi coordi = coordiOptional.orElseThrow(() -> new CoordiNotFoundException("코디를 찾을 수 없습니다."));
+
+
+
+        String outerImage = coordiOptional.map(c -> String.valueOf(c.getOuterCloth().getImageUrl())).orElse(null);
+        byte[] outerThumbnail = outerImage.equals("null") ? null : getFeedThumbnailFromS3(bucket, outerImage);
+
+        String upperImage = coordiOptional.map(c -> String.valueOf(c.getOuterCloth().getImageUrl())).orElse(null);
+        byte[] upperThumbnail = upperImage.equals("null") ? null : getFeedThumbnailFromS3(bucket, upperImage);
+
+        String dressImage = coordiOptional.map(c -> String.valueOf(c.getDress().getImageUrl())).orElse(null);
+        byte[] dressThumbnail = dressImage.equals("null") ? null : getFeedThumbnailFromS3(bucket, dressImage);
+
+        String lowerImage = coordiOptional.map(c -> String.valueOf(c.getLowerBody().getImageUrl())).orElse(null);
+        byte[] lowerThumbnail = lowerImage.equals("null") ? null : getFeedThumbnailFromS3(bucket, lowerImage);
+
 
         CoordiContainer coordiContainer = CoordiContainer.builder()
                 .id(coordi.get_id())
@@ -199,10 +214,6 @@ public class FeedServiceImpl implements FeedService {
                 .lowerBody(coordi.getLowerBody())
                 .dress(coordi.getDress())
                 .build();
-
-        // 피드 썸네일 읽어오기
-        String storeFilePath = feed.getFeedThumbnail();
-        byte[] feedThumbnail = getFeedThumbnailFromS3(bucket, storeFilePath);
 
         List<Comment> comments = commentRepository.findAllByFeedId(feed);
 
@@ -235,14 +246,18 @@ public class FeedServiceImpl implements FeedService {
                 .user(feedUserDTO)
                 .feedTitle(feed.getFeedTitle())
                 .feedContent(feed.getFeedContent())
-                .feedThumbnail(feedThumbnail)
                 .feedLikes(feed.getFeedLikes())
                 .originWriter(feed.getOriginWriter())
+                .outerImage(outerThumbnail)
+                .dressImage(dressThumbnail)
+                .upperImage(upperThumbnail)
+                .lowerImage(lowerThumbnail)
                 .coordiContainer(coordiContainer)
                 .feedCreatedDate(feed.getFeedCreatedDate())
                 .feedUpdatedDate(feed.getFeedUpdatedDate())
                 .comments(feedCommentDTOList)
                 .build();
+
 
         FeedReadResponse response = FeedReadResponse.builder()
                 .message("success")
@@ -569,6 +584,9 @@ public class FeedServiceImpl implements FeedService {
             throw new FeedImageIOException("피드 썸네일을 불러오지 못했습니다.");
         } catch (AmazonS3Exception exception) {
             throw new FeedImageIOException("저장된 피드 썸네일이 없습니다.");
+        } catch (Exception exception) {
+            throw new FeedImageIOException("피드 썸네일을 불러오는 중 오류가 발생했습니다.");
         }
     }
+
 }

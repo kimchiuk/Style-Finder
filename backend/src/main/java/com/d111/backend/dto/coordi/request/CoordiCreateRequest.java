@@ -12,12 +12,23 @@ import lombok.NoArgsConstructor;
 public class CoordiCreateRequest {
 
 
-    private String outerCloth;
+    private ClothInfo outerCloth;
 
-    private String upperBody;
+    private ClothInfo upperBody;
 
-    private String lowerBody;
+    private ClothInfo lowerBody;
 
-    private String dress;
+    private ClothInfo dress;
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ClothInfo {
+        private String style;
+        private String category;
+        private String color;
+        private String imageUrl;
+    }
 
 }
