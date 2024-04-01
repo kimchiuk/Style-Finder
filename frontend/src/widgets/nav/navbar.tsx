@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react'; // useEffect 추가
 import useLoginStore from '../../shared/store/use-login-store';
 import logo from '../../assets/logos/logo.png';
+import './nav.css';
 
 const Navbar = () => {
   const loginStore = useLoginStore();
@@ -25,12 +26,12 @@ const Navbar = () => {
 
   return (
     <div className="navbar flex flex-row h-20 bg-[#161A30]">
-      <div className="navbar-start flex items-center justify-center bg-[#F0ECE5] rounded-full m-5 w-36">
+      <div className="flex items-center justify-center w-48 m-5 rounded-full navbar-start">
         <div className="flex items-center logo">
           <Link to="/" replace={true}>
             <img className="w-10 h-10" src={logo} alt="" />
           </Link>
-          <Link to="/" replace={true} className="ml-2">
+          <Link to="/" replace={true} className="ml-2 nav-text">
             StyleFinder
           </Link>
         </div>
@@ -50,7 +51,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="navbar-end flex items-center justify-center text-center m-5 bg-[#F0ECE5] rounded-full w-20">
+      <div className="flex items-center justify-center w-20 m-5 text-center rounded-full navbar-end menu">
         {!loginStore.isLogin ? (
           <Link to="/login" replace={true} className="mr-2">
             로그인

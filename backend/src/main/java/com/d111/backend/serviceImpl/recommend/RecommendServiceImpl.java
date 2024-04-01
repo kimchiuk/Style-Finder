@@ -72,13 +72,13 @@ public class RecommendServiceImpl implements RecommendService {
 //            }
 
 
-            // 일단 4개씩만 조회
+//            // 일단 4개씩만 조회
             for (int i = 0; i < 4; i++) {
                 JSONObject obj = filesArray.getJSONObject(i);
                 int fileId = obj.getInt("데이터셋 정보_파일 번호");
                 fileNames.add(String.valueOf(fileId));
             }
-
+//
 
             // 연결 해제
             connection.disconnect();
