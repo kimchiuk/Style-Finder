@@ -8,10 +8,15 @@ import { FeedInfo } from '../../entities/feed/feed-types';
 import './feed.css';
 
 const FeedDetail: React.FC = () => {
+  // const navigate = useNavigate();
   const { feedId } = useParams<{ feedId: string }>();
   const [feedInfo, setFeedInfo] = useState<FeedInfo>();
   const [isChecked, setIsChecked] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
+
+  // const handleClickItem = (feedId: string, coordiId: string) => {
+  //   navigate(`/coordi/1/${feedId}/${coordiId}`);
+  // };
 
   const handleIconClick = () => {
     setIsChecked(!isChecked);
@@ -42,6 +47,7 @@ const FeedDetail: React.FC = () => {
             <div className="flex justify-center">최초등록자 : {feedInfo?.originWriter}</div>
             <div className="flex flex-row justify-between pt-3">
               <button className="btn btn-outline custom-button">피팅 해보기</button>
+              {/* onClick={() => handleClickItem(feedId, coordiId)} */}
               <div className="flex flex-row">
                 {feedInfo?.feedLikes}
                 <label className="pl-2 swap swap-flip text-9xl">

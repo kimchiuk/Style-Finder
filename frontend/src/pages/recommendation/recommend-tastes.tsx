@@ -3,13 +3,11 @@ import RecommendationItem from './recommendation-Item';
 import Dropbox from '../../shared/ui/dropbox/dropbox';
 
 import Image from '../../assets/images/main1.png';
-
-interface TasteResponse {
-  id: string;
-  image: string;
-}
+import { Cloth } from '../../entities/closet/closet-types';
+import { useNavigate } from 'react-router';
 
 const RecommendationTastes = () => {
+  const navigate = useNavigate();
   const [taste, setTaste] = useState<string>('전체');
   const tasteList = [
     '전체',
@@ -37,7 +35,9 @@ const RecommendationTastes = () => {
     '히피',
     '힙합',
   ];
-  const [tasteResponseList, setTasteResponseList] = useState<TasteResponse[]>([{ id: 'id1', image: Image }]);
+
+  const cloth = { id: 2, image: Image, category: [], details: [], textures: [], part: '' };
+  const [tasteResponseList, setTasteResponseList] = useState<Cloth[]>([cloth, cloth, cloth, cloth]);
 
   // 취향 설정
   const handleSelectedTaste = (selectedItem: string) => {
@@ -52,15 +52,19 @@ const RecommendationTastes = () => {
   };
 
   // 해당 아이템 코디 해 보기
-  const handleClickMoveToCoordi = () => {};
+  const handleClickMoveToCoordi = (selectedItem: Cloth) => {
+    navigate(`/coordi/2/${selectedItem.id}`);
+  };
 
   return (
     <>
-      <Dropbox options={tasteList} onSelected={handleSelectedTaste}></Dropbox>
+      <Dropbox options={tasteList} onSelected={() => handleSelectedTaste}></Dropbox>
 
-      {tasteResponseList.map((item, index) => (
-        <RecommendationItem key={index} id={item.id} image={item.image} handleClickMoveToCoordi={handleClickMoveToCoordi} />
-      ))}
+      <div className="flex">
+        {tasteResponseList.map((item, index) => (
+          <RecommendationItem key={index} item={item} onClickItem={() => handleClickMoveToCoordi(item)} />
+        ))}
+      </div>
     </>
   );
 };

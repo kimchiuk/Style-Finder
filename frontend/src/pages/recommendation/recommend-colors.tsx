@@ -3,19 +3,18 @@ import RecommendationItem from './recommendation-Item';
 import Dropbox from '../../shared/ui/dropbox/dropbox';
 
 import Image from '../../assets/images/main2.png';
+import { Cloth } from '../../entities/closet/closet-types';
+import { useNavigate } from 'react-router';
 // import { useParams } from 'react-router';
-
-interface ColorResponse {
-  id: string;
-  image: string;
-}
 
 const RecommendationColors = () => {
   // const { info } = useParams<{ id: string; image: string }>();
+  const navigate = useNavigate();
 
   const [color, setColor] = useState<string>('전체');
   const colorList = ['전체', '빨강', '주황', '노랑', '초록', '파랑', '보라', '하양', '검정'];
-  const [colorResponseList, setColorResponseList] = useState<ColorResponse[]>([{ id: 'id1', image: Image }]);
+  const cloth = { id: 2, image: Image, category: [], details: [], textures: [], part: '' };
+  const [colorResponseList, setColorResponseList] = useState<Cloth[]>([cloth, cloth, cloth, cloth]);
 
   // 색상 설정
   const handleSelectedColor = (selectedItem: string) => {
@@ -30,15 +29,19 @@ const RecommendationColors = () => {
   };
 
   // 해당 아이템 코디 해 보기
-  const handleClickMoveToCoordi = () => {};
+  const handleClickMoveToCoordi = (selectedItem: Cloth) => {
+    navigate(`/coordi/2/${selectedItem.id}`);
+  };
 
   return (
     <>
       <Dropbox options={colorList} onSelected={handleSelectedColor}></Dropbox>
 
-      {colorResponseList.map((item, index) => (
-        <RecommendationItem key={index} id={item.id} image={item.image} handleClickMoveToCoordi={handleClickMoveToCoordi} />
-      ))}
+      <div className="flex">
+        {colorResponseList.map((item, index) => (
+          <RecommendationItem key={index} item={item} onClickItem={() => handleClickMoveToCoordi(item)} />
+        ))}
+      </div>
     </>
   );
 };

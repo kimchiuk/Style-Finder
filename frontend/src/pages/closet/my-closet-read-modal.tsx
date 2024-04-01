@@ -1,12 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
 
 import MyClosetItem from './my-closet-Item';
-import MyClosetCreateForm from './my-closet-create-form';
 
 import Button from '../../shared/ui/button/button';
-import Modal from '../../shared/ui/modal/Modal';
-import useOpenModal from '../../shared/hooks/use-open-modal';
 import { useNavigate } from 'react-router';
 
 import api from '../../entities/closet/closet-apis';
@@ -14,11 +10,9 @@ import { axiosError } from '../../shared/utils/axiosError';
 import useLoginStore from '../../shared/store/use-login-store';
 import { Cloth } from '../../entities/closet/closet-types';
 
-const MyCloset = () => {
+const MyClosetReadModal = () => {
   const loginStore = useLoginStore();
   const navigate = useNavigate();
-
-  const { isOpenModal, clickModal, closeModal } = useOpenModal();
 
   const [ItemList, setItemList] = useState<Cloth[]>([]);
 
@@ -58,13 +52,6 @@ const MyCloset = () => {
   return (
     <div className="p-2 m-2 bg-gray-100 rounded-lgs">
       <div>
-        <Button value="옷 등록" onClick={clickModal} />
-
-        <Modal isOpen={isOpenModal} onClose={closeModal}>
-          <div>옷 저장</div>
-          <MyClosetCreateForm />
-        </Modal>
-
         <Button value="전체" onClick={() => handleClickOption('')} />
         <Button value="아우터" onClick={() => handleClickOption('아우터')} />
         <Button value="상의" onClick={() => handleClickOption('상의')} />
@@ -80,4 +67,4 @@ const MyCloset = () => {
   );
 };
 
-export default MyCloset;
+export default MyClosetReadModal;

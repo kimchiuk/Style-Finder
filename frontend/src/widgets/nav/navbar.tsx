@@ -38,13 +38,13 @@ const Navbar = () => {
 
       <div className="flex items-center justify-center flex-grow m-5 navbar-center">
         <div className="flex justify-between menu menu-sm dropdown-content mt-3 z-[1] p-2 m-5  bg-[#F0ECE5] rounded-full w-1/2">
-          <Link to="/coordi" replace={true} className="mr-8">
+          <Link to="/coordi/0" replace={true} className="mr-8">
             코디
           </Link>
           <Link to="/feed" replace={true} className="mr-8">
             피드
           </Link>
-          <Link to="/analysis" replace={true}>
+          <Link to="/analysis/closet" replace={true}>
             분석
           </Link>
         </div>
