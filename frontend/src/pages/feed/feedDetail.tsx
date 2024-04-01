@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../widgets/nav/navbar';
 import { useParams } from 'react-router';
@@ -33,17 +34,17 @@ const FeedDetail: React.FC = () => {
   return (
     <>
       <Navbar />
-      <div className="mx-auto px-36 pt-5">
+      <div className="pt-5 mx-auto px-36">
         <div className="flex flex-row max-w-screen-xl hero max-h-screen-xl bg-base-200">
-          <div className="flex-col hero-content lg:flex-row pr-10">
+          <div className="flex-col pr-10 hero-content lg:flex-row">
             <img src={`data:image/png;base64,${feedInfo?.feedThumbnail}`} className="max-w-md rounded-lg shadow-2xl" />
-            <div className="pt-5 flex justify-center author-name">피드 제목: {feedInfo?.feedTitle}</div>
-            <div className='flex justify-center'>최초등록자 : {feedInfo?.originWriter}</div>
+            <div className="flex justify-center pt-5 author-name">피드 제목: {feedInfo?.feedTitle}</div>
+            <div className="flex justify-center">최초등록자 : {feedInfo?.originWriter}</div>
             <div className="flex flex-row justify-between pt-3">
               <button className="btn btn-outline custom-button">피팅 해보기</button>
               <div className="flex flex-row">
                 {feedInfo?.feedLikes}
-                <label className="swap swap-flip text-9xl pl-2">
+                <label className="pl-2 swap swap-flip text-9xl">
                   <input type="checkbox" onChange={() => {}} style={{ display: 'none' }} />
                   <div className={isChecked ? 'swap-on' : 'swap-off'} onClick={handleIconClick}>
                     {isChecked ? (
@@ -65,22 +66,22 @@ const FeedDetail: React.FC = () => {
             </div>
           </div>
           <div>
-            <div className='flex flex-row'>
-            <div>
-            <img src={`data:image/png;base64,${feedInfo?.user.profileImage}`} alt="profileImage" className="w-16 h-16 rounded-full" />
+            <div className="flex flex-row">
+              <div>
+                <img src={`data:image/png;base64,${feedInfo?.user.profileImage}`} alt="profileImage" className="w-16 h-16 rounded-full" />
+              </div>
+              <div>
+                <div className="pl-5 author-name">작성자 닉네임: {feedInfo?.user.nickname}</div>
+                <div className="pl-5">피드 내용: {feedInfo?.feedContent}</div>
+              </div>
             </div>
-            <div>
-            <div className='pl-5 author-name'>작성자 닉네임: {feedInfo?.user.nickname}</div>
-            <div className='pl-5'>피드 내용: {feedInfo?.feedContent}</div>
-            </div>
-            </div>
-            <div className='flex justify-center pt-5 author-name'>Comments</div>
+            <div className="flex justify-center pt-5 author-name">Comments</div>
             {feedInfo?.comments.map((comment) => (
               <div key={comment.nickname} className="flex items-center justify-center">
                 <div className="flex items-start flex-grow max-w-screen-xl mt-5 hero max-h-screen-xl bg-base-200 ">
                   <div className="avatar">
                     <div>
-                      <img src={`data:image/png;base64,${comment.profileImage}`} alt="commentProfileImage" className='w-10 h-10 rounded-full'/>
+                      <img src={`data:image/png;base64,${comment.profileImage}`} alt="commentProfileImage" className="w-10 h-10 rounded-full" />
                     </div>
                   </div>
                   <div className="flex justify-between flex-grow">

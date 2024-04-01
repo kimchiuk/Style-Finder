@@ -10,7 +10,6 @@ import main3 from '../../assets/images/main3.jpg';
 import './main.css';
 
 const Main = () => {
-
   const images = [main3, main2, main1];
 
   const settings = {

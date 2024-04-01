@@ -1,7 +1,9 @@
 import MainPage from '../pages/main/main';
 import SignInPage from '../pages/login/signIn';
 import SignUpPage from '../pages/login/signUp';
-import CoordiPage from '../pages/coordi/coordi';
+import CoordiFromCoordiPage from '../pages/coordi/coordi-from-coordi';
+import CoordiFromFeedPage from '../pages/coordi/coordi-from-feed';
+import CoordiFromAnalysisPage from '../pages/coordi/coordi-from-analysis';
 import FeedPage from '../pages/feed/feed';
 import FeedDetail from '../pages/feed/feedDetail';
 import AnalysisPage from '../pages/analysis/analysis';
@@ -10,6 +12,7 @@ import RecommendationPage from '../pages/recommendation/recommendation';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
+//:part/:feedId/:clothId
 const Router = () => {
   return (
     <BrowserRouter>
@@ -17,7 +20,9 @@ const Router = () => {
         <Route path="/" element={<MainPage />}></Route>
         <Route path="/login" element={<SignInPage />}></Route>
         <Route path="/signup" element={<SignUpPage />}></Route>
-        <Route path="/coordi" element={<CoordiPage />}></Route>
+        <Route path="/coordi/0" element={<CoordiFromCoordiPage />}></Route>
+        <Route path="/coordi/1/:feedId/:coordiId" element={<CoordiFromFeedPage />}></Route>
+        <Route path="/coordi/2/:clothId" element={<CoordiFromAnalysisPage />}></Route>
         <Route path="/feed" element={<FeedPage />}></Route>
         <Route path="/feeddetail/:feedId" element={<FeedDetail />}></Route>
         <Route path="/analysis/*" element={<AnalysisPage />}>

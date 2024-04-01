@@ -1,9 +1,9 @@
 import jwtAxiosInstance from '../../shared/utils/jwtAxiosInstance';
-import { CoordiCreateRequestDTO } from './coordi-types';
+import { Coordi } from './coordi-types';
 
 const url = '/api/coordi';
 const api = {
-  coordiCreate: (request: CoordiCreateRequestDTO) => jwtAxiosInstance.post(`${url}`, request),
+  coordiCreate: (request: Coordi) => jwtAxiosInstance.post(`${url}`, request),
 };
 
 export default api;

@@ -1,11 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable prefer-const */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef, useState } from 'react';
-import Keywords from '../../features/analysis/kewords';
-import useUserStore from '../../shared/store/useUserStore';
+import useUserStore from '../../shared/store/use-user-store';
 import api from '../../entities/user/user-apis';
 import { axiosError } from '../../shared/utils/axiosError';
 import { UserInfo } from '../../entities/user/user-types';
-import useLoginStore from '../../shared/store/useLoginStore';
+import useLoginStore from '../../shared/store/use-login-store';
 import { useNavigate } from 'react-router';
+import './my.css';
 
 const style = [
   '레트로',
@@ -196,22 +199,30 @@ const My = () => {
 
   return (
     <div>
-      <div>내 정보</div>
-      <div className="w-auto card bg-base-100">
+      <div className="flex flex-row justify-between">
+        <div className="pb-3 text-lg font-bold">내 정보</div>
+        <div className="button flex justify-center">
+          <button onClick={() => setIsUpdate(true)}>수정</button>
+        </div>
+      </div>
+      <div className="w-auto h-56 card bg-base-100 bg-[#F0ECE5] rounded-lg ">
         <div className="card-body">
-          <div className="flex flex-row">
+          <div className="flex flex-row p-5 pl-8">
             <div className="avatar">
-              <div className="w-12 rounded-full">{userInfo?.profileImage && <img src={`data:image/png;base64,${userInfo?.profileImage}`} />}</div>
+              <div className="w-36 h-36">{userInfo?.profileImage && <img src={`data:image/png;base64,${userInfo?.profileImage}`} className="rounded-lg" />}</div>
             </div>
             <div className="flex flex-col ml-4">
-              <div>
-                <button onClick={() => setIsUpdate(true)}>수정</button>
-              </div>
-              <div>{userInfo?.nickname} 님</div>
-              <div>
+              <div className="text-lg pb-3">{userInfo?.nickname}</div>
+              <div className="text-lg pb-2">
                 키: {userInfo?.height}cm, 몸무게: {userInfo?.weight}kg
               </div>
-              <div>선호: {userInfo?.likeCategories.map((category) => <span className="border-2">{category}</span>)}</div>
+              <div className="text-md">
+                {userInfo?.likeCategories.map((category, index) => (
+                  <span key={index} className="likecate">
+                    {category}
+                  </span>
+                ))}
+              </div>{' '}
               {isUpdate && (
                 <div
                   className={'modal-container'}
@@ -224,31 +235,28 @@ const My = () => {
                 >
                   <div className="flex justify-between bg-white">
                     <div>
-                      <div className="inputWrap mb-5">
+                      <div className="mb-5 inputWrap">
                         <input className="input" placeholder="닉네임 입력" value={nickname} onChange={(e) => setNickname(e.target.value)} />
                       </div>
                       <div className="flex flex-row">
                         <div>
-                          <div className="inputWrap mr-5 mb-5">
-                            <input className="input w-16 mr-2" placeholder="키 입력" value={height} onChange={handleHeight} />
+                          <div className="mb-5 mr-5 inputWrap">
+                            <input className="w-16 mr-2 input" placeholder="키 입력" value={height} onChange={handleHeight} />
                             cm
                           </div>
                         </div>
                         <div>
                           <div className="inputWrap">
-                            <input className="input w-24 mr-2" placeholder="몸무게 입력" value={weight} onChange={handleWeight} />
+                            <input className="w-24 mr-2 input" placeholder="몸무게 입력" value={weight} onChange={handleWeight} />
                             kg
                           </div>
                         </div>
                       </div>
-                      <div className="inputWrap mb-5">
-                        <input className="input" placeholder="한 줄 소개" value={introduce} onChange={(e) => setIntroduce(e.target.value)} />
-                      </div>
-                      <div className="inputTitle mb-2">프로필 이미지 수정</div>
-                      <div className="inputWrap mb-5 customInputWrap">
+                      <div className="mb-2 inputTitle">프로필 이미지 수정</div>
+                      <div className="mb-5 inputWrap customInputWrap">
                         <input type="file" accept="image/*" onChange={handleImageUpload} className="customFileInput" />
                       </div>
-                      <select className="select select-bordered w-full max-w-xs" onChange={handleSelectChange}>
+                      <select className="w-full max-w-xs select select-bordered" onChange={handleSelectChange}>
                         <option disabled selected>
                           당신의 취향을 골라주세요
                         </option>
@@ -286,7 +294,7 @@ const My = () => {
                               return rows;
                             }, [])
                             .map((row, rowIndex) => (
-                              <div className="option-box-container flex justify-between" key={rowIndex}>
+                              <div className="flex justify-between option-box-container" key={rowIndex}>
                                 {row.map((option) => (
                                   <div className="option-box" key={option}>
                                     {option}
@@ -300,10 +308,10 @@ const My = () => {
                         </div>
                       )}
                       <div>
-                        <button className="border-2 p-2 m-2" onClick={modifyUserInfo}>
+                        <button className="p-2 m-2 border-2" onClick={modifyUserInfo}>
                           저장
                         </button>
-                        <button className="border-2 p-2 m-2" onClick={() => setIsUpdate(false)}>
+                        <button className="p-2 m-2 border-2" onClick={() => setIsUpdate(false)}>
                           취소
                         </button>
                       </div>
@@ -313,27 +321,6 @@ const My = () => {
               )}
             </div>
           </div>
-        </div>
-      </div>
-      <div className="content-center">
-        <Keywords />
-      </div>
-      <div className="mt-6">당신의 취향은?</div>
-      <div className="w-auto card bg-base-100">
-        <div className="card-body">
-          <div>여기는 어떻게 할껴?</div>
-        </div>
-      </div>
-      <div className="mt-6">당신의 옷장은?</div>
-      <div className="w-auto card bg-base-100">
-        <div className="card-body">
-          <div>여기는 어떻게 할껴?</div>
-        </div>
-      </div>
-      <div className="mt-6">내 옷장</div>
-      <div className="w-auto card bg-base-100">
-        <div className="card-body">
-          <div>여기는 어떻게 할껴?</div>
         </div>
       </div>
     </div>

@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react'; // useEffect 추가
-import useLoginStore from '../../shared/store/useLoginStore';
+import useLoginStore from '../../shared/store/use-login-store';
 import logo from '../../assets/logos/logo.png';
+import './nav.css';
 
 const Navbar = () => {
   const loginStore = useLoginStore();
@@ -24,45 +26,49 @@ const Navbar = () => {
 
   return (
     <div className="navbar flex flex-row h-20 bg-[#161A30]">
-      <div className="navbar-start flex items-center justify-center bg-[#F0ECE5] rounded-full m-5 w-36">
-        <div className="logo flex items-center">
+      <div className="navbar-start flex items-center justify-center rounded-full m-5 w-48">
+        <div className="flex items-center logo">
           <Link to="/" replace={true}>
             <img className="w-10 h-10" src={logo} alt="" />
           </Link>
-          <Link to="/" replace={true} className="ml-2">
+          <Link to="/" replace={true} className="ml-2 nav-text">
             StyleFinder
           </Link>
         </div>
       </div>
 
-      <div className="navbar-center flex items-center justify-center flex-grow m-5">
-        <div className="flex justify-between menu menu-sm dropdown-content mt-3 z-[1] p-2 m-5  bg-[#F0ECE5] rounded-full w-1/2">
-          <Link to="/coordi" replace={true} className='mr-8'>
-            코디
-          </Link>
-          <Link to="/feed" replace={true} className='mr-8'>
-            피드
-          </Link>
-          <Link to="/analysis" replace={true}>
-            분석
-          </Link>
+      <div className="flex items-center justify-end flex-grow mt-2">
+        <div className="flex justify-between menu menu-sm dropdown-content mt-3 z-[1] p-2 m-5 rounded-full">
+          <button className="w-20 h-10">
+            <Link to="/coordi" replace={true}>
+              코디
+            </Link>
+          </button>
+          <button className="w-20 h-10">
+            <Link to="/feed" replace={true}>
+              피드
+            </Link>
+          </button>
+          <button className="w-20 h-10">
+            <Link to="/analysis/closet" replace={true}>
+              분석
+            </Link>
+          </button>
         </div>
       </div>
 
-      <div className="navbar-end flex items-center justify-center text-center m-5 bg-[#F0ECE5] rounded-full w-20">
+      <div className="navbar-end flex items-center justify-center text-center m-5 menu rounded-full w-20">
         {!loginStore.isLogin ? (
           <Link to="/login" replace={true} className="mr-2">
             로그인
           </Link>
         ) : (
-          <div className="flex flex items-center justify-center">
+          <div className="flex items-center justify-center">
             <button onClick={handleLogout}>로그아웃</button>
           </div>
         )}
       </div>
-
     </div>
-
   );
 };
 

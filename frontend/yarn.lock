@@ -423,6 +423,18 @@
   dependencies:
     "@babel/types" "^7.20.7"
 
+"@types/d3-cloud@^1.2.9":
+  version "1.2.9"
+  resolved "https://registry.npmjs.org/@types/d3-cloud/-/d3-cloud-1.2.9.tgz"
+  integrity sha512-5EWJvnlCrqTThGp8lYHx+DL00sOjx2HTlXH1WRe93k5pfOIhPQaL63NttaKYIbT7bTXp/USiunjNS/N4ipttIQ==
+  dependencies:
+    "@types/d3" "^3"
+
+"@types/d3@^3":
+  version "3.5.53"
+  resolved "https://registry.npmjs.org/@types/d3/-/d3-3.5.53.tgz"
+  integrity sha512-8yKQA9cAS6+wGsJpBysmnhlaaxlN42Qizqkw+h2nILSlS+MAG2z4JdO6p+PJrJ+ACvimkmLJL281h157e52psQ==
+
 "@types/estree@1.0.5":
   version "1.0.5"
   resolved "https://registry.npmjs.org/@types/estree/-/estree-1.0.5.tgz"
