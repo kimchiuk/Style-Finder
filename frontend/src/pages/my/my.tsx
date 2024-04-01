@@ -72,6 +72,7 @@ const My = () => {
   const [weight, setWeight] = useState(0);
   const [nickname, setNickname] = useState('');
   const [image, setImage] = useState<File | null>(null);
+  const [introduce, setIntroduce] = useState('');
   const [dislikeCategories, setDislikeCategories] = useState<string[]>([]);
 
   const [heightValid, setHeightValid] = useState(true);
@@ -130,6 +131,7 @@ const My = () => {
           nickname: nickname,
           height: height,
           weight: weight,
+          introduce: introduce,
           likeCategories: selectedOptions,
           dislikeCategories: dislikeCategories,
         }),
@@ -143,7 +145,6 @@ const My = () => {
     api
       .updateUserInfo(request)
       .then((response) => {
-        console.log(response);
         setIsUpdate(false);
         getUserInfo();
       })
@@ -167,6 +168,7 @@ const My = () => {
         setHeight(data.height);
         setWeight(data.weight);
         setNickname(data.nickname);
+        setIntroduce(data.introduce);
 
         let likeCategories: string[] = [];
 
@@ -238,6 +240,9 @@ const My = () => {
                             kg
                           </div>
                         </div>
+                      </div>
+                      <div className="inputWrap mb-5">
+                        <input className="input" placeholder="한 줄 소개" value={introduce} onChange={(e) => setIntroduce(e.target.value)} />
                       </div>
                       <div className="inputTitle mb-2">프로필 이미지 수정</div>
                       <div className="inputWrap mb-5 customInputWrap">
