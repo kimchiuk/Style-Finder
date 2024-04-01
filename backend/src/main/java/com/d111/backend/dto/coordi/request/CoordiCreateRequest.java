@@ -1,5 +1,6 @@
 package com.d111.backend.dto.coordi.request;
 
+import com.d111.backend.entity.coordi.ClothInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,16 +20,5 @@ public class CoordiCreateRequest {
     private ClothInfo lowerBody;
 
     private ClothInfo dress;
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ClothInfo {
-        private String style;
-        private String category;
-        private String color;
-        private String imageUrl;
-    }
 
 }

@@ -1,7 +1,6 @@
 package com.d111.backend.dto.feed.response.dto;
 
 import com.d111.backend.dto.coordi.response.dto.CoordiContainer;
-import com.d111.backend.entity.user.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -21,11 +20,20 @@ public class FeedListReadResponseDTO {
     @Schema(description = "피드 제목", example = "멋있는 코디")
     private String feedTitle;
 
-    @Schema(description = "피드 내용", example = "example.com")
-    private byte[] feedThumbnail;
-
     @Schema(description = "피드 좋아요")
     private Long feedLikes;
+
+    @Schema(description = "아우터 이미지", example = "example.com")
+    private byte[] outerImage;
+
+    @Schema(description = "드레스 이미지", example = "example.com")
+    private byte[] dressImage;
+
+    @Schema(description = "상의 이미지", example = "example.com")
+    private byte[] upperImage;
+
+    @Schema(description = "하의 이미지", example = "example.com")
+    private byte[] lowerImage;
 
     private CoordiContainer coordiContainer;
 }
