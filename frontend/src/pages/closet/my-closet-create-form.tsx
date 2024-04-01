@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router';
 import useLoginStore from '../../shared/store/use-login-store';
 
 import Image from '../../assets/images/aimodel.png';
-
 import Button from '../../shared/ui/button/button';
 import Dropbox from '../../shared/ui/dropbox/dropbox';
 
