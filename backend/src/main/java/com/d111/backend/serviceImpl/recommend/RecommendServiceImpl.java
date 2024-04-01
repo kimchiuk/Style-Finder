@@ -39,11 +39,12 @@ public class RecommendServiceImpl implements RecommendService {
     private String bucket; // 버킷 이름
 
     @Override
-    public ResponseEntity<List<ItemRecommendResponseDTO>> recommendItems(String itemCategory) {
-        List<String> fileNames = new ArrayList<>();
+    public ResponseEntity<List<ItemRecommendResponseDTO>>recommendItems(String items, String detailCategory) {
 
-        String encodedCategory = URLEncoder.encode(itemCategory, StandardCharsets.UTF_8);
-        String apiUrl = "http://j10d111.p.ssafy.io:8000/get_outer_items/?outer_category=" + encodedCategory;
+        List<String> fileNames = new ArrayList<>();
+        String encodedCategory = URLEncoder.encode(detailCategory, StandardCharsets.UTF_8);
+        String apiUrl = "http://j10d111.p.ssafy.io:8000/get_" + items +"_items/?" + items + "_category=" + encodedCategory;
+
         try {
             URL url = new URL(apiUrl);
 
@@ -87,14 +88,11 @@ public class RecommendServiceImpl implements RecommendService {
 
         List<ItemRecommendResponseDTO> itemRecommendResponseDTOList = new ArrayList<>();
 
-        System.out.println(fileNames);
-
         for (String fileName : fileNames) {
             byte[] outerImage;
 
             String storeFilePath = "big_date_image/" + fileName + ".jpg" ; // 수정된 부분
 
-            System.out.println(storeFilePath + "경로");
             try {
                 // 파일 이름을 사용하여 S3에서 이미지를 가져옴
                 GetObjectRequest getObjectRequest = new GetObjectRequest(bucket, storeFilePath);
@@ -118,6 +116,5 @@ public class RecommendServiceImpl implements RecommendService {
 
         return ResponseEntity.status(HttpStatus.OK).body(itemRecommendResponseDTOList);
     }
-
 
 }

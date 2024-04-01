@@ -4,10 +4,7 @@ import com.d111.backend.dto.user.request.SignInRequestDTO;
 import com.d111.backend.dto.user.request.SignUpRequestDTO;
 import com.d111.backend.dto.user.request.TokenReissueRequestDTO;
 import com.d111.backend.dto.user.request.UpdateUserInfoRequestDTO;
-import com.d111.backend.dto.user.response.GetUserResponse;
-import com.d111.backend.dto.user.response.SignInResponseDTO;
-import com.d111.backend.dto.user.response.TokenReissueResponseDTO;
-import com.d111.backend.dto.user.response.UpdateUserInfoResponseDTO;
+import com.d111.backend.dto.user.response.*;
 import com.d111.backend.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -92,5 +89,13 @@ public class UserController {
         return userService.getUser();
     }
 
+    @Operation(summary = "유저 취향 분석", description = "유저의 취향을 분석합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "분석 성공", content = @Content(schema = @Schema(implementation = AnalysisFavorResponseDTO.class)))
+    })
+    @GetMapping("/favor")
+    public ResponseEntity<AnalysisFavorResponseDTO> analysisFavor() {
+        return userService.analysisFavor();
+    }
 
 }

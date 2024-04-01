@@ -1,5 +1,3 @@
-export interface CoordiCreateRequestDTO extends Coordi {}
-
 export interface CoordiContainerDTO extends Coordi {
   _id: string;
 }

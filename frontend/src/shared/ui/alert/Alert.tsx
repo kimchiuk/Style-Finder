@@ -1,23 +1,57 @@
+import styled from 'styled-components';
+import Button from '../button/button';
+
 interface AlertProps {
   message: string;
   onClickOK(): void;
-  onClickCancel(): void;
 }
+
+const AlertDiv = styled.div`
+  width: 300px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+`;
+
+const TitleElement = styled.h2`
+  margin-bottom: 10px;
+`;
+
+const MessageElement = styled.div`
+  margin-bottom: 20px;
+`;
+
+const ButtonDiv = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const ButtonElement = styled(Button)`
+  margin-left: 10px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: #3b82f6;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #2563eb;
+  }
+`;
 
 const Alert = (props: AlertProps) => {
   return (
-    <div>
-      <h2>Alert</h2>
-      <div className="p-2 m-2 bg-gray-200 rounded-lg">{props.message}</div>
-      <div>
-        <button className="p-2 m-2 bg-gray-200 rounded-lg" onClick={props.onClickCancel}>
-          cancel
-        </button>
-        <button className="p-2 m-2 bg-gray-200 rounded-lg" onClick={props.onClickOK}>
-          ok
-        </button>
-      </div>
-    </div>
+    <AlertDiv>
+      <TitleElement>Alert</TitleElement>
+      <MessageElement>{props.message}</MessageElement>
+      <ButtonDiv>
+        <ButtonElement onClick={props.onClickOK} value="ok" />
+      </ButtonDiv>
+    </AlertDiv>
   );
 };
 

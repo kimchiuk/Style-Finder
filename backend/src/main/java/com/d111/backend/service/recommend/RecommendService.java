@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface RecommendService {
 
-    ResponseEntity<List<ItemRecommendResponseDTO>> recommendItems(String itemCategory);
+    ResponseEntity<List<ItemRecommendResponseDTO>> recommendItems(String items, String detailCategory);
 }

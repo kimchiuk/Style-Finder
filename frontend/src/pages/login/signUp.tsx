@@ -1,10 +1,12 @@
+/* eslint-disable no-useless-escape */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
-import useLoginStore from '../../shared/store/useLoginStore';
+import useLoginStore from '../../shared/store/use-login-store';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../widgets/nav/navbar';
 import api from '../../entities/user/user-apis';
 import { axiosError } from '../../shared/utils/axiosError';
-import './signup.css';
+import './signUp.css';
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -145,46 +147,46 @@ const SignUp = () => {
           <div className=" box-border w-2/5 p-4 border-4 overflow-y-auto rounded-lg bg-[#F5F5F5] mt-5">
             <div className="flex justify-between">
               <div>
-                <div className="inputWrap mb-5">
+                <div className="mb-5 inputWrap">
                   <input className="input" placeholder="이메일 입력" value={email} onChange={handleEmail} />
                 </div>
-                <div className="inputWrap mb-5">
+                <div className="mb-5 inputWrap">
                   <input className="input" placeholder="닉네임 입력" value={nickname} onChange={(e) => setNickname(e.target.value)} />
                 </div>
-                <div className="inputWrap mb-5">
+                <div className="mb-5 inputWrap">
                   <input type="password" className="input" placeholder="비밀번호 입력" value={pw} onChange={handlePw} />
                 </div>
-                <div className="inputWrap mb-5">
+                <div className="mb-5 inputWrap">
                   <input type="password" className="input" placeholder="비밀번호 확인" value={confirmPw} onChange={handleConfirmPw} />
                 </div>
                 <div className="flex flex-row">
                   <div>
-                    <div className="inputWrap mr-5 mb-5">
-                      <input className="input w-16 mr-2" placeholder="키 입력" value={height} onChange={handleHeight} />
+                    <div className="mb-5 mr-5 inputWrap">
+                      <input className="w-16 mr-2 input" placeholder="키 입력" value={height} onChange={handleHeight} />
                       cm
                     </div>
                   </div>
                   <div>
                     <div className="inputWrap">
-                      <input className="input w-24 mr-2" placeholder="몸무게 입력" value={weight} onChange={handleWeight} />
+                      <input className="w-24 mr-2 input" placeholder="몸무게 입력" value={weight} onChange={handleWeight} />
                       kg
                     </div>
                   </div>
                 </div>
-                <div className="inputWrap mb-5">
+                <div className="mb-5 inputWrap">
                   <select className="input" value={gender} onChange={(e) => setGender(e.target.value)}>
                     <option value="">성별 선택</option>
                     <option value="male">남성</option>
                     <option value="female">여성</option>
                   </select>
                 </div>
-                <div className="inputTitle mb-2">프로필 이미지 업로드</div>
-                <div className="inputWrap mb-5 customInputWrap">
+                <div className="mb-2 inputTitle">프로필 이미지 업로드</div>
+                <div className="mb-5 inputWrap customInputWrap">
                   <input type="file" accept="image/*" onChange={handleImageUpload} className="customFileInput" />
                 </div>
               </div>
               <div className="w-1/2">
-                <select className="select select-bordered w-full max-w-xs" onChange={handleSelectChange}>
+                <select className="w-full max-w-xs select select-bordered" onChange={handleSelectChange}>
                   <option disabled selected>
                     당신의 취향을 골라주세요
                   </option>
@@ -222,7 +224,7 @@ const SignUp = () => {
                         return rows;
                       }, [])
                       .map((row, rowIndex) => (
-                        <div className="option-box-container flex justify-between" key={rowIndex}>
+                        <div className="flex justify-between option-box-container" key={rowIndex}>
                           {row.map((option) => (
                             <div className="option-box" key={option}>
                               {option}
