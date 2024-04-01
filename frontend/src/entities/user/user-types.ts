@@ -46,6 +46,7 @@ export interface User {
 export interface UserInfo {
   nickname: string;
   profileImage: string;
+  introduce: string;
   likeCategories: string[];
   dislikeCategories: string[];
   height: number;

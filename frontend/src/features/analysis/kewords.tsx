@@ -63,8 +63,6 @@ const Keywords = () => {
   ]);
 
   useEffect(() => {
-    let value = 0;
-
     api
       .analysisFavor()
       .then((response) => {
@@ -114,7 +112,7 @@ const Keywords = () => {
 
   return (
     <div>
-      <WordCloud data={datas} width={500} height={350} font="Times" fontWeight="bold" spiral="rectangular" rotate={(word) => word.value % 1} fontSize={(word) => Math.log2(word.value) * 5} />
+      <WordCloud data={datas} width={500} height={200} font="Times" fontWeight="bold" spiral="rectangular" rotate={(word) => word.value % 1} fontSize={(word) => Math.log2(word.value) * 5} />
     </div>
   );
 };
