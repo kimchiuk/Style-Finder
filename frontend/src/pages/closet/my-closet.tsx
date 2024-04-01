@@ -73,7 +73,7 @@ const MyCloset = () => {
       </div>
       <div className="flex flex-wrap">
         {ItemList.map((item, index) => (
-          <MyClosetItem image={item} index={index} />
+          <MyClosetItem key={index} image={item} index={index} />
         ))}
       </div>
     </div>

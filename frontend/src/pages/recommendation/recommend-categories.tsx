@@ -34,8 +34,8 @@ const RecommendationCategories = () => {
     <>
       <Dropbox options={categoryList} onSelected={handleSelectedCategory}></Dropbox>
 
-      {categoryResponseList.map((item) => (
-        <RecommendationItem id={item.id} image={item.image} handleClickMoveToCoordi={handleClickMoveToCoordi} />
+      {categoryResponseList.map((item, index) => (
+        <RecommendationItem key={index} id={item.id} image={item.image} handleClickMoveToCoordi={handleClickMoveToCoordi} />
       ))}
     </>
   );

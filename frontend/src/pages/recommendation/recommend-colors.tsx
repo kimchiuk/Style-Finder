@@ -36,8 +36,8 @@ const RecommendationColors = () => {
     <>
       <Dropbox options={colorList} onSelected={handleSelectedColor}></Dropbox>
 
-      {colorResponseList.map((item) => (
-        <RecommendationItem id={item.id} image={item.image} handleClickMoveToCoordi={handleClickMoveToCoordi} />
+      {colorResponseList.map((item, index) => (
+        <RecommendationItem key={index} id={item.id} image={item.image} handleClickMoveToCoordi={handleClickMoveToCoordi} />
       ))}
     </>
   );

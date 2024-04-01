@@ -6,7 +6,7 @@ import './coordi.css';
 
 // import { useParams } from 'react-router-dom';
 
-const Coordi = () => {
+const CoordiFromCoordi = () => {
   // { part, id }
   // 새로 작성하는 경우: part==new
   // 피드에서 불러온 경우: part==all, feedId
@@ -445,4 +445,4 @@ const Coordi = () => {
   );
 };
 
-export default Coordi;
+export default CoordiFromCoordi;

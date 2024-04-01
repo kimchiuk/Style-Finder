@@ -58,8 +58,8 @@ const RecommendationTastes = () => {
     <>
       <Dropbox options={tasteList} onSelected={handleSelectedTaste}></Dropbox>
 
-      {tasteResponseList.map((item) => (
-        <RecommendationItem id={item.id} image={item.image} handleClickMoveToCoordi={handleClickMoveToCoordi} />
+      {tasteResponseList.map((item, index) => (
+        <RecommendationItem key={index} id={item.id} image={item.image} handleClickMoveToCoordi={handleClickMoveToCoordi} />
       ))}
     </>
   );
