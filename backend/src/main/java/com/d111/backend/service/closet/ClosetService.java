@@ -11,7 +11,7 @@ public interface ClosetService {
 
     ResponseEntity<ClosetUploadResponseDTO> uploadCloset(String part, MultipartFile clothImage) throws Exception;
 
-    ResponseEntity<List<ClosetListReadResponseDTO>> getClosets();
+    ResponseEntity<List<ClosetListReadResponseDTO>> getClosets(String part);
 
     ResponseEntity<String> deleteCloset(Long closetId);
 

@@ -14,6 +14,7 @@ import com.d111.backend.entity.user.RefreshToken;
 import com.d111.backend.entity.user.User;
 import com.d111.backend.exception.feed.FeedImageIOException;
 import com.d111.backend.exception.user.*;
+import com.d111.backend.repository.mongo.MongoCoordiRepository;
 import com.d111.backend.repository.s3.S3Repository;
 import com.d111.backend.repository.user.RefreshTokenRepository;
 import com.d111.backend.repository.user.UserRepository;
@@ -43,6 +44,7 @@ public class UserServiceImpl implements UserService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final AmazonS3Client amazonS3Client;
+    private final MongoCoordiRepository mongoCoordiRepository;
 
     @Value("${DEFAULT_PROFILE_URL}")
     private String DEFAULT_PROFILE_URL;
@@ -63,7 +65,7 @@ public class UserServiceImpl implements UserService {
         // S3 bucket에 프로필 이미지 저장
         String storeFilePath;
 
-        if (profileImage != null && !profileImage.isEmpty()) {
+        if (profileImage == null || profileImage.isEmpty()) {
             storeFilePath = DEFAULT_PROFILE_URL;
         } else {
             ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -302,6 +304,7 @@ public class UserServiceImpl implements UserService {
 
         Map<String, Integer> feedStyles = new HashMap<>();
         Map<String, Integer> feedCategories = new HashMap<>();
+
 
         AnalysisFavorResponseDTO analysisFavorResponseDTO = AnalysisFavorResponseDTO.builder()
                 .likeCategories(likeCategories)

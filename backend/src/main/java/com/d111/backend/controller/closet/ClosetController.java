@@ -38,8 +38,8 @@ public class ClosetController {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = String.class))),
     })
     @GetMapping("/getAll")
-    ResponseEntity<List<ClosetListReadResponseDTO>> getClosets() {
-        return closetService.getClosets();
+    ResponseEntity<List<ClosetListReadResponseDTO>> getClosets(@RequestParam String part) {
+        return closetService.getClosets(part);
     }
 
     @Operation(summary = "내 옷 제거", description = "내 옷장에서 옷을 제거합니다")
