@@ -7,7 +7,7 @@ import MyClosetItem from './my-closet-Item';
 import MyClosetCreateForm from './my-closet-create-form';
 
 import Button from '../../shared/ui/button/button';
-import Modal from '../../shared/ui/modal/modal';
+import Modal from '../../shared/ui/modal/Modal';
 import useOpenModal from '../../shared/hooks/use-open-modal';
 import { useNavigate } from 'react-router';
 

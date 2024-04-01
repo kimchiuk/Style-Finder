@@ -2,13 +2,13 @@
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef, useState } from 'react';
-import Keywords from '../../features/analysis/kewords';
 import useUserStore from '../../shared/store/use-user-store';
 import api from '../../entities/user/user-apis';
 import { axiosError } from '../../shared/utils/axiosError';
 import { UserInfo } from '../../entities/user/user-types';
 import useLoginStore from '../../shared/store/use-login-store';
 import { useNavigate } from 'react-router';
+import './my.css';
 
 const style = [
   '레트로',
@@ -197,22 +197,30 @@ const My = () => {
 
   return (
     <div>
-      <div>내 정보</div>
-      <div className="w-auto card bg-base-100">
+      <div className="flex flex-row justify-between">
+        <div className="pb-3 text-lg font-bold">내 정보</div>
+        <div className="button flex justify-center">
+          <button onClick={() => setIsUpdate(true)}>수정</button>
+        </div>
+      </div>
+      <div className="w-auto h-56 card bg-base-100 bg-[#F0ECE5] rounded-lg ">
         <div className="card-body">
-          <div className="flex flex-row">
+          <div className="flex flex-row p-5 pl-8">
             <div className="avatar">
-              <div className="w-12 rounded-full">{userInfo?.profileImage && <img src={`data:image/png;base64,${userInfo?.profileImage}`} />}</div>
+              <div className="w-36 h-36">{userInfo?.profileImage && <img src={`data:image/png;base64,${userInfo?.profileImage}`} className="rounded-lg" />}</div>
             </div>
             <div className="flex flex-col ml-4">
-              <div>
-                <button onClick={() => setIsUpdate(true)}>수정</button>
-              </div>
-              <div>{userInfo?.nickname} 님</div>
-              <div>
+              <div className="text-lg pb-3">{userInfo?.nickname}</div>
+              <div className="text-lg pb-2">
                 키: {userInfo?.height}cm, 몸무게: {userInfo?.weight}kg
               </div>
-              <div>선호: {userInfo?.likeCategories.map((category) => <span className="border-2">{category}</span>)}</div>
+              <div className="text-md">
+                {userInfo?.likeCategories.map((category, index) => (
+                  <span key={index} className="likecate">
+                    {category}
+                  </span>
+                ))}
+              </div>{' '}
               {isUpdate && (
                 <div
                   className={'modal-container'}
@@ -311,27 +319,6 @@ const My = () => {
               )}
             </div>
           </div>
-        </div>
-      </div>
-      <div className="content-center">
-        <Keywords />
-      </div>
-      <div className="mt-6">당신의 취향은?</div>
-      <div className="w-auto card bg-base-100">
-        <div className="card-body">
-          <div>여기는 어떻게 할껴?</div>
-        </div>
-      </div>
-      <div className="mt-6">당신의 옷장은?</div>
-      <div className="w-auto card bg-base-100">
-        <div className="card-body">
-          <div>여기는 어떻게 할껴?</div>
-        </div>
-      </div>
-      <div className="mt-6">내 옷장</div>
-      <div className="w-auto card bg-base-100">
-        <div className="card-body">
-          <div>여기는 어떻게 할껴?</div>
         </div>
       </div>
     </div>

@@ -3,10 +3,11 @@
 
 // import { Link } from 'react-router-dom';
 
-import My from '../my/my';
 import RecommendTastes from './recommend-tastes';
 import RecommendColors from './recommend-colors';
 import RecommendCategories from './recommend-categories';
+import Keywords from '../../features/analysis/kewords';
+
 
 const Recommendation = () => {
   // const loginStore = useLoginStore();
@@ -18,8 +19,9 @@ const Recommendation = () => {
   return (
     <>
       <div>당신의 취향은?</div>
-      <My></My>
-
+      <div className="content-center">
+        <Keywords />
+      </div>
       <div>취향별 추천</div>
       <RecommendTastes />
 
