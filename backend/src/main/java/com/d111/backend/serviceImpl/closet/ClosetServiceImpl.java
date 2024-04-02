@@ -145,7 +145,9 @@ public class ClosetServiceImpl implements ClosetService {
                 }
 
                 ClosetListReadResponseDTO closetListReadResponseDTO = ClosetListReadResponseDTO.builder()
+                        .id(closet.getId())
                         .image(closetImage)
+                        .imageUrl(closet.getImage())
                         .categories(categories)
                         .details(details)
                         .textures(textures)

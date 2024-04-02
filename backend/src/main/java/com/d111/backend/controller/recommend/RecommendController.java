@@ -19,4 +19,5 @@ public class RecommendController {
     public ResponseEntity<List<ItemRecommendResponseDTO>> recommend(@RequestParam String items, @RequestParam String detailCategory) {
         return recommendService.recommendItems(items, detailCategory);
     }
+
 }
