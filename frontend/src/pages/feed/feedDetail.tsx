@@ -5,6 +5,7 @@ import { useParams } from 'react-router';
 import api from '../../entities/feed/feed-apis';
 import { axiosError } from '../../shared/utils/axiosError';
 import { FeedInfo } from '../../entities/feed/feed-types';
+import noimage from '../../assets/images/noimage.png';
 import './feed.css';
 
 const FeedDetail: React.FC = () => {
@@ -35,15 +36,34 @@ const FeedDetail: React.FC = () => {
     <>
       <Navbar />
       <div className="pt-5 mx-auto px-36">
-        <div className="flex flex-col max-w-screen-xl hero max-h-screen-xl bg-base-200 bg-[#161A30] text-color p-8 ">
+        <div className="flex flex-col min-w-min hero h-3/4 bg-base-200 bg-[#161A30] text-color p-8 ">
           <div className="flex flex-row pb-5">
             <img src={`data:image/png;base64,${feedInfo?.user.profileImage}`} alt="profileImage" className="w-16 h-16 rounded-full" />
             <div className="pl-5 author-name flex items-center">작성자 닉네임: {feedInfo?.user.nickname}</div>
           </div>
           <div className="flex flex-row">
-            <div>
-              <img src={`data:image/png;base64,${feedInfo?.feedThumbnail}`} className="max-w-md rounded-lg shadow-2xl" />
-            </div>
+          <div className="flex flex-col">
+                        <div className="flex flex-row">
+                          {feedInfo?.outerCloth ? (
+                            <img src={`data:image/png;base64,${feedInfo?.outerCloth}`} alt="Outer Cloth" className="w-2/4 h-32" />
+                          ) : (
+                            <img src={noimage} alt="Default Outer Cloth" className="w-2/4 h-32" />
+                          )}
+                          {feedInfo?.dress ? <img src={`data:image/png;base64,${feedInfo?.dress}`} alt="Dress" className="w-2/4 h-32" /> : <img src={noimage} alt="Default Dress" className="w-2/4 h-32" />}
+                        </div>
+                        <div className="flex flex-row">
+                          {feedInfo?.upperBody ? (
+                            <img src={`data:image/png;base64,${feedInfo?.upperBody}`} alt="Upper Body" className="w-2/4 h-32" />
+                          ) : (
+                            <img src={noimage} alt="Default Upper Body" className="w-2/4 h-32" />
+                          )}
+                          {feedInfo?.lowerBody ? (
+                            <img src={`data:image/png;base64,${feedInfo?.lowerBody}`} alt="Lower Body" className="w-2/4 h-32" />
+                          ) : (
+                            <img src={noimage} alt="Default Lower Body" className="w-2/4 h-32" />
+                          )}
+                        </div>
+                      </div>
             <div className="pl-8">
               <div className="flex pb-5 author-name">피드 제목: {feedInfo?.feedTitle}</div>
               <div className="pb-5">피드 내용: {feedInfo?.feedContent}</div>

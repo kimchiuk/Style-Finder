@@ -7,6 +7,7 @@ import './feed.css';
 import api from '../../entities/feed/feed-apis';
 import { axiosError } from '../../shared/utils/axiosError';
 import useLoginStore from '../../shared/store/use-login-store';
+import noimage from '../../assets/images/noimage.png';
 
 const Feed = () => {
   const navigate = useNavigate();
@@ -214,7 +215,32 @@ const Feed = () => {
                 <div className="relative card bg-base-100" onMouseEnter={() => handleMouseEnter(feed.feedId)} onMouseLeave={handleMouseLeave}>
                   <div className="card-body">
                     <figure>
-                      <img src={`data:image/png;base64,${feed?.feedThumbnail}`} alt="feedImage" />
+                      <div className="flex flex-col">
+                        <div className="flex flex-row">
+                          {feed?.outerCloth ? (
+                            <img src={`data:image/png;base64,${feed?.outerCloth}`} alt="Outer Cloth" className="w-2/4 h-32" />
+                          ) : (
+                            <img src={noimage} alt="Default Outer Cloth" className="w-2/4 h-32" />
+                          )}
+                          {feed?.dress ? (
+                            <img src={`data:image/png;base64,${feed?.dress}`} alt="Dress" className="w-2/4 h-32" /> 
+                          ): (
+                            <img src={noimage} alt="Default Dress" className="w-2/4 h-32" />
+                          )}
+                        </div>
+                        <div className="flex flex-row">
+                          {feed?.upperBody ? (
+                            <img src={`data:image/png;base64,${feed?.upperBody}`} alt="Upper Body" className="w-2/4 h-32" />
+                          ) : (
+                            <img src={noimage} alt="Default Upper Body" className="w-2/4 h-32" />
+                          )}
+                          {feed?.lowerBody ? (
+                            <img src={`data:image/png;base64,${feed?.lowerBody}`} alt="Lower Body" className="w-2/4 h-32" />
+                          ) : (
+                            <img src={noimage} alt="Default Lower Body" className="w-2/4 h-32" />
+                          )}
+                        </div>
+                      </div>
                     </figure>
                     {ModalOpen === feed.feedId && (
                       <div
@@ -261,10 +287,10 @@ const Feed = () => {
                     {isOverlayVisible == feed.feedId && (
                       <div className="absolute inset-0 bg-black opacity-50">
                         <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-                          {feed.coordiContainer.outerCloth && <p>아우터: {feed.coordiContainer.outerCloth}</p>}
-                          {feed.coordiContainer.upperBody && <p>상의: {feed.coordiContainer.upperBody}</p>}
-                          {feed.coordiContainer.lowerBody && <p>하의: {feed.coordiContainer.lowerBody}</p>}
-                          {feed.coordiContainer.dress && <p>드레스: {feed.coordiContainer.dress}</p>}
+                          {feed.coordiContainer?.outerCloth.category && <p>아우터: {feed.coordiContainer?.outerCloth.category}</p>}
+                          {feed.coordiContainer?.upperBody.category && <p>상의: {feed.coordiContainer?.upperBody.category}</p>}
+                          {feed.coordiContainer?.lowerBody.category && <p>하의: {feed.coordiContainer?.lowerBody.category}</p>}
+                          {feed.coordiContainer?.dress.category && <p>드레스: {feed.coordiContainer?.dress.category}</p>}
                         </div>
                       </div>
                     )}
