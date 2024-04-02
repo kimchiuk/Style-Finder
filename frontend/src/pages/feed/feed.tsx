@@ -8,6 +8,7 @@ import api from '../../entities/feed/feed-apis';
 import { axiosError } from '../../shared/utils/axiosError';
 import useLoginStore from '../../shared/store/use-login-store';
 import noimage from '../../assets/images/noimage.png';
+import { userInfo } from 'os';
 
 const Feed = () => {
   const navigate = useNavigate();
@@ -254,7 +255,7 @@ const Feed = () => {
                       >
                         <div className="modal-content w-1/2 h-2/5 flex justify-evenly items-center ">
                           <div className="pr-5 pl-5 basis-1/3">
-                            <img src={`data:image/png;base64,${feed?.feedThumbnail}`} alt="feedImage" className="w-36 h-36 rounded-lg" />
+                            <img src={`data:image/png;base64,${feed.user.profileImage}`} alt="feedImage" className="w-36 h-36 rounded-lg" />
                             <p>{feed.user.instagram}</p>
                             <p>{feed.user.youtube}</p>
                           </div>
