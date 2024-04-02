@@ -1,6 +1,8 @@
 package com.d111.backend.controller.recommend;
 
-import com.d111.backend.dto.recommend.response.ItemRecommendResponseDTO;
+import com.d111.backend.dto.recommend.request.RecommendListRequestDTO;
+import com.d111.backend.dto.recommend.response.ClothResponseDTO;
+import com.d111.backend.dto.recommend.response.RecommendListResponseDTO;
 import com.d111.backend.service.recommend.RecommendService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +17,24 @@ public class RecommendController {
 
     private final RecommendService recommendService;
 
-    @GetMapping
-    public ResponseEntity<List<ItemRecommendResponseDTO>> recommend(@RequestParam String items, @RequestParam String detailCategory) {
-        return recommendService.recommendItems(items, detailCategory);
+    @PostMapping
+    public ResponseEntity<RecommendListResponseDTO> recommend(@RequestBody RecommendListRequestDTO recommendListRequestDTO) {
+        return recommendService.recommendItems(recommendListRequestDTO);
+    }
+
+    @GetMapping("/style")
+    public ResponseEntity<List<ClothResponseDTO>> styleRecommend(@RequestParam String style) {
+        return recommendService.getStyleRecommend(style);
+    }
+
+    @GetMapping("/category")
+    public ResponseEntity<List<ClothResponseDTO>> categoryRecommend(@RequestParam String category) {
+        return recommendService.getCategoryRecommend(category);
+    }
+
+    @GetMapping("/color")
+    public ResponseEntity<List<ClothResponseDTO>> colorRecommend(@RequestParam String color) {
+        return recommendService.getColorRecommend(color);
     }
 
 }

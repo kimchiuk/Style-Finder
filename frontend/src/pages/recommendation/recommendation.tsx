@@ -8,7 +8,6 @@ import RecommendColors from './recommend-colors';
 import RecommendCategories from './recommend-categories';
 import Keywords from '../../features/analysis/kewords';
 
-
 const Recommendation = () => {
   // const loginStore = useLoginStore();
   // const userStore = useUserStore();

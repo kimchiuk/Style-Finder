@@ -9,6 +9,7 @@ import noimage from '../../assets/images/noimage.png';
 import './feed.css';
 
 const FeedDetail: React.FC = () => {
+  // const navigate = useNavigate();
   const { feedId } = useParams<{ feedId: string }>();
   const [feedInfo, setFeedInfo] = useState<FeedInfo>();
   const [isChecked, setIsChecked] = useState(false);
@@ -25,6 +26,10 @@ const FeedDetail: React.FC = () => {
     // 댓글 작성 후에는 입력된 텍스트를 초기화할 수 있습니다.
     setCommentText('');
   };
+
+  // const handleClickItem = (feedId: string, coordiId: string) => {
+  //   navigate(`/coordi/1/${feedId}/${coordiId}`);
+  // };
 
   const handleIconClick = () => {
     setIsChecked(!isChecked);
