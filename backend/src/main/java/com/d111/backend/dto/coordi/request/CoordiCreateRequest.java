@@ -20,6 +20,7 @@ public class CoordiCreateRequest {
 
     private ClothInfo dress;
 
+
     @Data
     @Builder
     @NoArgsConstructor
