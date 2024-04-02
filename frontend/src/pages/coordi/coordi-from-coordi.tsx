@@ -3,32 +3,40 @@ import Navbar from '../../widgets/nav/navbar';
 import { useState } from 'react';
 import './coordi.css';
 
+import api from '../../entities/analysis/analysis-apis';
 import Image from '../../assets/images/noimage.png';
 import useOpenModal from '../../shared/hooks/use-open-modal';
 import Modal from '../../shared/ui/modal/Modal';
 import MyClosetReadModal from '../closet/my-closet-read-modal';
 import Button from '../../shared/ui/button/button';
-import { Cloth } from '../../entities/closet/closet-types';
+// import { ClosetCloth } from '../../entities/closet/closet-types';
+// import { HadoopCloth } from '../../entities/analysis/analysis-types';
 import TextArea from '../../shared/ui/input/textarea';
 import Input from '../../shared/ui/input/input';
 import WhiteButton from '../../shared/ui/button/white-button';
+import { CoordiCloth } from '../../entities/coordi/coordi-types';
+import { axiosError } from '../../shared/utils/axiosError';
+import useLoginStore from '../../shared/store/use-login-store';
+import { useNavigate } from 'react-router';
 
 const CoordiFromCoordi = () => {
+  const loginStore = useLoginStore();
+  const navigate = useNavigate();
   const { isOpenModal, clickModal, closeModal } = useOpenModal();
 
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [coordiId, setCoordiId] = useState<string>('');
 
-  const [outerCloth, setOuterCloth] = useState<Cloth | null>(null);
-  const [upperBody, setUpperBody] = useState<Cloth | null>(null);
-  const [lowerBody, setLowerBody] = useState<Cloth | null>(null);
-  const [dress, setDress] = useState<Cloth | null>(null);
+  const [outerCloth, setOuterCloth] = useState<CoordiCloth | null>(null);
+  const [upperBody, setUpperBody] = useState<CoordiCloth | null>(null);
+  const [lowerBody, setLowerBody] = useState<CoordiCloth | null>(null);
+  const [dress, setDress] = useState<CoordiCloth | null>(null);
 
-  const [outerClothes, setOuterClothes] = useState<Cloth[]>([]);
-  const [upperBodys, setUpperBodys] = useState<Cloth[]>([]);
-  const [lowerBodys, setLowerBodys] = useState<Cloth[]>([]);
-  const [dresses, setDresses] = useState<Cloth[]>([]);
+  const [outerClothes, setOuterClothes] = useState<CoordiCloth[]>([]);
+  const [upperBodys, setUpperBodys] = useState<CoordiCloth[]>([]);
+  const [lowerBodys, setLowerBodys] = useState<CoordiCloth[]>([]);
+  const [dresses, setDresses] = useState<CoordiCloth[]>([]);
 
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [isRecommendListVisible, setIsRecommendListVisible] = useState(false);
@@ -112,10 +120,10 @@ const CoordiFromCoordi = () => {
   ];
 
   // 부위별 아이템 선택 시 이미지 변경
-  const handleClickItem = (newItem: Cloth) => {
-    if (newItem.part === 'outer') setOuterCloth(newItem);
-    else if (newItem.part === 'upper') setUpperBody(newItem);
-    else if (newItem.part === 'lower') setLowerBody(newItem);
+  const handleClickItem = (newItem: CoordiCloth) => {
+    if (newItem.part === 'outerCloth') setOuterCloth(newItem);
+    else if (newItem.part === 'upperBody') setUpperBody(newItem);
+    else if (newItem.part === 'lowerBody') setLowerBody(newItem);
     else setDress(newItem);
   };
 
@@ -198,12 +206,92 @@ const CoordiFromCoordi = () => {
     }
   };
 
+  // get outers api
+  const getOuterClothes = () => {
+    api
+      .getOuterItems()
+      .then((response) => {
+        const data = response.data;
+
+        setOuterClothes(data);
+        console.log(data);
+      })
+      .catch((error) => {
+        const errorCode = axiosError(error);
+
+        if (errorCode == 401) {
+          loginStore.setLogout();
+          navigate('/login');
+        }
+      });
+  };
+
+  // get uppers api
+  const getUpperBodys = () => {
+    api
+      .getTopItems()
+      .then((response) => {
+        const data = response.data;
+
+        setUpperBodys(data);
+        console.log(data);
+      })
+      .catch((error) => {
+        const errorCode = axiosError(error);
+
+        if (errorCode == 401) {
+          loginStore.setLogout();
+          navigate('/login');
+        }
+      });
+  };
+
+  // get lowers api
+  const getLowerBodys = () => {
+    api
+      .getBottomItems()
+      .then((response) => {
+        const data = response.data;
+
+        setLowerBodys(data);
+        console.log(data);
+      })
+      .catch((error) => {
+        const errorCode = axiosError(error);
+
+        if (errorCode == 401) {
+          loginStore.setLogout();
+          navigate('/login');
+        }
+      });
+  };
+
+  // get outers api
+  const getDresses = () => {
+    api
+      .getDressItems()
+      .then((response) => {
+        const data = response.data;
+
+        setDresses(data);
+        console.log(data);
+      })
+      .catch((error) => {
+        const errorCode = axiosError(error);
+
+        if (errorCode == 401) {
+          loginStore.setLogout();
+          navigate('/login');
+        }
+      });
+  };
+
   // 검색 버튼
   const handleSearchItems = () => {
-    setOuterClothes([]); // outer api
-    setUpperBodys([]); // upper api
-    setLowerBodys([]); // lower api
-    setDresses([]); // dress api
+    getOuterClothes();
+    getUpperBodys();
+    getLowerBodys();
+    getDresses();
   };
 
   return (
@@ -217,7 +305,7 @@ const CoordiFromCoordi = () => {
               <div className="mx-8 my-2">
                 <div className="flex justify-center">
                   <div>아우터 </div>
-                  <button className="text-gray-400" onClick={() => handleDeleteCloth('outer')}>
+                  <button className="text-gray-400" onClick={() => handleDeleteCloth('outerCloth')}>
                     (삭제)
                   </button>
                 </div>
@@ -230,7 +318,7 @@ const CoordiFromCoordi = () => {
               <div className="mx-8 my-2">
                 <div className="flex justify-center">
                   <div>상의 </div>
-                  <button className="text-gray-400" onClick={() => handleDeleteCloth('upper')}>
+                  <button className="text-gray-400" onClick={() => handleDeleteCloth('upperBody')}>
                     (삭제)
                   </button>
                 </div>
@@ -243,7 +331,7 @@ const CoordiFromCoordi = () => {
               <div className="mx-8 my-2">
                 <div className="flex justify-center">
                   <div>하의 </div>
-                  <button className="text-gray-400" onClick={() => handleDeleteCloth('lowet')}>
+                  <button className="text-gray-400" onClick={() => handleDeleteCloth('lowerBody')}>
                     (삭제)
                   </button>
                 </div>
@@ -277,7 +365,7 @@ const CoordiFromCoordi = () => {
                         {styles.map((style, index) => (
                           <button
                             key={index}
-                            className={`rounded-full border-2 px-4 py-2 my-2 mr-2 shadow-md border-md cursor-pointer ${selectedStyles.includes(style) ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}
+                            className={`rounded-full border-2 py-2 my-2 mr-2 shadow-md border-md cursor-pointer ${selectedStyles.includes(style) ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}
                             onClick={() => toggleStyle(style)}
                           >
                             {style}
@@ -291,7 +379,7 @@ const CoordiFromCoordi = () => {
                         {categories.map((category, index) => (
                           <button
                             key={index}
-                            className={`rounded-full border-2 px-4 py-2 my-2 mr-2 shadow-md border-md cursor-pointer ${selectedCategories.includes(category) ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}
+                            className={`rounded-full border-2  py-2 my-2 mr-2 shadow-md border-md cursor-pointer ${selectedCategories.includes(category) ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}
                             onClick={() => toggleCategory(category)}
                           >
                             {category}
@@ -305,7 +393,7 @@ const CoordiFromCoordi = () => {
                         {colors.map((color, index) => (
                           <button
                             key={index}
-                            className={`rounded-full border-2 px-4 py-2 my-2 mr-2 shadow-md border-md cursor-pointer ${selectedColors.includes(color) ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}
+                            className={`rounded-full border-2  py-2 my-2 mr-2 shadow-md border-md cursor-pointer ${selectedColors.includes(color) ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}
                             value={color}
                             onClick={() => toggleColor(color)}
                           >

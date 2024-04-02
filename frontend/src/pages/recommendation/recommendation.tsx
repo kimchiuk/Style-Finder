@@ -16,20 +16,24 @@ const Recommendation = () => {
   // const handleClickMoveToCoordi = () => {};
 
   return (
-    <>
-      <div className='text-lg pt-4'>당신의 취향은?</div>
+    <div>
       <div className="content-center">
         <Keywords />
       </div>
-      <div className='text-lg'>취향별 추천</div>
-      <RecommendTastes />
+      <div className="pt-4 mt-4">
+        <div className="content-center">
+          <RecommendTastes />
+        </div>
 
-      <div className='text-lg'>카테고리별 추천</div>
-      <RecommendCategories />
+        <div className="content-center">
+          <RecommendCategories />
+        </div>
 
-      <div className='text-lg'>색상별 추천</div>
-      <RecommendColors />
-    </>
+        <div className="content-center">
+          <RecommendColors />
+        </div>
+      </div>
+    </div>
   );
 };
 

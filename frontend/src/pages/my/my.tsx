@@ -203,7 +203,7 @@ const My = () => {
     <div>
       <div className="flex flex-row justify-between">
         <div className="pb-3 text-lg font-bold">내 정보</div>
-        <div className="button flex justify-center">
+        <div className="flex justify-center button">
           <button onClick={() => setIsUpdate(true)}>수정</button>
         </div>
       </div>
@@ -214,8 +214,8 @@ const My = () => {
               <div className="w-36 h-36">{userInfo?.profileImage && <img src={`data:image/png;base64,${userInfo?.profileImage}`} className="rounded-lg" />}</div>
             </div>
             <div className="flex flex-col ml-4">
-              <div className="text-lg pb-3">{userInfo?.nickname}</div>
-              <div className="text-lg pb-2">
+              <div className="pb-3 text-lg">{userInfo?.nickname}</div>
+              <div className="pb-2 text-lg">
                 키: {userInfo?.height}cm, 몸무게: {userInfo?.weight}kg
               </div>
               <div className="pb-5">피드 내용: {userInfo?.introduce}</div>
@@ -236,14 +236,14 @@ const My = () => {
                     }
                   }}
                 >
-                  <div className="flex justify-center bg-white w-1/2 h-auto">
+                  <div className="flex justify-center w-1/2 h-auto bg-white">
                     <div>
                       {userInfo && (
                         <div>
-                          <div className="mb-5 flex justify-center pt-3">
+                          <div className="flex justify-center pt-3 mb-5">
                             <img src={image ? URL.createObjectURL(image) : `data:image/png;base64,${userInfo.profileImage}`} alt="Profile Image" className="uploadedImage" />
                           </div>
-                          <div className="mb-5 inputWrap customInputWrap flex justify-center">
+                          <div className="flex justify-center mb-5 inputWrap customInputWrap">
                             <label htmlFor="customFileInput" className="customFileInputLabel">
                               프로필 사진 업로드
                             </label>
@@ -251,8 +251,8 @@ const My = () => {
                           </div>
                         </div>
                       )}
-                      <div className="mb-5 inputWrap flex justify-center pt-1 textdetail">
-                        <input className="input text-center" placeholder="닉네임 입력" value={nickname} onChange={(e) => setNickname(e.target.value)} />
+                      <div className="flex justify-center pt-1 mb-5 inputWrap textdetail">
+                        <input className="text-center input" placeholder="닉네임 입력" value={nickname} onChange={(e) => setNickname(e.target.value)} />
                       </div>
                       <div className="flex flex-row">
                         <div>

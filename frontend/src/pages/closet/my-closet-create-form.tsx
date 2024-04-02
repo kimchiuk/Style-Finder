@@ -74,8 +74,14 @@ const MyClosetCreateForm = (props: MyClosetCreateFormProps) => {
       return;
     }
 
+    let option;
+    if (selectedOption == '아우터') option = 'outerCloth';
+    else if (selectedOption == '상의') option = 'upperBody';
+    else if (selectedOption == '하의') option = 'lowerBody';
+    else option = 'dress';
+
     api
-      .uploadCloth(selectedOption, selectedFile)
+      .uploadCloth(option, selectedFile)
       .then((response) => {
         const data = response.data.data;
 
