@@ -287,10 +287,10 @@ const Feed = () => {
                     {isOverlayVisible == feed.feedId && (
                       <div className="absolute inset-0 bg-black opacity-50">
                         <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-                          {feed.coordiContainer?.outerCloth.category && <p>아우터: {feed.coordiContainer?.outerCloth.category}</p>}
-                          {feed.coordiContainer?.upperBody.category && <p>상의: {feed.coordiContainer?.upperBody.category}</p>}
-                          {feed.coordiContainer?.lowerBody.category && <p>하의: {feed.coordiContainer?.lowerBody.category}</p>}
-                          {feed.coordiContainer?.dress.category && <p>드레스: {feed.coordiContainer?.dress.category}</p>}
+                          {feed.coordiContainer?.outerCloth?.category && <p>아우터: {feed.coordiContainer?.outerCloth?.category}</p>}
+                          {feed.coordiContainer?.upperBody?.category && <p>상의: {feed.coordiContainer?.upperBody?.category}</p>}
+                          {feed.coordiContainer?.lowerBody?.category && <p>하의: {feed.coordiContainer?.lowerBody?.category}</p>}
+                          {feed.coordiContainer?.dress?.category && <p>드레스: {feed.coordiContainer?.dress?.category}</p>}
                         </div>
                       </div>
                     )}

@@ -66,7 +66,7 @@ const FeedDetail: React.FC = () => {
                     <div className="flex justify-center">아우터</div>
                     <div>
                       {feedInfo?.outerCloth ? (
-                        <img src={`data:image/png;base64,${feedInfo?.outerCloth}`} alt="Outer Cloth" className="w-6/7 h-32" />
+                        <img src={`data:image/png;base64,${feedInfo?.outerCloth}`} alt="Outer Cloth" className="w-48 h-32" />
                       ) : (
                         <img src={noimage} alt="Default Outer Cloth" className="w-48 h-32" />
                       )}
@@ -87,7 +87,7 @@ const FeedDetail: React.FC = () => {
                       <div className="flex justify-center">상의</div>
                       <div>
                         {feedInfo?.upperBody ? (
-                          <img src={`data:image/png;base64,${feedInfo?.upperBody}`} alt="Upper Body" className="w-6/7 h-32" />
+                          <img src={`data:image/png;base64,${feedInfo?.upperBody}`} alt="Upper Body" className="w-48 h-32" />
                         ) : (
                           <img src={noimage} alt="Default Upper Body" className="w-48 h-32" />
                         )}
@@ -97,7 +97,7 @@ const FeedDetail: React.FC = () => {
                       <div className="flex justify-center">하의</div>
                       <div>
                         {feedInfo?.lowerBody ? (
-                          <img src={`data:image/png;base64,${feedInfo?.lowerBody}`} alt="Lower Body" className="w-6/7 h-32" />
+                          <img src={`data:image/png;base64,${feedInfo?.lowerBody}`} alt="Lower Body" className="w-48 h-32" />
                         ) : (
                           <img src={noimage} alt="Default Lower Body" className="w-48 h-32" />
                         )}
