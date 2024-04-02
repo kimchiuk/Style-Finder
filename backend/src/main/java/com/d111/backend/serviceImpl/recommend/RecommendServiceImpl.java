@@ -80,24 +80,28 @@ public class RecommendServiceImpl implements RecommendService {
         for (ClothResponseDTO clothResponseDTO: outerResponseDTOList) {
             String storeFilePath = clothResponseDTO.getImageUrl();
             byte[] outerImage = getImage(storeFilePath);
+            clothResponseDTO.setPart("outer");
             clothResponseDTO.setImage(outerImage);
         }
 
         for (ClothResponseDTO clothResponseDTO: topResponseDTOList) {
             String storeFilePath = clothResponseDTO.getImageUrl();
             byte[] topImage = getImage(storeFilePath);
+            clothResponseDTO.setPart("upper");
             clothResponseDTO.setImage(topImage);
         }
 
         for (ClothResponseDTO clothResponseDTO: bottomResponseDTOList) {
             String storeFilePath = clothResponseDTO.getImageUrl();
             byte[] bottomImage = getImage(storeFilePath);
+            clothResponseDTO.setPart("lower");
             clothResponseDTO.setImage(bottomImage);
         }
 
         for (ClothResponseDTO clothResponseDTO: dressResponseDTOList) {
             String storeFilePath = clothResponseDTO.getImageUrl();
             byte[] dressImage = getImage(storeFilePath);
+            clothResponseDTO.setPart("dress");
             clothResponseDTO.setImage(dressImage);
         }
 
