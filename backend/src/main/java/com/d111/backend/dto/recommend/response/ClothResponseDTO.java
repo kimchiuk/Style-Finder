@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpperBodyResponseDTO {
+public class ClothResponseDTO {
 
     private byte[] image;
 
