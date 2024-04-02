@@ -211,7 +211,7 @@ const My = () => {
         <div className="card-body">
           <div className="flex flex-row p-5 pl-8">
             <div>
-              <div className="w-36 h-36">{userInfo?.profileImage && <img src={`data:image/png;base64,${userInfo?.profileImage}`} className="rounded-lg" />}</div>
+              <div className="w-36 h-auto">{userInfo?.profileImage && <img src={`data:image/png;base64,${userInfo?.profileImage}`} className="rounded-lg h-auto" />}</div>
             </div>
             <div className="flex flex-col ml-4">
               <div className="text-lg pb-3">{userInfo?.nickname}</div>
