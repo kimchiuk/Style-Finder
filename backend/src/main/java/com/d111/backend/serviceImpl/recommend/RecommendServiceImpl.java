@@ -42,6 +42,7 @@ public class RecommendServiceImpl implements RecommendService {
     public ResponseEntity<List<ItemRecommendResponseDTO>>recommendItems(String items, String detailCategory) {
 
         List<String> fileNames = new ArrayList<>();
+
         String encodedCategory = URLEncoder.encode(detailCategory, StandardCharsets.UTF_8);
         String apiUrl = "http://j10d111.p.ssafy.io:8000/get_" + items +"_items/?" + items + "_category=" + encodedCategory;
 
@@ -65,20 +66,18 @@ public class RecommendServiceImpl implements RecommendService {
 
 
             JSONArray filesArray = new JSONArray(response.toString());
-//            for (int i = 0; i < filesArray.length(); i++) {
-//                JSONObject obj = filesArray.getJSONObject(i);
-//                int fileId = obj.getInt("데이터셋 정보_파일 번호");
-//                fileNames.add(String.valueOf(fileId));
-//            }
 
-
-//            // 일단 4개씩만 조회
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < filesArray.length(); i++) {
                 JSONObject obj = filesArray.getJSONObject(i);
                 int fileId = obj.getInt("데이터셋 정보_파일 번호");
                 fileNames.add(String.valueOf(fileId));
             }
-//
+
+//            for (int i = 0; i < 4; i++) {
+//                JSONObject obj = filesArray.getJSONObject(i);
+//                int fileId = obj.getInt("데이터셋 정보_파일 번호");
+//                fileNames.add(String.valueOf(fileId));
+//            }
 
             // 연결 해제
             connection.disconnect();
@@ -108,7 +107,7 @@ public class RecommendServiceImpl implements RecommendService {
             }
 
             ItemRecommendResponseDTO itemRecommendResponseDTO = ItemRecommendResponseDTO.builder()
-                    .outerImage(outerImage)
+//                    .outerImage(outerImage)
                     .build();
 
             itemRecommendResponseDTOList.add(itemRecommendResponseDTO);

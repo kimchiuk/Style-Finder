@@ -1,6 +1,6 @@
     package com.d111.backend.dto.coordi.response.dto;
 
-    import com.d111.backend.dto.coordi.request.CoordiCreateRequest.ClothInfo;
+    import com.d111.backend.entity.coordi.ClothInfo;
     import com.d111.backend.entity.coordi.Coordi;
     import com.d111.backend.repository.mongo.MongoCoordiRepository;
     import io.swagger.v3.oas.annotations.media.Schema;

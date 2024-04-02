@@ -17,17 +17,17 @@ const Recommendation = () => {
 
   return (
     <>
-      <div>당신의 취향은?</div>
+      <div className='text-lg pt-4'>당신의 취향은?</div>
       <div className="content-center">
         <Keywords />
       </div>
-      <div>취향별 추천</div>
+      <div className='text-lg'>취향별 추천</div>
       <RecommendTastes />
 
-      <div>카테고리별 추천</div>
+      <div className='text-lg'>카테고리별 추천</div>
       <RecommendCategories />
 
-      <div>색상별 추천</div>
+      <div className='text-lg'>색상별 추천</div>
       <RecommendColors />
     </>
   );

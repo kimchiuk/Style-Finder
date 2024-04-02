@@ -6,8 +6,6 @@ import com.d111.backend.dto.feed.request.FittingRequest;
 import com.d111.backend.dto.feed.response.FeedDeleteResponse;
 import com.d111.backend.dto.feed.response.FeedListReadResponse;
 import com.d111.backend.dto.feed.response.FeedReadResponse;
-import com.d111.backend.dto.feed.response.dto.FeedListReadResponseDTO;
-import com.d111.backend.entity.feed.Feed;
 import com.d111.backend.entity.user.User;
 import com.d111.backend.exception.user.EmailNotFoundException;
 import com.d111.backend.repository.user.UserRepository;
@@ -15,13 +13,11 @@ import com.d111.backend.service.feed.FeedService;
 import com.d111.backend.util.JWTUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -42,10 +38,9 @@ public class FeedController {
     }
 
     // 피드 및 코디 생성
-    @PostMapping(value = "/create",consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createFeedCoordi(@RequestPart(value = "feedcoordiCreateRequest") FeedCoordiCreateRequest request,
-                                                               @RequestPart(value = "feedThumbnail", required = false) MultipartFile feedThumbnail) {
-        return feedService.create(request.getFeedCreateRequest(), request.getCoordiCreateRequest(), feedThumbnail);
+    @PostMapping(value = "/create")
+    public ResponseEntity<?> createFeedCoordi(@RequestBody FeedCoordiCreateRequest request) {
+        return feedService.create(request.getFeedCreateRequest(), request.getCoordiCreateRequest());
     }
 
     // 피드 상세 조회
@@ -69,9 +64,8 @@ public class FeedController {
     // 피드 수정
     @PutMapping(value = "/update/{feedId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateFeed(@PathVariable Long feedId,
-                                        @RequestPart(value = "feedUpdateRequest") FeedUpdateRequest feedUpdateRequest,
-                                        @RequestPart(value = "feedThumbnail", required = false) MultipartFile multipartFile) {
-        return feedService.update(feedId, feedUpdateRequest, multipartFile);
+                                        @RequestPart(value = "feedUpdateRequest") FeedUpdateRequest feedUpdateRequest) {
+        return feedService.update(feedId, feedUpdateRequest);
     }
 
     // 피드 인기순 조회

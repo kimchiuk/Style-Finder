@@ -1,8 +1,6 @@
 package com.d111.backend.entity.coordi;
 
-
 import com.d111.backend.dto.coordi.request.CoordiCreateRequest;
-import com.d111.backend.dto.coordi.request.CoordiCreateRequest.ClothInfo;
 import com.d111.backend.entity.feed.Feed;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,7 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 
 @Data
 @Builder
@@ -61,7 +58,7 @@ public class Coordi {
         return coordi;
     }
 
-    private static ClothInfo createClothInfo(com.d111.backend.dto.coordi.request.CoordiCreateRequest.ClothInfo clothInfoDto) {
+    private static ClothInfo createClothInfo(ClothInfo clothInfoDto) {
         return ClothInfo.builder()
                 .style(clothInfoDto.getStyle())
                 .category(clothInfoDto.getCategory())

@@ -30,12 +30,12 @@ public class UpdateUserInfoRequestDTO {
     Integer weight;
 
     @Schema(description = "한 줄 소개")
-    private String introduce;
+    String introduce;
 
     @Schema(description = "인스타그램 주소")
-    private String instagram;
+    String instagram;
 
     @Schema(description = "유튜브 주소")
-    private String youtube;
+    String youtube;
 
 }

@@ -27,10 +27,10 @@ export interface FeedComment {
 
 export interface CoordiContainer {
   id: string;
-  outerCloth: string;
-  upperBody: string;
-  lowerBody: string;
-  dress: string;
+  outerCloth: any;
+  upperBody: any;
+  lowerBody: any;
+  dress: any;
 }
 
 export interface FeedInfo extends FeedContent {

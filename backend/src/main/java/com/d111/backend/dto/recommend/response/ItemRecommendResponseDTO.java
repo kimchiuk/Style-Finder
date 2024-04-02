@@ -9,6 +9,12 @@ import lombok.*;
 @AllArgsConstructor
 public class ItemRecommendResponseDTO {
 
-    private byte[] outerImage;
+    private OuterClothResponseDTO outerCloth;
+
+    private UpperBodyResponseDTO upperBody;
+
+    private LowerBodyResponseDTO lowerBody;
+
+    private DressResponseDTO dress;
 
 }
