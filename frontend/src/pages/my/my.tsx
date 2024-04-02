@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable prefer-const */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef, useState } from 'react';
 import useUserStore from '../../shared/store/use-user-store';
 import api from '../../entities/user/user-apis';
@@ -199,6 +196,12 @@ const My = () => {
     getUserInfo();
   }, []);
 
+  useEffect(() => {
+    if (userInfo) {
+      setFeedContent(userInfo.introduce); // userInfo.introduce 값을 feedContent state의 초기값으로 설정
+    }
+  }, [userInfo]);
+
   return (
     <div>
       <div className="flex flex-row justify-between">
@@ -211,7 +214,7 @@ const My = () => {
         <div className="card-body">
           <div className="flex flex-row p-5 pl-8">
             <div>
-              <div className="w-36 h-36">{userInfo?.profileImage && <img src={`data:image/png;base64,${userInfo?.profileImage}`} className="rounded-lg" />}</div>
+              <div className="w-36 h-auto">{userInfo?.profileImage && <img src={`data:image/png;base64,${userInfo?.profileImage}`} className="rounded-lg h-auto" />}</div>
             </div>
             <div className="flex flex-col ml-4">
               <div className="pb-3 text-lg">{userInfo?.nickname}</div>
@@ -319,12 +322,10 @@ const My = () => {
                                     <div className="flex justify-between option-box-container" key={rowIndex}>
                                       {row.map((option) => (
                                         <div className="option-box" key={option}>
-                                          {option}
-                                          <div className="flex justify-end">
-                                            <button className="option-button custom-button" onClick={() => handleOptionRemove(option)}>
-                                              취소
-                                            </button>
-                                          </div>
+                                          <span>{option}</span>
+                                          <button className="option-button custom-button" onClick={() => handleOptionRemove(option)}>
+                                            취소
+                                          </button>
                                         </div>
                                       ))}
                                     </div>

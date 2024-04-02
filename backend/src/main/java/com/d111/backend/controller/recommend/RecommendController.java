@@ -17,7 +17,7 @@ public class RecommendController {
 
     private final RecommendService recommendService;
 
-    @GetMapping
+    @PostMapping
     public ResponseEntity<RecommendListResponseDTO> recommend(@RequestBody RecommendListRequestDTO recommendListRequestDTO) {
         return recommendService.recommendItems(recommendListRequestDTO);
     }

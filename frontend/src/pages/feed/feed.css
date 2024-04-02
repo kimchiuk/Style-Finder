@@ -75,5 +75,9 @@
 
 .hr{
   border: 3px solid white;
-  width: 460px;
+  width: 760px;
+}
+
+.blackText {
+  color: black;
 }

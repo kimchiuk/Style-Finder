@@ -19,4 +19,6 @@ public class ClothResponseDTO {
 
     private String color;
 
+    private String part;
+
 }
