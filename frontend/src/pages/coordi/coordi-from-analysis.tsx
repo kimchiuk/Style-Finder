@@ -165,7 +165,7 @@ const CoordiFromAnalysis = () => {
       <div>
         <div>코디</div>
         <div className="mx-auto px-36">
-          <div className="p-2 m-2 bg-gray-100 rounded-lg ">
+          <div className="p-2 m-2 bg-gray-100 rounded-lg">
             <div className="">
               <div className="w-auto">
                 <button onClick={toggleScreen}>검색 설정</button>
@@ -205,13 +205,13 @@ const CoordiFromAnalysis = () => {
             <div className="flex flex-col">
               <label>아우터</label>
               <div className="flex">
-                {!outerCloth ? <img id="outer" src={Image} /> : <img id="outer" src={outerCloth.image} />}
+                {!outerCloth ? <img id="outer" style={{ width: '200px', height: '200px' }} src={Image} /> : <img id="outer" style={{ width: '200px', height: '200px' }} src={outerCloth.image} />}
                 <Button value="옷장" onClick={() => clickModal} />
 
                 <div className="flex">
                   {outerClothes.map((item, index) => (
                     <div key={index}>
-                      <img className="p-2 m-2 bg-gray-200 rounded-lg" src={item.image} alt="" />
+                      <img style={{ width: '200px', height: '200px' }} src={item.image} alt="" />
                       <Button
                         onClick={() => {
                           handleClickItem(item);
@@ -225,13 +225,13 @@ const CoordiFromAnalysis = () => {
 
               <label>상의</label>
               <div className="flex">
-                {!upperBody ? <img id="upper" src={Image} /> : <img id="upper" src={upperBody.image} />}
+                {!upperBody ? <img id="upper" style={{ width: '200px', height: '200px' }} src={Image} /> : <img id="upper" style={{ width: '200px', height: '200px' }} src={upperBody.image} />}
                 <Button value="옷장" onClick={() => clickModal} />
 
                 <div className="flex">
                   {upperBodys.map((item, index) => (
                     <div key={index}>
-                      <img className="p-2 m-2 bg-gray-200 rounded-lg" src={item.image} alt="" />
+                      <img style={{ width: '200px', height: '200px' }} src={item.image} alt="" />
                       <Button
                         onClick={() => {
                           handleClickItem(item);

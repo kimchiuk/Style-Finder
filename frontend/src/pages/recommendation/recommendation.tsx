@@ -3,15 +3,10 @@
 
 // import { Link } from 'react-router-dom';
 
-<<<<<<< HEAD
-=======
-// import My from '../my/my';
->>>>>>> origin/develop
 import RecommendTastes from './recommend-tastes';
 import RecommendColors from './recommend-colors';
 import RecommendCategories from './recommend-categories';
 import Keywords from '../../features/analysis/kewords';
-
 
 const Recommendation = () => {
   // const loginStore = useLoginStore();

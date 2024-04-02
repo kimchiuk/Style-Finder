@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 interface TextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label: string;
+  onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
 const TextAreaDiv = styled.div`
@@ -27,7 +28,7 @@ const TextArea = (props: TextAreaProps) => {
   return (
     <TextAreaDiv>
       <LabelElement>{props.label}</LabelElement>
-      <TextareaElement cacheMeasurements placeholder="" value={props.value} />
+      <TextareaElement cacheMeasurements placeholder="" value={props.value} onChange={props.onChange} />
     </TextAreaDiv>
   );
 };

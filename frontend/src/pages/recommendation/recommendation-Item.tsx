@@ -1,16 +1,16 @@
-import { Cloth } from '../../entities/closet/closet-types';
+import { HadoopCloth } from '../../entities/analysis/analysis-types';
 import Button from '../../shared/ui/button/button';
 
 interface RecommendationItemProps {
-  item: Cloth;
-  onClickItem(item: Cloth): void;
+  item: HadoopCloth;
+  onClickItem(item: HadoopCloth): void;
 }
 
 const RecommendationItem = (props: RecommendationItemProps) => {
   return (
     <div>
-      <img style={{ width: '200px', height: '200px' }} src={props.item.image} alt="" />
-      <Button style={{ width: '200px', height: '50px' }} onClick={() => props.onClickItem(props.item)} value="코디 해 보기" />
+      <img className="w-64 h-64" src={props.item.image} alt="" />
+      <Button className="w-64 h-16" onClick={() => props.onClickItem(props.item)} value="코디 해 보기" />
     </div>
   );
 };

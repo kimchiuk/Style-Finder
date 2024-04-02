@@ -196,13 +196,13 @@ const CoordiFromFeed = () => {
             <div className="flex flex-col">
               <label>아우터</label>
               <div className="flex">
-                {!outerCloth ? <img id="outer" src={Image} /> : <img id="outer" src={outerCloth.image} />}
+                {!outerCloth ? <img id="outer" style={{ width: '200px', height: '200px' }} src={Image} /> : <img id="outer" style={{ width: '200px', height: '200px' }} src={outerCloth.image} />}
                 ;
                 <Button value="옷장" onClick={() => clickModal} />
                 <div className="flex">
                   {outerClothes.map((item, index) => (
                     <div key={index}>
-                      <img className="p-2 m-2 bg-gray-200 rounded-lg" src={item.image} alt="" />
+                      <img style={{ width: '200px', height: '200px' }} src={item.image} alt="" />
                       <Button
                         onClick={() => {
                           handleClickItem(item);
@@ -216,13 +216,13 @@ const CoordiFromFeed = () => {
 
               <label>상의</label>
               <div className="flex">
-                {!upperBody ? <img id="upper" src={Image} /> : <img id="upper" src={upperBody.image} />}
+                {!upperBody ? <img style={{ width: '200px', height: '200px' }} id="upper" src={Image} /> : <img style={{ width: '200px', height: '200px' }} id="upper" src={upperBody.image} />}
                 <Button value="옷장" onClick={() => clickModal} />
 
                 <div className="flex">
                   {upperBodys.map((item, index) => (
                     <div key={index}>
-                      <img className="p-2 m-2 bg-gray-200 rounded-lg" src={item.image} alt="" />
+                      <img style={{ width: '200px', height: '200px' }} src={item.image} alt="" />
                       <Button
                         onClick={() => {
                           handleClickItem(item);
@@ -236,13 +236,13 @@ const CoordiFromFeed = () => {
 
               <label>하의</label>
               <div className="flex">
-                {!lowerBody ? <img id="lower" src={Image} /> : <img id="lower" src={lowerBody.image} />}
+                {!lowerBody ? <img style={{ width: '200px', height: '200px' }} id="lower" src={Image} /> : <img style={{ width: '200px', height: '200px' }} id="lower" src={lowerBody.image} />}
                 <Button value="옷장" onClick={() => clickModal} />
 
                 <div className="flex">
                   {lowerBodys.map((item, index) => (
                     <div key={index}>
-                      <img className="p-2 m-2 bg-gray-200 rounded-lg" src={item.image} alt="" />
+                      <img style={{ width: '200px', height: '200px' }} src={item.image} alt="" />
                       <Button
                         onClick={() => {
                           handleClickItem(item);
@@ -256,13 +256,13 @@ const CoordiFromFeed = () => {
 
               <label>드레스</label>
               <div className="flex">
-                {!dress ? <img id="dress" src={Image} /> : <img id="dress" src={dress.image} />}
+                {!dress ? <img style={{ width: '200px', height: '200px' }} id="dress" src={Image} /> : <img id="dress" style={{ width: '200px', height: '200px' }} src={dress.image} />}
                 <Button value="옷장" onClick={() => clickModal} />
 
                 <div className="flex">
                   {dresses.map((item, index) => (
                     <div key={index}>
-                      <img className="p-2 m-2 bg-gray-200 rounded-lg" src={item.image} alt="" />
+                      <img style={{ width: '200px', height: '200px' }} src={item.image} alt="" />
                       <Button
                         onClick={() => {
                           handleClickItem(item);

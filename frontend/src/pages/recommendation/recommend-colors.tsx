@@ -2,9 +2,8 @@ import { useState } from 'react';
 import RecommendationItem from './recommendation-Item';
 import Dropbox from '../../shared/ui/dropbox/dropbox';
 
-import Image from '../../assets/images/main2.png';
-import { Cloth } from '../../entities/closet/closet-types';
 import { useNavigate } from 'react-router';
+import { HadoopCloth } from '../../entities/analysis/analysis-types';
 // import { useParams } from 'react-router';
 
 const RecommendationColors = () => {
@@ -13,8 +12,7 @@ const RecommendationColors = () => {
 
   const [color, setColor] = useState<string>('전체');
   const colorList = ['전체', '빨강', '주황', '노랑', '초록', '파랑', '보라', '하양', '검정'];
-  const cloth = { id: 2, image: Image, category: [], details: [], textures: [], part: '' };
-  const [colorResponseList, setColorResponseList] = useState<Cloth[]>([cloth, cloth, cloth, cloth]);
+  const [colorResponseList, setColorResponseList] = useState<HadoopCloth[]>([]);
 
   // 색상 설정
   const handleSelectedColor = (selectedItem: string) => {
@@ -29,7 +27,7 @@ const RecommendationColors = () => {
   };
 
   // 해당 아이템 코디 해 보기
-  const handleClickMoveToCoordi = (selectedItem: Cloth) => {
+  const handleClickMoveToCoordi = (selectedItem: HadoopCloth) => {
     navigate(`/coordi/2/${selectedItem.id}`);
   };
 

@@ -2,9 +2,8 @@ import { useState } from 'react';
 import RecommendationItem from './recommendation-Item';
 import Dropbox from '../../shared/ui/dropbox/dropbox';
 
-import Image from '../../assets/images/main1.png';
-import { Cloth } from '../../entities/closet/closet-types';
 import { useNavigate } from 'react-router';
+import { HadoopCloth } from '../../entities/analysis/analysis-types';
 
 const RecommendationTastes = () => {
   const navigate = useNavigate();
@@ -36,8 +35,7 @@ const RecommendationTastes = () => {
     '힙합',
   ];
 
-  const cloth = { id: 2, image: Image, category: [], details: [], textures: [], part: '' };
-  const [tasteResponseList, setTasteResponseList] = useState<Cloth[]>([cloth, cloth, cloth, cloth]);
+  const [tasteResponseList, setTasteResponseList] = useState<HadoopCloth[]>([]);
 
   // 취향 설정
   const handleSelectedTaste = (selectedItem: string) => {
@@ -52,7 +50,7 @@ const RecommendationTastes = () => {
   };
 
   // 해당 아이템 코디 해 보기
-  const handleClickMoveToCoordi = (selectedItem: Cloth) => {
+  const handleClickMoveToCoordi = (selectedItem: HadoopCloth) => {
     navigate(`/coordi/2/${selectedItem.id}`);
   };
 
