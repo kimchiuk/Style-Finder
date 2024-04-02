@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable prefer-const */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef, useState } from 'react';
 import useUserStore from '../../shared/store/use-user-store';
 import api from '../../entities/user/user-apis';
@@ -198,6 +195,12 @@ const My = () => {
   useEffect(() => {
     getUserInfo();
   }, []);
+
+  useEffect(() => {
+    if (userInfo) {
+      setFeedContent(userInfo.introduce); // userInfo.introduce 값을 feedContent state의 초기값으로 설정
+    }
+  }, [userInfo]);
 
   return (
     <div>
