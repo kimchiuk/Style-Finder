@@ -26,16 +26,16 @@ public class FeedReadResponseDTO {
     private String feedTitle;
 
     @Schema(description = "아우터 이미지", example = "example.com")
-    private byte[] outerImage;
+    private byte[] outerCloth;
 
     @Schema(description = "드레스 이미지", example = "example.com")
-    private byte[] dressImage;
+    private byte[] dress;
 
     @Schema(description = "상의 이미지", example = "example.com")
-    private byte[] upperImage;
+    private byte[] upperBody;
 
     @Schema(description = "하의 이미지", example = "example.com")
-    private byte[] lowerImage;
+    private byte[] lowerBody;
 
     @Schema(description = "피드 내용", example = "내용입니다")
     private String feedContent;

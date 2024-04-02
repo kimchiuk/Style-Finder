@@ -18,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -65,9 +64,8 @@ public class FeedController {
     // 피드 수정
     @PutMapping(value = "/update/{feedId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateFeed(@PathVariable Long feedId,
-                                        @RequestPart(value = "feedUpdateRequest") FeedUpdateRequest feedUpdateRequest,
-                                        @RequestPart(value = "feedThumbnail", required = false) MultipartFile multipartFile) {
-        return feedService.update(feedId, feedUpdateRequest, multipartFile);
+                                        @RequestPart(value = "feedUpdateRequest") FeedUpdateRequest feedUpdateRequest) {
+        return feedService.update(feedId, feedUpdateRequest);
     }
 
     // 피드 인기순 조회

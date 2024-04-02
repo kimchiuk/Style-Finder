@@ -82,6 +82,8 @@ const My = () => {
   const [weightValid, setWeightValid] = useState(true);
   const [notAllow, setNotAllow] = useState(true);
 
+  const [feedContent, setFeedContent] = useState('');
+
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -134,7 +136,7 @@ const My = () => {
           nickname: nickname,
           height: height,
           weight: weight,
-          introduce: introduce,
+          introduce: feedContent, // 수정된 부분: feedContent state를 사용하여 피드 내용 업데이트
           likeCategories: selectedOptions,
           dislikeCategories: dislikeCategories,
         }),
@@ -208,7 +210,7 @@ const My = () => {
       <div className="w-auto h-56 card bg-base-100 bg-[#F0ECE5] rounded-lg ">
         <div className="card-body">
           <div className="flex flex-row p-5 pl-8">
-            <div className="avatar">
+            <div>
               <div className="w-36 h-36">{userInfo?.profileImage && <img src={`data:image/png;base64,${userInfo?.profileImage}`} className="rounded-lg" />}</div>
             </div>
             <div className="flex flex-col ml-4">
@@ -216,13 +218,14 @@ const My = () => {
               <div className="text-lg pb-2">
                 키: {userInfo?.height}cm, 몸무게: {userInfo?.weight}kg
               </div>
+              <div className="pb-5">피드 내용: {userInfo?.introduce}</div>
               <div className="text-md">
                 {userInfo?.likeCategories.map((category, index) => (
                   <span key={index} className="likecate">
                     {category}
                   </span>
                 ))}
-              </div>{' '}
+              </div>
               {isUpdate && (
                 <div
                   className={'modal-container'}
@@ -233,85 +236,110 @@ const My = () => {
                     }
                   }}
                 >
-                  <div className="flex justify-between bg-white">
+                  <div className="flex justify-center bg-white w-1/2 h-auto">
                     <div>
-                      <div className="mb-5 inputWrap">
-                        <input className="input" placeholder="닉네임 입력" value={nickname} onChange={(e) => setNickname(e.target.value)} />
+                      {userInfo && (
+                        <div>
+                          <div className="mb-5 flex justify-center pt-3">
+                            <img src={image ? URL.createObjectURL(image) : `data:image/png;base64,${userInfo.profileImage}`} alt="Profile Image" className="uploadedImage" />
+                          </div>
+                          <div className="mb-5 inputWrap customInputWrap flex justify-center">
+                            <label htmlFor="customFileInput" className="customFileInputLabel">
+                              프로필 사진 업로드
+                            </label>
+                            <input type="file" id="customFileInput" accept="image/*" onChange={handleImageUpload} className="customFileInput" style={{ display: 'none' }} />
+                          </div>
+                        </div>
+                      )}
+                      <div className="mb-5 inputWrap flex justify-center pt-1 textdetail">
+                        <input className="input text-center" placeholder="닉네임 입력" value={nickname} onChange={(e) => setNickname(e.target.value)} />
                       </div>
                       <div className="flex flex-row">
                         <div>
-                          <div className="mb-5 mr-5 inputWrap">
-                            <input className="w-16 mr-2 input" placeholder="키 입력" value={height} onChange={handleHeight} />
-                            cm
-                          </div>
-                        </div>
-                        <div>
-                          <div className="inputWrap">
-                            <input className="w-24 mr-2 input" placeholder="몸무게 입력" value={weight} onChange={handleWeight} />
-                            kg
-                          </div>
-                        </div>
-                      </div>
-                      <div className="mb-2 inputTitle">프로필 이미지 수정</div>
-                      <div className="mb-5 inputWrap customInputWrap">
-                        <input type="file" accept="image/*" onChange={handleImageUpload} className="customFileInput" />
-                      </div>
-                      <select className="w-full max-w-xs select select-bordered" onChange={handleSelectChange}>
-                        <option disabled selected>
-                          당신의 취향을 골라주세요
-                        </option>
-                        <option value="재킷">재킷</option>
-                        <option value="조거팬츠">조거팬츠</option>
-                        <option value="짚업">짚업</option>
-                        <option value="스커트">스커트</option>
-                        <option value="가디건">가디건</option>
-                        <option value="점퍼">점퍼</option>
-                        <option value="티셔츠">티셔츠</option>
-                        <option value="셔츠">셔츠</option>
-                        <option value="팬츠">팬츠</option>
-                        <option value="드레스">드레스</option>
-                        <option value="패딩">패딩</option>
-                        <option value="청바지">청바지</option>
-                        <option value="점프수트">점프수트</option>
-                        <option value="니트웨어">니트웨어</option>
-                        <option value="베스트">베스트</option>
-                        <option value="코트">코트</option>
-                        <option value="브라탑">브라탑</option>
-                        <option value="블라우스">블라우스</option>
-                        <option value="탑">탑</option>
-                        <option value="후드티">후드티</option>
-                        <option value="래깅스">래깅스</option>
-                      </select>
-
-                      {/* 선택된 옵션들 표시 */}
-                      {selectedOptions.length > 0 && (
-                        <div>
-                          <p className="flex justify-center mt-3">선택된 옵션들</p>
-                          {selectedOptions
-                            .reduce((rows: string[][], option, index) => {
-                              if (index % 2 === 0) rows.push([] as string[]);
-                              rows[rows.length - 1].push(option);
-                              return rows;
-                            }, [])
-                            .map((row, rowIndex) => (
-                              <div className="flex justify-between option-box-container" key={rowIndex}>
-                                {row.map((option) => (
-                                  <div className="option-box" key={option}>
-                                    {option}
-                                    <button className="option-button" onClick={() => handleOptionRemove(option)}>
-                                      취소
-                                    </button>
-                                  </div>
-                                ))}
+                          <div className="flex flex-row">
+                            <div>
+                              <div className="mb-5 mr-5 inputWrap">
+                                <input className="w-16 mr-2 input" placeholder="키 입력" value={height} onChange={handleHeight} />
+                                cm
                               </div>
-                            ))}
+                            </div>
+                            <div>
+                              <div className="inputWrap">
+                                <input className="w-24 mr-2 input" placeholder="몸무게 입력" value={weight} onChange={handleWeight} />
+                                kg
+                              </div>
+                            </div>
+                          </div>
+                          <div className="mb-5 inputWrap">
+                            <textarea className="input" placeholder="피드 내용 입력" value={feedContent} onChange={(e) => setFeedContent(e.target.value)} />
+                          </div>
                         </div>
-                      )}
-                      <div>
-                        <button className="p-2 m-2 border-2" onClick={modifyUserInfo}>
+
+                        <div className="flex flex-col pl-8">
+                          <div>
+                            <select className="w-full max-w-xs select select-bordered" onChange={handleSelectChange}>
+                              <option disabled selected>
+                                당신의 취향을 골라주세요
+                              </option>
+                              <option value="재킷">재킷</option>
+                              <option value="조거팬츠">조거팬츠</option>
+                              <option value="짚업">짚업</option>
+                              <option value="스커트">스커트</option>
+                              <option value="가디건">가디건</option>
+                              <option value="점퍼">점퍼</option>
+                              <option value="티셔츠">티셔츠</option>
+                              <option value="셔츠">셔츠</option>
+                              <option value="팬츠">팬츠</option>
+                              <option value="드레스">드레스</option>
+                              <option value="패딩">패딩</option>
+                              <option value="청바지">청바지</option>
+                              <option value="점프수트">점프수트</option>
+                              <option value="니트웨어">니트웨어</option>
+                              <option value="베스트">베스트</option>
+                              <option value="코트">코트</option>
+                              <option value="브라탑">브라탑</option>
+                              <option value="블라우스">블라우스</option>
+                              <option value="탑">탑</option>
+                              <option value="후드티">후드티</option>
+                              <option value="래깅스">래깅스</option>
+                            </select>
+                          </div>
+                          <div>
+                            {/* 선택된 옵션들 표시 */}
+                            {selectedOptions.length > 0 && (
+                              <div>
+                                <p className="flex justify-center mt-3">선택된 옵션들</p>
+                                {selectedOptions
+                                  .reduce((rows: string[][], option, index) => {
+                                    if (index % 2 === 0) rows.push([] as string[]);
+                                    rows[rows.length - 1].push(option);
+                                    return rows;
+                                  }, [])
+                                  .map((row, rowIndex) => (
+                                    <div className="flex justify-between option-box-container" key={rowIndex}>
+                                      {row.map((option) => (
+                                        <div className="option-box" key={option}>
+                                          {option}
+                                          <div className="flex justify-end">
+                                            <button className="option-button custom-button" onClick={() => handleOptionRemove(option)}>
+                                              취소
+                                            </button>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <div></div>
+                      </div>
+                      <div className="flex justify-center">
+                        <button className="p-2 m-2 border-2 save" onClick={modifyUserInfo}>
                           저장
                         </button>
-                        <button className="p-2 m-2 border-2" onClick={() => setIsUpdate(false)}>
+                        <button className="p-2 m-2 border-2 cancel" onClick={() => setIsUpdate(false)}>
                           취소
                         </button>
                       </div>

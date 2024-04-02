@@ -14,7 +14,6 @@ public class StringToClothInfoConverter implements Converter<String, ClothInfo> 
         clothInfo.setStyle(parts[0]); // 첫 번째 부분을 스타일로 설정합니다.
         clothInfo.setCategory(parts[1]); // 두 번째 부분을 카테고리로 설정합니다.
         clothInfo.setColor(parts[2]); // 세 번째 부분을 색상으로 설정합니다.
-        clothInfo.setImageUrl(parts[3]); // 네 번째 부분을 이미지 URL로 설정합니다.
 
         return clothInfo;
     }

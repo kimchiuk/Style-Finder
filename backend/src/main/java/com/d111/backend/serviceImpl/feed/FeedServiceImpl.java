@@ -40,7 +40,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -124,9 +123,21 @@ public class FeedServiceImpl implements FeedService {
 
         // 각 피드의 이미지를 가져와서 리스트에 추가
         for (Feed feed : feedList) {
-            // 피드 썸네일 읽어오기
-//            String storeFilePath = feed.getFeedThumbnail();
-//            byte[] feedThumbnail = getFeedThumbnailFromS3(bucket, storeFilePath);
+
+            Coordi coordi = mongoCoordiRepository.findById(feed.getCoordiId())
+                    .orElseThrow(() -> new CoordiNotFoundException("코디를 찾을 수 없습니다."));
+
+            String outerImage = feed.getOuterCloth();
+            byte[] outerThumbnail = getThumbnailOrNull(bucket, outerImage);
+
+            String upperImage = feed.getUpperBody();
+            byte[] upperThumbnail = getThumbnailOrNull(bucket, upperImage);
+
+            String dressImage = feed.getDress();
+            byte[] dressThumbnail = getThumbnailOrNull(bucket, dressImage);
+
+            String lowerImage = feed.getLowerBody();
+            byte[] lowerThumbnail = getThumbnailOrNull(bucket, lowerImage);
 
             CoordiContainer coordiContainer = createMongoContainer(feed.getCoordiId(), mongoCoordiRepository);
 
@@ -146,8 +157,11 @@ public class FeedServiceImpl implements FeedService {
                             .user(feedListUserDTO)
                             .feedId(feed.getId())
                             .feedTitle(feed.getFeedTitle())
-//                            .feedThumbnail(feedThumbnail)
                             .feedLikes(feed.getFeedLikes())
+                            .outerCloth(outerThumbnail)
+                            .dress(dressThumbnail)
+                            .upperBody(upperThumbnail)
+                            .lowerBody(lowerThumbnail)
                             .coordiContainer(coordiContainer)
                             .build()
             );
@@ -170,32 +184,22 @@ public class FeedServiceImpl implements FeedService {
         Optional<Feed> optionalFeed = feedRepository.findById(feedId);
         Feed feed = optionalFeed.orElseThrow(() -> new FeedNotFoundException("피드를 찾을 수 없습니다."));
 
-        Optional<Coordi> coordiOptional = mongoCoordiRepository.findById(feed.getCoordiId());
+        Coordi coordi = mongoCoordiRepository.findById(feed.getCoordiId())
+                .orElseThrow(() -> new CoordiNotFoundException("코디를 찾을 수 없습니다."));
 
-        Coordi coordi = coordiOptional.orElseThrow(() -> new CoordiNotFoundException("코디를 찾을 수 없습니다."));
+        String outerImage = feed.getOuterCloth();
+        byte[] outerThumbnail = getThumbnailOrNull(bucket, outerImage);
 
+        String upperImage = feed.getUpperBody();
+        byte[] upperThumbnail = getThumbnailOrNull(bucket, upperImage);
 
+        String dressImage = feed.getDress();
+        byte[] dressThumbnail = getThumbnailOrNull(bucket, dressImage);
 
-        String outerImage = coordiOptional.map(c -> String.valueOf(c.getOuterCloth().getImageUrl())).orElse(null);
-        byte[] outerThumbnail = outerImage.equals("null") ? null : getFeedThumbnailFromS3(bucket, outerImage);
+        String lowerImage = feed.getLowerBody();
+        byte[] lowerThumbnail = getThumbnailOrNull(bucket, lowerImage);
 
-        String upperImage = coordiOptional.map(c -> String.valueOf(c.getOuterCloth().getImageUrl())).orElse(null);
-        byte[] upperThumbnail = upperImage.equals("null") ? null : getFeedThumbnailFromS3(bucket, upperImage);
-
-        String dressImage = coordiOptional.map(c -> String.valueOf(c.getDress().getImageUrl())).orElse(null);
-        byte[] dressThumbnail = dressImage.equals("null") ? null : getFeedThumbnailFromS3(bucket, dressImage);
-
-        String lowerImage = coordiOptional.map(c -> String.valueOf(c.getLowerBody().getImageUrl())).orElse(null);
-        byte[] lowerThumbnail = lowerImage.equals("null") ? null : getFeedThumbnailFromS3(bucket, lowerImage);
-
-
-        CoordiContainer coordiContainer = CoordiContainer.builder()
-                .id(coordi.get_id())
-                .outerCloth(coordi.getOuterCloth())
-                .upperBody(coordi.getUpperBody())
-                .lowerBody(coordi.getLowerBody())
-                .dress(coordi.getDress())
-                .build();
+        CoordiContainer coordiContainer = createMongoContainer(feed.getCoordiId(), mongoCoordiRepository);
 
         List<Comment> comments = commentRepository.findAllByFeedId(feed);
 
@@ -230,10 +234,10 @@ public class FeedServiceImpl implements FeedService {
                 .feedContent(feed.getFeedContent())
                 .feedLikes(feed.getFeedLikes())
                 .originWriter(feed.getOriginWriter())
-                .outerImage(outerThumbnail)
-                .dressImage(dressThumbnail)
-                .upperImage(upperThumbnail)
-                .lowerImage(lowerThumbnail)
+                .outerCloth(outerThumbnail)
+                .dress(dressThumbnail)
+                .upperBody(upperThumbnail)
+                .lowerBody(lowerThumbnail)
                 .coordiContainer(coordiContainer)
                 .feedCreatedDate(feed.getFeedCreatedDate())
                 .feedUpdatedDate(feed.getFeedUpdatedDate())
@@ -330,7 +334,7 @@ public class FeedServiceImpl implements FeedService {
 
 
     @Override
-    public ResponseEntity<FeedUpdateResponse> update(Long feedId, FeedUpdateRequest feedUpdateRequest, MultipartFile multipartFile) {
+    public ResponseEntity<FeedUpdateResponse> update(Long feedId, FeedUpdateRequest feedUpdateRequest) {
 
         // 현재 로그인한 유저 정보 받아오기
         String userid = JWTUtil.findEmailByToken();
@@ -386,23 +390,22 @@ public class FeedServiceImpl implements FeedService {
         List<FeedListReadResponseDTO> feedListReadResponseDTOList = new ArrayList<>();
 
         // 각 피드의 이미지를 가져와서 리스트에 추가
+
         for (Feed feed : feedList) {
+            Coordi coordi = mongoCoordiRepository.findById(feed.getCoordiId())
+                    .orElseThrow(() -> new CoordiNotFoundException("코디를 찾을 수 없습니다."));
 
-            Optional<Coordi> coordiOptional = mongoCoordiRepository.findById(feed.getCoordiId());
+            String outerImage = feed.getOuterCloth();
+            byte[] outerThumbnail = getThumbnailOrNull(bucket, outerImage);
 
-            Coordi coordi = coordiOptional.orElseThrow(() -> new CoordiNotFoundException("코디를 찾을 수 없습니다."));
+            String upperImage = feed.getUpperBody();
+            byte[] upperThumbnail = getThumbnailOrNull(bucket, upperImage);
 
-            String outerImage = coordiOptional.map(c -> String.valueOf(c.getOuterCloth().getImageUrl())).orElse(null);
-            byte[] outerThumbnail = outerImage.equals("null") ? null : getFeedThumbnailFromS3(bucket, outerImage);
+            String dressImage = feed.getDress();
+            byte[] dressThumbnail = getThumbnailOrNull(bucket, dressImage);
 
-            String upperImage = coordiOptional.map(c -> String.valueOf(c.getOuterCloth().getImageUrl())).orElse(null);
-            byte[] upperThumbnail = upperImage.equals("null") ? null : getFeedThumbnailFromS3(bucket, upperImage);
-
-            String dressImage = coordiOptional.map(c -> String.valueOf(c.getDress().getImageUrl())).orElse(null);
-            byte[] dressThumbnail = dressImage.equals("null") ? null : getFeedThumbnailFromS3(bucket, dressImage);
-
-            String lowerImage = coordiOptional.map(c -> String.valueOf(c.getLowerBody().getImageUrl())).orElse(null);
-            byte[] lowerThumbnail = lowerImage.equals("null") ? null : getFeedThumbnailFromS3(bucket, lowerImage);
+            String lowerImage = feed.getLowerBody();
+            byte[] lowerThumbnail = getThumbnailOrNull(bucket, lowerImage);
 
             CoordiContainer coordiContainer = createMongoContainer(feed.getCoordiId(), mongoCoordiRepository);
 
@@ -423,10 +426,10 @@ public class FeedServiceImpl implements FeedService {
                             .feedId(feed.getId())
                             .feedTitle(feed.getFeedTitle())
                             .feedLikes(feed.getFeedLikes())
-                            .outerImage(outerThumbnail)
-                            .dressImage(dressThumbnail)
-                            .upperImage(upperThumbnail)
-                            .lowerImage(lowerThumbnail)
+                            .outerCloth(outerThumbnail)
+                            .dress(dressThumbnail)
+                            .upperBody(upperThumbnail)
+                            .lowerBody(lowerThumbnail)
                             .coordiContainer(coordiContainer)
                             .build()
             );
@@ -462,11 +465,23 @@ public class FeedServiceImpl implements FeedService {
         // 각 피드의 이미지를 가져와서 리스트에 추가
         for (Feed feed : feedList) {
             // 피드 썸네일 읽어오기
-//            String storeFilePath = feed.getFeedThumbnail();
-//            byte[] feedThumbnail = getFeedThumbnailFromS3(bucket, storeFilePath);
+
+            Coordi coordi = mongoCoordiRepository.findById(feed.getCoordiId())
+                    .orElseThrow(() -> new CoordiNotFoundException("코디를 찾을 수 없습니다."));
+
+            String outerImage = feed.getOuterCloth();
+            byte[] outerThumbnail = getThumbnailOrNull(bucket, outerImage);
+
+            String upperImage = feed.getUpperBody();
+            byte[] upperThumbnail = getThumbnailOrNull(bucket, upperImage);
+
+            String dressImage = feed.getDress();
+            byte[] dressThumbnail = getThumbnailOrNull(bucket, dressImage);
+
+            String lowerImage = feed.getLowerBody();
+            byte[] lowerThumbnail = getThumbnailOrNull(bucket, lowerImage);
 
             CoordiContainer coordiContainer = createMongoContainer(feed.getCoordiId(), mongoCoordiRepository);
-
             User user = feed.getUserId();
             FeedListUserDTO feedListUserDTO = FeedListUserDTO.builder()
                     .nickname(user.getNickname())
@@ -483,8 +498,11 @@ public class FeedServiceImpl implements FeedService {
                             .user(feedListUserDTO)
                             .feedId(feed.getId())
                             .feedTitle(feed.getFeedTitle())
-//                            .feedThumbnail(feedThumbnail)
                             .feedLikes(feed.getFeedLikes())
+                            .outerCloth(outerThumbnail)
+                            .dress(dressThumbnail)
+                            .upperBody(upperThumbnail)
+                            .lowerBody(lowerThumbnail)
                             .coordiContainer(coordiContainer)
                             .build()
             );
@@ -511,17 +529,45 @@ public class FeedServiceImpl implements FeedService {
         // 각 피드의 이미지를 가져와서 리스트에 추가
         for (Feed feed : feedList) {
             // 피드 썸네일 읽어오기
-//            String storeFilePath = feed.getFeedThumbnail();
-//            byte[] feedThumbnail = getFeedThumbnailFromS3(bucket, storeFilePath);
+
+            Coordi coordi = mongoCoordiRepository.findById(feed.getCoordiId())
+                    .orElseThrow(() -> new CoordiNotFoundException("코디를 찾을 수 없습니다."));
+
+            String outerImage = feed.getOuterCloth();
+            byte[] outerThumbnail = getThumbnailOrNull(bucket, outerImage);
+
+            String upperImage = feed.getUpperBody();
+            byte[] upperThumbnail = getThumbnailOrNull(bucket, upperImage);
+
+            String dressImage = feed.getDress();
+            byte[] dressThumbnail = getThumbnailOrNull(bucket, dressImage);
+
+            String lowerImage = feed.getLowerBody();
+            byte[] lowerThumbnail = getThumbnailOrNull(bucket, lowerImage);
 
             CoordiContainer coordiContainer = createMongoContainer(feed.getCoordiId(), mongoCoordiRepository);
 
+            User user = feed.getUserId();
+            FeedListUserDTO feedListUserDTO = FeedListUserDTO.builder()
+                    .nickname(user.getNickname())
+                    .profileImage(getFeedThumbnailFromS3(bucket, user.getProfileImage()))
+                    .likeCategories(Arrays.asList(user.getLikeCategories().split(",")))
+                    .dislikeCategories(Arrays.asList(user.getDislikeCategories().split(",")))
+                    .introduce(user.getIntroduce())
+                    .instagram(user.getInstagram())
+                    .youtube(user.getYoutube())
+                    .build();
+
             feedListReadResponseDTOList.add(
                     FeedListReadResponseDTO.builder()
+                            .user(feedListUserDTO)
                             .feedId(feed.getId())
                             .feedTitle(feed.getFeedTitle())
-//                            .feedThumbnail(feedThumbnail)
                             .feedLikes(feed.getFeedLikes())
+                            .outerCloth(outerThumbnail)
+                            .dress(dressThumbnail)
+                            .upperBody(upperThumbnail)
+                            .lowerBody(lowerThumbnail)
                             .coordiContainer(coordiContainer)
                             .build()
             );
@@ -562,7 +608,6 @@ public class FeedServiceImpl implements FeedService {
                 .feedContent(newFeedContent)
                 .coordiId(originFeed.getCoordiId())
                 .originWriter(originFeed.getOriginWriter())
-//                .feedThumbnail(originFeed.getFeedThumbnail())
                 .feedCreatedDate(LocalDate.now(ZoneId.of("UTC")))
                 .feedUpdatedDate(LocalDate.now(ZoneId.of("UTC")))
                 .build();
@@ -587,4 +632,10 @@ public class FeedServiceImpl implements FeedService {
         }
     }
 
+    public byte[] getThumbnailOrNull(String bucket, String imageUrl) {
+        if (imageUrl != null && !imageUrl.equals("null")) {
+            return getFeedThumbnailFromS3(bucket, imageUrl);
+        }
+        return null;
+    }
 }
