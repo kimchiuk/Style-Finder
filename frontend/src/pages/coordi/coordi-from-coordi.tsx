@@ -131,6 +131,13 @@ const CoordiFromCoordi = () => {
     setCoordiId(newCoordiId);
   };
 
+  const handleDeleteCloth = (part: string) => {
+    if (part === 'outer') setOuterCloth(null);
+    else if (part === 'upper') setUpperBody(null);
+    else if (part === 'lower') setLowerBody(null);
+    else setDress(null);
+  };
+
   // 피드 등록 버튼
   const handleCreateFeed = () => {
     if (!outerCloth || !upperBody || !lowerBody || !dress) return;
@@ -191,7 +198,7 @@ const CoordiFromCoordi = () => {
     }
   };
 
-  // 피드 등록 버튼
+  // 검색 버튼
   const handleSearchItems = () => {
     setOuterClothes([]); // outer api
     setUpperBodys([]); // upper api
@@ -208,7 +215,12 @@ const CoordiFromCoordi = () => {
           <div className="p-8 m-2 bg-gray-100 rounded-lg">
             <div className="flex justify-center">
               <div className="mx-8 my-2">
-                <div className="text-center">아우터</div>
+                <div className="flex justify-center">
+                  <div>아우터 </div>
+                  <button className="text-gray-400" onClick={() => handleDeleteCloth('outer')}>
+                    (삭제)
+                  </button>
+                </div>
                 {!outerCloth ? (
                   <img className="w-64 h-auto border-2 rounded-md max-h-64" id="outer" src={Image} />
                 ) : (
@@ -216,7 +228,12 @@ const CoordiFromCoordi = () => {
                 )}
               </div>
               <div className="mx-8 my-2">
-                <div className="text-center">상의</div>
+                <div className="flex justify-center">
+                  <div>상의 </div>
+                  <button className="text-gray-400" onClick={() => handleDeleteCloth('upper')}>
+                    (삭제)
+                  </button>
+                </div>
                 {!upperBody ? (
                   <img className="w-64 h-auto border-2 rounded-md max-h-64" id="upper" src={Image} />
                 ) : (
@@ -224,7 +241,12 @@ const CoordiFromCoordi = () => {
                 )}
               </div>
               <div className="mx-8 my-2">
-                <div className="text-center">하의</div>
+                <div className="flex justify-center">
+                  <div>하의 </div>
+                  <button className="text-gray-400" onClick={() => handleDeleteCloth('lowet')}>
+                    (삭제)
+                  </button>
+                </div>
                 {!lowerBody ? (
                   <img className="w-64 h-auto border-2 rounded-md max-h-64" id="lower" src={Image} />
                 ) : (
@@ -232,7 +254,12 @@ const CoordiFromCoordi = () => {
                 )}
               </div>
               <div className="mx-8 my-2">
-                <div className="text-center">드레스</div>
+                <div className="flex justify-center">
+                  <div>드레스 </div>
+                  <button className="text-gray-400" onClick={() => handleDeleteCloth('dress')}>
+                    (삭제)
+                  </button>
+                </div>
                 {!dress ? (
                   <img className="w-64 h-auto border-2 rounded-md max-h-64" id="dress" src={Image} />
                 ) : (
@@ -242,7 +269,7 @@ const CoordiFromCoordi = () => {
             </div>
             <div className="">
               <div className="">
-                {!isSearchVisible && (
+                {isSearchVisible && (
                   <div className="py-2 my-2">
                     <div className="my-8">
                       <h2 className="pl-2 ml-2">스타일</h2>
@@ -294,20 +321,20 @@ const CoordiFromCoordi = () => {
             </div>
             <div className="flex justify-end p-2 m-2">
               <div className="p-2">
-                {!isRecommendListVisible ? <WhiteButton onClick={toggleRecommendList} value="추천 리스트 닫기" /> : <WhiteButton onClick={toggleRecommendList} value="추천 리스트 열기" />}
+                {isRecommendListVisible ? <WhiteButton onClick={toggleRecommendList} value="추천 리스트 닫기" /> : <WhiteButton onClick={toggleRecommendList} value="추천 리스트 열기" />}
               </div>
-              <div className="p-2">{!isSearchVisible ? <WhiteButton onClick={toggleSearch} value="검색 필터 닫기" /> : <WhiteButton onClick={toggleSearch} value="검색 필터 열기" />}</div>
+              <div className="p-2">{isSearchVisible ? <WhiteButton onClick={toggleSearch} value="검색 필터 닫기" /> : <WhiteButton onClick={toggleSearch} value="검색 필터 열기" />}</div>
 
               <div className="p-2">
                 <Button value="옷장" onClick={() => clickModal} />
               </div>
               <div className="p-2">
-                <Button value="검색" onClick={() => clickModal} />
+                <Button value="검색" onClick={() => handleSearchItems} />
               </div>
             </div>
             <div className="">
               <div className="w-auto">
-                {!isRecommendListVisible && (
+                {isRecommendListVisible && (
                   <div>
                     {outerClothes.length == 0 && outerClothes.length == 0 && outerClothes.length == 0 && outerClothes.length == 0 && (
                       <div className="mx-4 my-20">

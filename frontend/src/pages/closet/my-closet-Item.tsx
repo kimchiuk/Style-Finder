@@ -38,9 +38,9 @@ const MyClosetItem = (props: MyClosetItemProps) => {
 
   return (
     <>
-      <div className="mx-4 my-2">
-        <img className="w-64 h-64" src={props.item.image}></img>
-        <div className="flex">
+      <div className="mx-0 my-2">
+        <img className="w-64 h-64 m-2 rounded-md" src={`data:image/png;base64,${props.item.image}`}></img>
+        <div className="flex m-2">
           <Button className="w-40 h-16" value="코디 해 보기" onClick={() => props.onClickItem(props.item)} />
           <WhiteButton className="w-24 h-16" value="휴지통" onClick={() => onClickDeleteItem(props.item)} />
         </div>

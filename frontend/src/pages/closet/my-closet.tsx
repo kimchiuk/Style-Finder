@@ -24,7 +24,7 @@ const MyCloset = () => {
   const [ItemList, setItemList] = useState<Cloth[]>([{ image: 'image', part: 'outer', category: [], details: [], textures: [] }]);
 
   useEffect(() => {
-    getClosets('outerCloth');
+    getClosets('');
   }, []);
 
   const handleClickOption = (selectedPart: string) => {
@@ -58,8 +58,9 @@ const MyCloset = () => {
   };
 
   return (
-    <div className="p-2 m-2 rounded-lgs">
+    <div className="">
       <div className="flex justify-end">
+        <WhiteButton className="my-2 mr-2" value="전체" onClick={() => handleClickOption('')} />
         <WhiteButton className="my-2 mr-2" value="아우터" onClick={() => handleClickOption('outerCloth')} />
         <WhiteButton className="mx-2 my-2" value="상의" onClick={() => handleClickOption('upperBody')} />
         <WhiteButton className="mx-2 my-2" value="하의" onClick={() => handleClickOption('lowerBody')} />

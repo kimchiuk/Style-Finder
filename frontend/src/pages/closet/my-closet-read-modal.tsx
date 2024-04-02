@@ -17,7 +17,7 @@ const MyClosetReadModal = () => {
   const [ItemList, setItemList] = useState<Cloth[]>([]);
 
   useEffect(() => {
-    getClosets('outerCloth');
+    getClosets('');
   }, []);
 
   const handleClickOption = (selectedPart: string) => {
@@ -53,12 +53,13 @@ const MyClosetReadModal = () => {
   return (
     <div className="p-2 m-2 rounded-lgs">
       <div className="flex justify-end">
+        <WhiteButton className="my-2 mr-2" value="전체" onClick={() => handleClickOption('')} />
         <WhiteButton className="my-2 mr-2" value="아우터" onClick={() => handleClickOption('outerCloth')} />
         <WhiteButton className="mx-2 my-2" value="상의" onClick={() => handleClickOption('upperBody')} />
         <WhiteButton className="mx-2 my-2" value="하의" onClick={() => handleClickOption('lowerBody')} />
         <WhiteButton className="mx-2 my-2" value="드레스" onClick={() => handleClickOption('dress')} />
       </div>
-      <div className="flex flex-wrap">
+      <div className="flex flex-row flex-wrap">
         {ItemList.map((item, index) => (
           <MyClosetItem key={index} item={item} onClickItem={() => handleClickItem(item)} />
         ))}
