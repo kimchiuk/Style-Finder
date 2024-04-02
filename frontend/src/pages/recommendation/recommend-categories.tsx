@@ -2,18 +2,15 @@ import { useState } from 'react';
 import RecommendationItem from './recommendation-Item';
 import Dropbox from '../../shared/ui/dropbox/dropbox';
 
-import Image from '../../assets/images/main3.jpg';
-
-interface CategoryResponse {
-  id: string;
-  image: string;
-}
+import { useNavigate } from 'react-router';
+import { HadoopCloth } from '../../entities/analysis/analysis-types';
 
 const RecommendationCategories = () => {
+  const navigate = useNavigate();
   const [category, setCategory] = useState<string>('전체');
   // 하위 카테고리 추가 필요
   const categoryList = ['전체', '아우터', '상의', '하의', '드레스'];
-  const [categoryResponseList, setCategoryResponseList] = useState<CategoryResponse[]>([{ id: 'id1', image: Image }]);
+  const [categoryResponseList, setCategoryResponseList] = useState<HadoopCloth[]>([]);
 
   // 카테고리 설정
   const handleSelectedCategory = (selectedItem: string) => {
@@ -28,15 +25,19 @@ const RecommendationCategories = () => {
   };
 
   // 해당 아이템 코디 해 보기
-  const handleClickMoveToCoordi = () => {};
+  const handleClickMoveToCoordi = (selectedItem: HadoopCloth) => {
+    navigate(`/coordi/2/${selectedItem.id}`);
+  };
 
   return (
     <>
-      <Dropbox options={categoryList} onSelected={handleSelectedCategory}></Dropbox>
+      <Dropbox options={categoryList} onSelected={() => handleSelectedCategory}></Dropbox>
 
-      {categoryResponseList.map((item, index) => (
-        <RecommendationItem key={index} id={item.id} image={item.image} handleClickMoveToCoordi={handleClickMoveToCoordi} />
-      ))}
+      <div className="flex">
+        {categoryResponseList.map((item, index) => (
+          <RecommendationItem key={index} item={item} onClickItem={() => handleClickMoveToCoordi(item)} />
+        ))}
+      </div>
     </>
   );
 };

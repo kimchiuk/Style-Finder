@@ -1,52 +1,48 @@
 import Button from '../../shared/ui/button/button';
 
-import closetApi from '../../entities/closet/closet-apis';
-// import coordiApi from '../../entities/coordi/coordi-apis';
-import { axiosError } from '../../shared/utils/axiosError';
+// import closetApi from '../../entities/closet/closet-apis';
+// import { axiosError } from '../../shared/utils/axiosError';
 
-import useLoginStore from '../../shared/store/use-login-store';
-import { useNavigate } from 'react-router';
+// import useLoginStore from '../../shared/store/use-login-store';
+// import { useNavigate } from 'react-router';
+import { Cloth } from '../../entities/closet/closet-types';
+import WhiteButton from '../../shared/ui/button/white-button';
 
 interface MyClosetItemProps {
-  index: number;
-  image: string;
+  item: Cloth;
+  onClickItem(item: Cloth): void;
 }
 
 const MyClosetItem = (props: MyClosetItemProps) => {
-  const navigate = useNavigate();
-  const loginStore = useLoginStore();
-
-  // 아이템 선택 시 해당 아이템을 코디 해 보기
-  const onClickMoveToCoordi = (index: number) => {
-    index;
-  };
+  // const navigate = useNavigate();
+  // const loginStore = useLoginStore();
 
   // 아이템 선택 시 해당 아이템을 삭제
-  const onClickDeleteItem = (index: number) => {
-    closetApi
-      .deleteCloth(index)
-      .then((response) => {
-        const data = response.data.data;
-
-        console.log(data);
-      })
-      .catch((error) => {
-        const errorCode = axiosError(error);
-
-        if (errorCode == 401) {
-          loginStore.setLogout();
-          navigate('/login');
-        }
-      });
+  const onClickDeleteItem = (selectedItem: Cloth) => {
+    // 조회 시 삭제에 활용되는 pk인 cloth id 를 받아오지 않아서 삭제 못함
+    selectedItem;
+    // closetApi
+    //   .deleteCloth(selectedItem.id)
+    //   .then((response) => {
+    //     const data = response.data.data;
+    //     console.log(data);
+    //   })
+    //   .catch((error) => {
+    //     const errorCode = axiosError(error);
+    //     if (errorCode == 401) {
+    //       loginStore.setLogout();
+    //       navigate('/login');
+    //     }
+    //   });
   };
 
   return (
     <>
-      <div>
-        <img style={{ width: '200px', height: '200px' }} src={props.image}></img>
-        <div className="flex">
-          <Button style={{ width: '100px', height: '50px' }} value="코디 해 보기" onClick={() => onClickMoveToCoordi(props.index)} />
-          <Button style={{ width: '100px', height: '50px' }} value="휴지통" onClick={() => onClickDeleteItem(props.index)} />
+      <div className="mx-0 my-2">
+        <img className="w-64 h-64 m-2 rounded-md" src={`data:image/png;base64,${props.item.image}`}></img>
+        <div className="flex m-2">
+          <Button className="w-40 h-16" value="코디 해 보기" onClick={() => props.onClickItem(props.item)} />
+          <WhiteButton className="w-24 h-16" value="휴지통" onClick={() => onClickDeleteItem(props.item)} />
         </div>
       </div>
     </>

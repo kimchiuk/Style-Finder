@@ -1,48 +1,67 @@
 import Navbar from '../../widgets/nav/navbar';
-import Image from '../../assets/images/aimodel.png';
 
 import { useState } from 'react';
 import './coordi.css';
 
-// import { useParams } from 'react-router-dom';
+import Image from '../../assets/images/noimage.png';
+import useOpenModal from '../../shared/hooks/use-open-modal';
+import Modal from '../../shared/ui/modal/Modal';
+import MyClosetReadModal from '../closet/my-closet-read-modal';
+import Button from '../../shared/ui/button/button';
+import { Cloth } from '../../entities/closet/closet-types';
+import TextArea from '../../shared/ui/input/textarea';
+import Input from '../../shared/ui/input/input';
+import WhiteButton from '../../shared/ui/button/white-button';
 
 const CoordiFromCoordi = () => {
-  // { part, id }
-  // 새로 작성하는 경우: part==new
-  // 피드에서 불러온 경우: part==all, feedId
-  // 추천 받아서 코디 해 보는 경우: part=={part}, clothId
-
-  // const { part, feedId, clothId } = useParams<{ part: string; id: string; clothId: string }>();
+  const { isOpenModal, clickModal, closeModal } = useOpenModal();
 
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [coordiId, setCoordiId] = useState<string>('');
 
-  const [outerCloth, setOuterCloth] = useState<string>(Image);
-  const [upperBody, setUpperBody] = useState<string>(Image);
-  const [lowerBody, setLowerBody] = useState<string>(Image);
-  const [dress, setDress] = useState<string>(Image);
+  const [outerCloth, setOuterCloth] = useState<Cloth | null>(null);
+  const [upperBody, setUpperBody] = useState<Cloth | null>(null);
+  const [lowerBody, setLowerBody] = useState<Cloth | null>(null);
+  const [dress, setDress] = useState<Cloth | null>(null);
 
-  // 첫 렌더링 시 api 로 설정
-  const [outerClothes, setOuterClothes] = useState<string[]>([Image, Image, Image, Image, Image]);
-  const [upperBodys, setUpperBodys] = useState<string[]>([Image, Image, Image, Image, Image]);
-  const [lowerBodys, setLowerBodys] = useState<string[]>([Image, Image, Image, Image, Image]);
-  const [dresses, setDresses] = useState<string[]>([Image, Image, Image, Image, Image]);
+  const [outerClothes, setOuterClothes] = useState<Cloth[]>([]);
+  const [upperBodys, setUpperBodys] = useState<Cloth[]>([]);
+  const [lowerBodys, setLowerBodys] = useState<Cloth[]>([]);
+  const [dresses, setDresses] = useState<Cloth[]>([]);
 
-  const [outerList, setOuterList] = useState<string[]>(outerClothes.slice(0, outerClothes.length < 4 ? outerClothes.length : 4));
-  const [upperList, setUpperList] = useState<string[]>(upperBodys.slice(0, upperBodys.length < 4 ? upperBodys.length : 4));
-  const [lowerList, setLowerList] = useState<string[]>(lowerBodys.slice(0, lowerBodys.length < 4 ? lowerBodys.length : 4));
-  const [dressList, setDressList] = useState<string[]>(dresses.slice(0, dresses.length < 4 ? dresses.length : 4));
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const [isRecommendListVisible, setIsRecommendListVisible] = useState(false);
 
-  const [outerIndex, setOuterIndex] = useState<number>(0);
-  const [upperIndex, setUpperIndex] = useState<number>(0);
-  const [lowerIndex, setLowerIndex] = useState<number>(0);
-  const [dressIndex, setDressIndex] = useState<number>(0);
-
-  const [isScreenVisible, setIsScreenVisible] = useState(false);
-
+  const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
+
+  const styles = [
+    '레트로',
+    '로맨틱',
+    '리조트',
+    '매니시',
+    '모던',
+    '밀리터리',
+    '섹시',
+    '소피스트케이티드',
+    '스트리트',
+    '스포티',
+    '아방가르드',
+    '오리엔탈',
+    '웨스턴',
+    '젠더리스',
+    '컨트리',
+    '클래식',
+    '키치',
+    '톰보이',
+    '펑크',
+    '페미닌',
+    '프레피',
+    '히피',
+    '힙합',
+  ];
 
   const categories = [
     '재킷',
@@ -67,116 +86,38 @@ const CoordiFromCoordi = () => {
     '후드티',
     '래깅스',
   ];
-  const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'white', 'black'];
 
-  // useEffect(() => {
-  //   switch (part) {
-  //     case 'new':
-  //       break;
-  //     case 'all':
-  //       break;
-  //     case 'outer':
-  //       break;
-  //     case 'upper':
-  //       break;
-  //     case 'lower':
-  //       break;
-  //     case 'dress':
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // });
-
-  // // 해당 코디를 가져 오기
-  // const setTheCoordi = (id: string) => {
-  //   // 조회 api
-  //   const coordiReadResponseDTO = { _id: 'id', userId: 'userId', outerCloth: 'outerId' };
-
-  //   switch (itemPart) {
-  //     case '아우터':
-  //       setTheItem;
-  //       break;
-  //     case '상의':
-  //       break;
-  //     case '하의':
-  //       break;
-  //     case '드레스':
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // };
-
-  // // 해당 아이템을 가져 오기
-  // const setTheItem = (part: string, id: string) => {
-  //   // 조회 api
-
-  //   switch (itemPart) {
-  //     case '아우터':
-  //       setTheItem;
-  //       break;
-  //     case '상의':
-  //       break;
-  //     case '하의':
-  //       break;
-  //     case '드레스':
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // };
-
-  // 카테고리별 리스트 새로 고침
-  const handleClickRefresh = (part: string, direction: number) => {
-    const newList: string[] = [];
-    let i: number = 0;
-
-    if (part === 'outer') {
-      if (direction === -1) {
-        if (outerIndex - 8 < 0) setOuterIndex(0);
-        else setOuterIndex(outerIndex - 8);
-      }
-      for (i = outerIndex; i < outerIndex + 4 && i < outerClothes.length; i++) newList.push(outerClothes[i]);
-      setOuterList(newList);
-      setOuterIndex(i);
-    } else if (part === 'upper') {
-      if (direction === -1) {
-        if (upperIndex - 8 < 0) setUpperIndex(0);
-        else setUpperIndex(upperIndex - 8);
-      }
-      for (i = upperIndex; i < upperIndex + 4 && i < upperBodys.length; i++) newList.push(upperBodys[i]);
-      setUpperList(newList);
-      setUpperIndex(i);
-    } else if (part === 'lower') {
-      if (direction === -1) {
-        if (lowerIndex - 8 < 0) setLowerIndex(0);
-        else setLowerIndex(lowerIndex - 8);
-      }
-      for (i = lowerIndex; i < lowerIndex + 4 && i < lowerBodys.length; i++) newList.push(lowerBodys[i]);
-      setLowerList(newList);
-      setLowerIndex(i);
-    } else {
-      if (direction === -1) {
-        if (dressIndex - 8 < 0) setDressIndex(0);
-        else setDressIndex(dressIndex - 8);
-      }
-      for (i = dressIndex; i < dressIndex + 4 && i < dresses.length; i++) newList.push(dresses[i]);
-      setDressList(newList);
-      setDressIndex(i);
-    }
-  };
+  const colors = [
+    '화이트',
+    '그레이',
+    '베이지',
+    '라벤더',
+    '오렌지',
+    '블루',
+    '와인',
+    '블랙',
+    '레드',
+    '브라운',
+    '스카이블루',
+    '옐로우',
+    '핑크',
+    '실버',
+    '네온',
+    '퍼플',
+    '카키',
+    '민트',
+    '그린',
+    '골드',
+    '네이비',
+  ];
 
   // 부위별 아이템 선택 시 이미지 변경
-  const handleClickItem = (part: string, newItem: string) => {
-    if (part === 'outer') setOuterCloth(newItem);
-    else if (part === 'upper') setUpperBody(newItem);
-    else if (part === 'lower') setLowerBody(newItem);
+  const handleClickItem = (newItem: Cloth) => {
+    if (newItem.part === 'outer') setOuterCloth(newItem);
+    else if (newItem.part === 'upper') setUpperBody(newItem);
+    else if (newItem.part === 'lower') setLowerBody(newItem);
     else setDress(newItem);
   };
-
-  // 내 옷장 모달 열기
-  const handleClickCloset = () => {};
 
   const handleTitleChange = (newTitle: string) => {
     setTitle(newTitle);
@@ -190,13 +131,22 @@ const CoordiFromCoordi = () => {
     setCoordiId(newCoordiId);
   };
 
+  const handleDeleteCloth = (part: string) => {
+    if (part === 'outer') setOuterCloth(null);
+    else if (part === 'upper') setUpperBody(null);
+    else if (part === 'lower') setLowerBody(null);
+    else setDress(null);
+  };
+
   // 피드 등록 버튼
   const handleCreateFeed = () => {
+    if (!outerCloth || !upperBody || !lowerBody || !dress) return;
+
     const coordiCreateRequestDTO = {
-      outerCloth: outerCloth,
-      upperBody: upperBody,
-      lowerBody: lowerBody,
-      dress: dress,
+      outerCloth: outerCloth.image,
+      upperBody: upperBody.image,
+      lowerBody: lowerBody.image,
+      dress: dress.image,
     };
 
     coordiCreateRequestDTO;
@@ -214,9 +164,22 @@ const CoordiFromCoordi = () => {
   // 카카오톡 공유 버튼
   const handleShareToKakao = () => {};
 
-  // 검색 설정 화면 토글 버튼
-  const toggleScreen = () => {
-    setIsScreenVisible(!isScreenVisible);
+  // 검색 필터 토글 버튼
+  const toggleSearch = () => {
+    setIsSearchVisible(!isSearchVisible);
+  };
+
+  // 추천 리스트 토글 버튼
+  const toggleRecommendList = () => {
+    setIsRecommendListVisible(!isRecommendListVisible);
+  };
+
+  const toggleStyle = (style: string) => {
+    if (selectedStyles.includes(style)) {
+      setSelectedStyles(selectedStyles.filter((item) => item !== style));
+    } else {
+      setSelectedStyles([...selectedStyles, style]);
+    }
   };
 
   const toggleCategory = (category: string) => {
@@ -235,212 +198,246 @@ const CoordiFromCoordi = () => {
     }
   };
 
-  // 피드 등록 버튼
+  // 검색 버튼
   const handleSearchItems = () => {
-    setOuterClothes([Image, Image, Image, Image, Image]); // outer api
-    setUpperBodys([Image, Image, Image, Image, Image]); // upper api
-    setLowerBodys([Image, Image, Image, Image, Image]); // lower api
-    setDresses([Image, Image, Image, Image, Image]); // dress api
-
-    setOuterList(outerClothes.slice(0, outerClothes.length < 4 ? outerClothes.length : 4));
-    setUpperList(upperBodys.slice(0, upperBodys.length < 4 ? upperBodys.length : 4));
-    setLowerList(lowerBodys.slice(0, lowerBodys.length < 4 ? lowerBodys.length : 4));
-    setDressList(dresses.slice(0, dresses.length < 4 ? dresses.length : 4));
+    setOuterClothes([]); // outer api
+    setUpperBodys([]); // upper api
+    setLowerBodys([]); // lower api
+    setDresses([]); // dress api
   };
+
   return (
     <>
       <Navbar></Navbar>
-      <div>
-        {/* {!loginStore.isLogin ? (
-          // 로그아웃 상태
-          <div>
-            <div>코디</div>
-            <Link to="/">
-              <div>홈으로 돌아가기</div>
-            </Link>
-          </div>
-        ) : ( */}
-        {/* // 로그인 상태 */}
-        <div>
-          <div>코디</div>
-          <div className="mx-auto px-36">
-            <div className="p-2 m-2 bg-gray-100 rounded-lg ">
-              <div className="">
-                <div className="w-auto">
-                  <button onClick={toggleScreen}>검색 설정</button>
-                  {isScreenVisible && (
-                    <div>
-                      <div>
-                        <h2>카테고리 선택</h2>
-                        <div className="flex flex-wrap">
-                          {categories.map((category) => (
-                            <button
-                              key={category}
-                              className={`rounded-full px-4 py-2 m-2 shadow-md cursor-pointer ${selectedCategories.includes(category) ? 'selected' : 'button'}`}
-                              onClick={() => toggleCategory(category)}
-                            >
-                              {category}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                      <div>
-                        <h2>색상 선택</h2>
-                        <div className="flex flex-wrap">
-                          {colors.map((color) => (
-                            <button
-                              key={color}
-                              className={`rounded-full px-4 py-2 m-2 shadow-md cursor-pointer ${selectedColors.includes(color) ? 'selected' : 'button'}`}
-                              onClick={() => toggleColor(color)}
-                            >
-                              {color}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                      <button value="검색" onClick={() => handleSearchItems} />
-                    </div>
-                  )}
+      <div className="grid px-20 mx-auto my-16 justify-items-center">
+        <div className="justify-around">
+          <div className="text-center">코디</div>
+          <div className="p-8 m-2 bg-gray-100 rounded-lg">
+            <div className="flex justify-center">
+              <div className="mx-8 my-2">
+                <div className="flex justify-center">
+                  <div>아우터 </div>
+                  <button className="text-gray-400" onClick={() => handleDeleteCloth('outer')}>
+                    (삭제)
+                  </button>
                 </div>
+                {!outerCloth ? (
+                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="outer" src={Image} />
+                ) : (
+                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="outer" src={outerCloth.image} />
+                )}
               </div>
-              <div className="flex flex-col">
-                <label>아우터</label>
-                <div className="flex">
-                  <img id="outer" src={outerCloth} onClick={() => handleClickCloset} />
-
-                  <div className="flex">
-                    {outerList.map((item) => (
-                      <div>
-                        <img className="p-2 m-2 bg-gray-200 rounded-lg" src={item} alt="" />
-                        <button
-                          onClick={() => {
-                            handleClickItem('outer', item);
-                          }}
-                          value="선택"
-                        />
+              <div className="mx-8 my-2">
+                <div className="flex justify-center">
+                  <div>상의 </div>
+                  <button className="text-gray-400" onClick={() => handleDeleteCloth('upper')}>
+                    (삭제)
+                  </button>
+                </div>
+                {!upperBody ? (
+                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="upper" src={Image} />
+                ) : (
+                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="upper" src={upperBody.image} />
+                )}
+              </div>
+              <div className="mx-8 my-2">
+                <div className="flex justify-center">
+                  <div>하의 </div>
+                  <button className="text-gray-400" onClick={() => handleDeleteCloth('lowet')}>
+                    (삭제)
+                  </button>
+                </div>
+                {!lowerBody ? (
+                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="lower" src={Image} />
+                ) : (
+                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="lower" src={lowerBody.image} />
+                )}
+              </div>
+              <div className="mx-8 my-2">
+                <div className="flex justify-center">
+                  <div>드레스 </div>
+                  <button className="text-gray-400" onClick={() => handleDeleteCloth('dress')}>
+                    (삭제)
+                  </button>
+                </div>
+                {!dress ? (
+                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="dress" src={Image} />
+                ) : (
+                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="dress" src={dress.image} />
+                )}
+              </div>
+            </div>
+            <div className="">
+              <div className="">
+                {isSearchVisible && (
+                  <div className="py-2 my-2">
+                    <div className="my-8">
+                      <h2 className="pl-2 ml-2">스타일</h2>
+                      <div className="flex flex-wrap pl-2 ml-2">
+                        {styles.map((style, index) => (
+                          <button
+                            key={index}
+                            className={`rounded-full border-2 px-4 py-2 my-2 mr-2 shadow-md border-md cursor-pointer ${selectedStyles.includes(style) ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}
+                            onClick={() => toggleStyle(style)}
+                          >
+                            {style}
+                          </button>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                  <button
-                    onClick={() => {
-                      handleClickRefresh('outer', -1);
-                    }}
-                    value="<"
-                  />
-                  <button
-                    onClick={() => {
-                      handleClickRefresh('outer', 1);
-                    }}
-                    value=">"
-                  />
-                </div>
-
-                <label>상의</label>
-                <div className="flex">
-                  <img id="upper" src={upperBody} onClick={handleClickCloset} />
-
-                  <div className="flex">
-                    {upperList.map((item) => (
-                      <div>
-                        <img className="p-2 m-2 bg-gray-200 rounded-lg" src={item} alt="" />
-                        <button
-                          onClick={() => {
-                            handleClickItem('upper', item);
-                          }}
-                          value="선택"
-                        />
+                    </div>
+                    <div className="my-8">
+                      <h2 className="pl-2 ml-2">카테고리</h2>
+                      <div className="flex flex-wrap pl-2 ml-2">
+                        {categories.map((category, index) => (
+                          <button
+                            key={index}
+                            className={`rounded-full border-2 px-4 py-2 my-2 mr-2 shadow-md border-md cursor-pointer ${selectedCategories.includes(category) ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}
+                            onClick={() => toggleCategory(category)}
+                          >
+                            {category}
+                          </button>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                  <button
-                    onClick={() => {
-                      handleClickRefresh('upper', -1);
-                    }}
-                    value="<"
-                  />
-                  <button
-                    onClick={() => {
-                      handleClickRefresh('upper', 1);
-                    }}
-                    value=">"
-                  />
-                </div>
-
-                <label>하의</label>
-                <div className="flex">
-                  <img id="lower" src={lowerBody} onClick={() => handleClickCloset} />
-                  <div className="flex">
-                    {lowerList.map((item) => (
-                      <div>
-                        <img className="p-2 m-2 bg-gray-200 rounded-lg" src={item} alt="" />
-                        <button
-                          onClick={() => {
-                            handleClickItem('lower', item);
-                          }}
-                          value="선택"
-                        />
+                    </div>
+                    <div className="my-8">
+                      <h2 className="pl-2 ml-2">색상</h2>
+                      <div className="flex flex-wrap pl-2 ml-2">
+                        {colors.map((color, index) => (
+                          <button
+                            key={index}
+                            className={`rounded-full border-2 px-4 py-2 my-2 mr-2 shadow-md border-md cursor-pointer ${selectedColors.includes(color) ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}
+                            value={color}
+                            onClick={() => toggleColor(color)}
+                          >
+                            {color}
+                          </button>
+                        ))}
                       </div>
-                    ))}
+                    </div>
+                    <button value="검색" onClick={() => handleSearchItems} />
                   </div>
-                  <button
-                    onClick={() => {
-                      handleClickRefresh('lower', -1);
-                    }}
-                    value="<"
-                  />
-                  <button
-                    onClick={() => {
-                      handleClickRefresh('lower', 1);
-                    }}
-                    value=">"
-                  />
-                </div>
+                )}
+              </div>
+            </div>
+            <div className="flex justify-end p-2 m-2">
+              <div className="p-2">
+                {isRecommendListVisible ? <WhiteButton onClick={toggleRecommendList} value="추천 리스트 닫기" /> : <WhiteButton onClick={toggleRecommendList} value="추천 리스트 열기" />}
+              </div>
+              <div className="p-2">{isSearchVisible ? <WhiteButton onClick={toggleSearch} value="검색 필터 닫기" /> : <WhiteButton onClick={toggleSearch} value="검색 필터 열기" />}</div>
 
-                <label>드레스</label>
-                <div className="flex">
-                  <img id="dress" src={dress} onClick={() => handleClickCloset} />
-                  <div className="flex">
-                    {dressList.map((item) => (
-                      <div>
-                        <img className="p-2 m-2 bg-gray-200 rounded-lg" src={item} alt="" />
-                        <button
-                          onClick={() => {
-                            handleClickItem('dress', item);
-                          }}
-                          value="선택"
-                        />
+              <div className="p-2">
+                <Button value="옷장" onClick={() => clickModal} />
+              </div>
+              <div className="p-2">
+                <Button value="검색" onClick={() => handleSearchItems} />
+              </div>
+            </div>
+            <div className="">
+              <div className="w-auto">
+                {isRecommendListVisible && (
+                  <div>
+                    {outerClothes.length == 0 && outerClothes.length == 0 && outerClothes.length == 0 && outerClothes.length == 0 && (
+                      <div className="mx-4 my-20">
+                        <div className="text-center">검색된 추천 리스트가 없습니다!</div>
                       </div>
-                    ))}
+                    )}
+                    <div className="flex justify-center">
+                      {outerClothes.length > 0 && (
+                        <div className="mx-4 my-2">
+                          <div className="text-center">아우터</div>
+                          <div className="">
+                            {outerClothes.map((item, index) => (
+                              <div key={index}>
+                                <img className="w-64 h-64" src={item.image} alt="" />
+                                <Button
+                                  onClick={() => {
+                                    handleClickItem(item);
+                                  }}
+                                  value="선택"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {upperBodys.length > 0 && (
+                        <div className="mx-4 my-2">
+                          <div className="text-center">상의</div>
+                          <div className="">
+                            {upperBodys.map((item, index) => (
+                              <div key={index}>
+                                <img className="w-64 h-64" src={item.image} alt="" />
+                                <Button
+                                  onClick={() => {
+                                    handleClickItem(item);
+                                  }}
+                                  value="선택"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {lowerBodys.length > 0 && (
+                        <div className="mx-4 my-2">
+                          <div className="text-center">하의</div>
+                          <div className="">
+                            {lowerBodys.map((item, index) => (
+                              <div key={index}>
+                                <img className="w-64 h-64" src={item.image} alt="" />
+                                <Button
+                                  onClick={() => {
+                                    handleClickItem(item);
+                                  }}
+                                  value="선택"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {dresses.length > 0 && (
+                        <div className="mx-4 my-2">
+                          <div className="text-center">드레스</div>
+                          <div className="">
+                            {dresses.map((item, index) => (
+                              <div key={index}>
+                                <img className="w-64 h-64" src={item.image} alt="" />
+                                <Button
+                                  onClick={() => {
+                                    handleClickItem(item);
+                                  }}
+                                  value="선택"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  <button
-                    onClick={() => {
-                      handleClickRefresh('dress', -1);
-                    }}
-                    value="<"
-                  />
-                  <button
-                    onClick={() => {
-                      handleClickRefresh('dress', 1);
-                    }}
-                    value=">"
-                  />
-                </div>
-                <div>
-                  <label className="mr-3 text">제목</label>
-                  <input type="text" id="title" value={title} onChange={(event) => handleTitleChange(event.target.value)} className="p-2 border border-gray-300 rounded-full" />
-                </div>
-
-                <div className="mr-4 textarea-container">
-                  <label className="textarea-label">내용</label>
-                  <textarea id="content" value={content} onChange={(event) => handleContentChange(event.target.value)} rows={4} cols={50} className="textarea-field"></textarea>
-                </div>
-                <button value="피드 등록" onClick={() => handleCreateFeed} />
-                <button value="카카오톡 공유" onClick={() => handleShareToKakao} />
+                )}
+              </div>
+            </div>
+            <div className="p-2 m-2 border-2 rounded-md">
+              <div className="p-2 m-2">
+                <Input className="p-2 m-2 border-2 rounded-md" type="text" id="title" value={title} onChange={(event) => handleTitleChange(event.target.value)} label="피드 제목" />
+              </div>
+              <div className="p-2 m-2">
+                <TextArea className="p-2 m-2 border-2 rounded-md" id="content" value={content} onChange={(event) => handleContentChange(event.target.value)} rows={4} cols={50} label="피드 내용" />
+              </div>
+              <div className="flex justify-end p-2 m-2">
+                <Button className="p-2 mr-2" value="피드 등록" onClick={() => handleCreateFeed} />
+                <Button className="p-2 ml-2" value="카카오톡 공유" onClick={() => handleShareToKakao} />
               </div>
             </div>
           </div>
         </div>
       </div>
+      <Modal isOpen={isOpenModal} onClose={closeModal}>
+        <div>내 옷장</div>
+        <MyClosetReadModal />
+      </Modal>
     </>
   );
 };

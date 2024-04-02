@@ -1,17 +1,17 @@
+import { HadoopCloth } from '../../entities/analysis/analysis-types';
 import Button from '../../shared/ui/button/button';
 
 interface RecommendationItemProps {
-  id: string;
-  image: string;
-  handleClickMoveToCoordi(): void;
+  item: HadoopCloth;
+  onClickItem(item: HadoopCloth): void;
 }
 
 const RecommendationItem = (props: RecommendationItemProps) => {
   return (
-    <>
-      <img style={{ width: '200px', height: '200px' }} src={props.image} alt="" />
-      <Button style={{ width: '200px', height: '50px' }} onClick={props.handleClickMoveToCoordi} value="코디 해 보기" />
-    </>
+    <div>
+      <img className="w-64 h-64" src={props.item.image} alt="" />
+      <Button className="w-64 h-16" onClick={() => props.onClickItem(props.item)} value="코디 해 보기" />
+    </div>
   );
 };
 

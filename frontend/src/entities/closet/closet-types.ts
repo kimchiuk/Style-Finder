@@ -25,3 +25,11 @@ export interface Closet {
 
   userId: number;
 }
+
+export interface Cloth {
+  image: string;
+  part: string;
+  category: string[];
+  details: string[];
+  textures: string[];
+}

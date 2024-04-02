@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CoordiCreateRequest {
 
-
     private ClothInfo outerCloth;
 
     private ClothInfo upperBody;
@@ -20,5 +19,4 @@ public class CoordiCreateRequest {
     private ClothInfo lowerBody;
 
     private ClothInfo dress;
-
 }
