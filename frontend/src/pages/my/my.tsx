@@ -307,30 +307,29 @@ const My = () => {
                           <div>
                             {/* 선택된 옵션들 표시 */}
                             {selectedOptions.length > 0 && (
-                              <div>
-                                <p className="flex justify-center mt-3">선택된 옵션들</p>
-                                {selectedOptions
-                                  .reduce((rows: string[][], option, index) => {
-                                    if (index % 2 === 0) rows.push([] as string[]);
-                                    rows[rows.length - 1].push(option);
-                                    return rows;
-                                  }, [])
-                                  .map((row, rowIndex) => (
-                                    <div className="flex justify-between option-box-container" key={rowIndex}>
-                                      {row.map((option) => (
-                                        <div className="option-box" key={option}>
-                                          {option}
-                                          <div className="flex justify-end">
-                                            <button className="option-button custom-button" onClick={() => handleOptionRemove(option)}>
-                                              취소
-                                            </button>
-                                          </div>
-                                        </div>
-                                      ))}
-                                    </div>
-                                  ))}
-                              </div>
-                            )}
+  <div>
+    <p className="flex justify-center mt-3">선택된 옵션들</p>
+    {selectedOptions
+      .reduce((rows: string[][], option, index) => {
+        if (index % 2 === 0) rows.push([] as string[]);
+        rows[rows.length - 1].push(option);
+        return rows;
+      }, [])
+      .map((row, rowIndex) => (
+        <div className="flex justify-between option-box-container" key={rowIndex}>
+          {row.map((option) => (
+            <div className="flex justify-between flex-grow option-box" key={option}>
+              <span>{option}</span>
+              <button className="option-button custom-button" onClick={() => handleOptionRemove(option)}>
+                취소
+              </button>
+            </div>
+          ))}
+        </div>
+      ))}
+  </div>
+)}
+
                           </div>
                         </div>
                         <div></div>
