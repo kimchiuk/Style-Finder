@@ -530,13 +530,44 @@ public class FeedServiceImpl implements FeedService {
         for (Feed feed : feedList) {
             // 피드 썸네일 읽어오기
 
+            Coordi coordi = mongoCoordiRepository.findById(feed.getCoordiId())
+                    .orElseThrow(() -> new CoordiNotFoundException("코디를 찾을 수 없습니다."));
+
+            String outerImage = feed.getOuterCloth();
+            byte[] outerThumbnail = getThumbnailOrNull(bucket, outerImage);
+
+            String upperImage = feed.getUpperBody();
+            byte[] upperThumbnail = getThumbnailOrNull(bucket, upperImage);
+
+            String dressImage = feed.getDress();
+            byte[] dressThumbnail = getThumbnailOrNull(bucket, dressImage);
+
+            String lowerImage = feed.getLowerBody();
+            byte[] lowerThumbnail = getThumbnailOrNull(bucket, lowerImage);
+
             CoordiContainer coordiContainer = createMongoContainer(feed.getCoordiId(), mongoCoordiRepository);
+
+            User user = feed.getUserId();
+            FeedListUserDTO feedListUserDTO = FeedListUserDTO.builder()
+                    .nickname(user.getNickname())
+                    .profileImage(getFeedThumbnailFromS3(bucket, user.getProfileImage()))
+                    .likeCategories(Arrays.asList(user.getLikeCategories().split(",")))
+                    .dislikeCategories(Arrays.asList(user.getDislikeCategories().split(",")))
+                    .introduce(user.getIntroduce())
+                    .instagram(user.getInstagram())
+                    .youtube(user.getYoutube())
+                    .build();
 
             feedListReadResponseDTOList.add(
                     FeedListReadResponseDTO.builder()
+                            .user(feedListUserDTO)
                             .feedId(feed.getId())
                             .feedTitle(feed.getFeedTitle())
                             .feedLikes(feed.getFeedLikes())
+                            .outerCloth(outerThumbnail)
+                            .dress(dressThumbnail)
+                            .upperBody(upperThumbnail)
+                            .lowerBody(lowerThumbnail)
                             .coordiContainer(coordiContainer)
                             .build()
             );
