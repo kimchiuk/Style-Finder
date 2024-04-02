@@ -21,9 +21,6 @@ const FeedDetail: React.FC = () => {
 
   const handleSubmitComment = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // 여기에 댓글을 처리하는 로직을 추가할 수 있습니다.
-    // 예를 들어, API 호출이나 댓글 목록에 새 댓글을 추가하는 등의 작업을 수행할 수 있습니다.
-    // 댓글 작성 후에는 입력된 텍스트를 초기화할 수 있습니다.
     setCommentText('');
   };
 
@@ -117,35 +114,29 @@ const FeedDetail: React.FC = () => {
               <div className="flex flex-col justify-between">
                 <div className="flex flex-col justify-between">
                   <div className="flex justify-center pt-5 author-name">Comments</div>
-                  {feedInfo?.comments.map((comment) => (
-                    <div key={comment.nickname} className="flex items-center justify-center">
-                      <div className="flex items-start flex-grow max-w-screen-xl mt-5 hero max-h-screen-xl bg-base-200 ">
-                        <div className="avatar">
-                          <div>
+                  <div className="flex flex-col justify-between max-h-[270px] overflow-y-auto">
+                    {feedInfo?.comments.map((comment) => (
+                      <div key={comment.nickname} className="flex items-center justify-center">
+                        <div className="flex items-start flex-grow max-w-screen-xl mt-5 hero bg-base-200">
+                          <div className="avatar">
                             <img src={`data:image/png;base64,${comment.profileImage}`} alt="commentProfileImage" className="w-10 h-10 rounded-full" />
                           </div>
-                        </div>
-                        <div className="flex justify-between flex-grow">
-                          <div>
-                            <div className="ml-3">{comment.nickname}</div>
-                            <div className="ml-3">{comment.content}</div>
+                          <div className="flex justify-between flex-grow">
+                            <div>
+                              <div className="ml-3">{comment.nickname}</div>
+                              <div className="ml-3">{comment.content}</div>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
                 <div className="flex items-center justify-between pt-3">
                   <div className="flex items-center">
                     <div className="flex items-center justify-between pt-3">
                       <form onSubmit={handleSubmitComment} className="flex items-center">
-                        <input
-                          type="text"
-                          value={commentText}
-                          onChange={handleChangeComment}
-                          placeholder="댓글을 작성하세요"
-                          className="border border-gray-300 rounded-md py-2 px-3 mr-2 blackText"
-                        />
+                        <input type="text" value={commentText} onChange={handleChangeComment} placeholder="댓글을 작성하세요" className="border border-gray-300 rounded-md py-2 px-3 mr-2 blackText" />
                         <button type="submit" className="btn btn-primary">
                           댓글 작성
                         </button>
