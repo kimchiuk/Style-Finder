@@ -24,16 +24,16 @@ public class FeedListReadResponseDTO {
     private Long feedLikes;
 
     @Schema(description = "아우터 이미지", example = "example.com")
-    private byte[] outerImage;
+    private byte[] outerCloth;
 
     @Schema(description = "드레스 이미지", example = "example.com")
-    private byte[] dressImage;
+    private byte[] dress;
 
     @Schema(description = "상의 이미지", example = "example.com")
-    private byte[] upperImage;
+    private byte[] upperBody;
 
     @Schema(description = "하의 이미지", example = "example.com")
-    private byte[] lowerImage;
+    private byte[] lowerBody;
 
     private CoordiContainer coordiContainer;
 }

@@ -4,10 +4,7 @@ import com.d111.backend.dto.feed.request.FeedCreateRequest;
 import com.d111.backend.entity.comment.Comment;
 import com.d111.backend.entity.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,6 +15,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 @Table(name = "Feed")
 public class Feed {
 

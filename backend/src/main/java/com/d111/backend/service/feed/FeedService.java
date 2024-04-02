@@ -8,7 +8,6 @@ import com.d111.backend.dto.feed.response.*;
 import com.d111.backend.entity.user.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -24,7 +23,7 @@ public interface FeedService {
 
     ResponseEntity<?> feedLikes(Long feedId);
 
-    ResponseEntity<FeedUpdateResponse> update(Long feedId, FeedUpdateRequest request, MultipartFile multipartFile);
+    ResponseEntity<FeedUpdateResponse> update(Long feedId, FeedUpdateRequest request);
 
     ResponseEntity<FeedListReadResponse> readPopularList(Pageable pageable);
 
