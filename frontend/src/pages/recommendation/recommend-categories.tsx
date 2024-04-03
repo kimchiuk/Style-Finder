@@ -3,13 +3,15 @@ import RecommendationItem from './recommendation-Item';
 import Dropbox from '../../shared/ui/dropbox/dropbox';
 
 import { useNavigate } from 'react-router';
-import { HadoopCloth } from '../../entities/analysis/analysis-types';
+import { RecommendCloth } from '../../entities/recommend/recommend-types';
 import useLoginStore from '../../shared/store/use-login-store';
 import { axiosError } from '../../shared/utils/axiosError';
 import api from '../../entities/analysis/analysis-apis';
+import useClothStore from '../../shared/store/use-cloth-store';
 
 const RecommendationCategories = () => {
   const navigate = useNavigate();
+  const clothStore = useClothStore();
   const loginStore = useLoginStore();
   const [category, setCategory] = useState<string>('');
   // 하위 카테고리 추가 필요
@@ -37,7 +39,7 @@ const RecommendationCategories = () => {
     '후드티',
     '래깅스',
   ];
-  const [categoryResponseList, setCategoryResponseList] = useState<HadoopCloth[]>([]);
+  const [categoryResponseList, setCategoryResponseList] = useState<RecommendCloth[]>([]);
 
   // 카테고리 설정
   const handleSelectedCategory = (selectedItem: string) => {
@@ -66,9 +68,9 @@ const RecommendationCategories = () => {
   };
 
   // 해당 아이템 코디 해 보기
-  const handleClickMoveToCoordi = (selectedItem: HadoopCloth) => {
-    const parsing = selectedItem.imageUrl.split('/')[0];
-    navigate(`/coordi/2/${parsing}/${selectedItem.id}`);
+  const handleClickMoveToCoordi = (selectedItem: RecommendCloth) => {
+    clothStore.createCloth(selectedItem);
+    navigate(`/coordi/0`);
   };
 
   return (

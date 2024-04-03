@@ -14,9 +14,11 @@ import { axiosError } from '../../shared/utils/axiosError';
 import useLoginStore from '../../shared/store/use-login-store';
 import { ClosetCloth } from '../../entities/closet/closet-types';
 import WhiteButton from '../../shared/ui/button/white-button';
+import useClothStore from '../../shared/store/use-cloth-store';
 
 const MyCloset = () => {
   const loginStore = useLoginStore();
+  const clothStore = useClothStore();
   const navigate = useNavigate();
 
   const { isOpenModal, clickModal, closeModal } = useOpenModal();
@@ -28,8 +30,17 @@ const MyCloset = () => {
 
   // 해당 아이템 코디 해 보기
   const handleClickItem = (selectedItem: ClosetCloth) => {
-    const parsing = selectedItem.imageUrl.split('/')[0];
-    navigate(`/coordi/2/${parsing}/${selectedItem.id}`);
+    const recommendCloth = {
+      image: selectedItem.image,
+      imageUrl: selectedItem.imageUrl,
+      style: '',
+      category: selectedItem.categories[0],
+      color: '',
+      part: selectedItem.part,
+    };
+
+    clothStore.createCloth(recommendCloth);
+    navigate(`/coordi/0`);
   };
 
   // 아이템 선택 시 해당 아이템을 삭제

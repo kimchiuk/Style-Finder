@@ -8,10 +8,11 @@ import './coordi.css';
 import Image from '../../assets/images/noimage.png';
 import useOpenModal from '../../shared/hooks/use-open-modal';
 import Modal from '../../shared/ui/modal/Modal';
-import MyClosetReadModal from '../closet/my-closet-read-modal';
+import MyClosetReadForm from '../closet/my-closet-read-form';
 import Button from '../../shared/ui/button/button';
 
-import { RecommendCloth } from '../../entities/closet/closet-types';
+import RecommendationItem from '../recommendation/recommendation-Item';
+import { RecommendCloth } from '../../entities/recommend/recommend-types';
 import TextArea from '../../shared/ui/input/textarea';
 import Input from '../../shared/ui/input/input';
 import WhiteButton from '../../shared/ui/button/white-button';
@@ -21,9 +22,11 @@ import { error } from 'console';
 import { axiosError } from '../../shared/utils/axiosError';
 import useLoginStore from '../../shared/store/use-login-store';
 import { useNavigate } from 'react-router';
+import useClothStore from '../../shared/store/use-cloth-store';
 
 const CoordiFromCoordi = () => {
   const loginStore = useLoginStore();
+  const clothStore = useClothStore();
   const navigate = useNavigate();
 
   const { isOpenModal, clickModal, closeModal } = useOpenModal();
@@ -192,18 +195,19 @@ const CoordiFromCoordi = () => {
       coordiCreateRequest: coordiCreateRequestDTO,
     };
 
-    api.createFeedCoordi(request)
-    .then(() => {
-      navigate('/feed')
-    })
-    .catch((error: any) => {
-      const errorCode = axiosError(error);
+    api
+      .createFeedCoordi(request)
+      .then(() => {
+        navigate('/feed');
+      })
+      .catch((error: any) => {
+        const errorCode = axiosError(error);
 
         if (errorCode == 401) {
           loginStore.setLogout();
           navigate('/login');
         }
-    })
+      });
   };
 
   // 카카오톡 공유 버튼
@@ -280,7 +284,32 @@ const CoordiFromCoordi = () => {
     getRecommends();
   };
 
+  // 옷장의 아이템을 store 저장 완료, 값 반영
+  const handleClothStore = () => {
+    if (clothStore.cloth != null) {
+      switch (clothStore.cloth.part) {
+        case '아우터':
+          setOuterCloth(clothStore.cloth);
+          break;
+        case '상의':
+          setUpperBody(clothStore.cloth);
+          break;
+        case '하의':
+          setLowerBody(clothStore.cloth);
+          break;
+        case '드레스':
+          setDress(clothStore.cloth);
+          break;
+        default:
+          break;
+      }
+
+      clothStore.deleteCloth();
+    }
+  };
+
   useEffect(() => {
+    handleClothStore();
     getRecommends();
   }, []);
 
@@ -406,10 +435,6 @@ const CoordiFromCoordi = () => {
                   {isRecommendListVisible ? <WhiteButton onClick={toggleRecommendList} value="추천 리스트 닫기" /> : <WhiteButton onClick={toggleRecommendList} value="추천 리스트 열기" />}
                 </div>
                 <div className="p-2">{isSearchVisible ? <WhiteButton onClick={toggleSearch} value="검색 필터 닫기" /> : <WhiteButton onClick={toggleSearch} value="검색 필터 열기" />}</div>
-
-                <div className="p-2">
-                  <Button value="옷장" onClick={() => clickModal()} />
-                </div>
                 <div className="p-2">
                   <Button value="검색" onClick={() => handleSearchItems()} />
                 </div>
@@ -430,15 +455,7 @@ const CoordiFromCoordi = () => {
                           <div className="text-center">아우터</div>
                           <div className="">
                             {outerClothes.map((item, index) => (
-                              <div key={index}>
-                                <img className="w-64 h-64" src={`data:image/png;base64,${item.image}`} alt="" />
-                                <Button
-                                  onClick={() => {
-                                    handleClickItem(item);
-                                  }}
-                                  value="선택"
-                                />
-                              </div>
+                              <RecommendationItem key={index} item={item} onClickItem={() => handleClickItem(item)}></RecommendationItem>
                             ))}
                           </div>
                         </div>
@@ -448,15 +465,7 @@ const CoordiFromCoordi = () => {
                           <div className="text-center">상의</div>
                           <div className="">
                             {upperBodys.map((item, index) => (
-                              <div key={index}>
-                                <img className="w-64 h-64" src={`data:image/png;base64,${item.image}`} alt="" />
-                                <Button
-                                  onClick={() => {
-                                    handleClickItem(item);
-                                  }}
-                                  value="선택"
-                                />
-                              </div>
+                              <RecommendationItem key={index} item={item} onClickItem={() => handleClickItem(item)}></RecommendationItem>
                             ))}
                           </div>
                         </div>
@@ -466,15 +475,7 @@ const CoordiFromCoordi = () => {
                           <div className="text-center">하의</div>
                           <div className="">
                             {lowerBodys.map((item, index) => (
-                              <div key={index}>
-                                <img className="w-64 h-64" src={`data:image/png;base64,${item.image}`} alt="" />
-                                <Button
-                                  onClick={() => {
-                                    handleClickItem(item);
-                                  }}
-                                  value="선택"
-                                />
-                              </div>
+                              <RecommendationItem key={index} item={item} onClickItem={() => handleClickItem(item)}></RecommendationItem>
                             ))}
                           </div>
                         </div>
@@ -484,15 +485,7 @@ const CoordiFromCoordi = () => {
                           <div className="text-center">드레스</div>
                           <div className="">
                             {dresses.map((item, index) => (
-                              <div key={index}>
-                                <img className="w-64 h-64" src={`data:image/png;base64,${item.image}`} alt="" />
-                                <Button
-                                  onClick={() => {
-                                    handleClickItem(item);
-                                  }}
-                                  value="선택"
-                                />
-                              </div>
+                              <RecommendationItem key={index} item={item} onClickItem={() => handleClickItem(item)}></RecommendationItem>
                             ))}
                           </div>
                         </div>
@@ -519,7 +512,7 @@ const CoordiFromCoordi = () => {
       </div>
       <Modal isOpen={isOpenModal} onClose={closeModal}>
         <div>내 옷장</div>
-        <MyClosetReadModal />
+        <MyClosetReadForm onClose={closeModal} handleClothStore={handleClothStore} />
       </Modal>
     </>
   );

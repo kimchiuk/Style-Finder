@@ -20,8 +20,19 @@ const FeedDetail: React.FC = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
   const [commentText, setCommentText] = useState('');
+  const [feedLikes, setFeedLikes] = useState<number>(feedInfo?.feedLikes || 0);
+  const [isLiked, setIsLiked] = useState<boolean>(false);
   const handleChangeComment = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCommentText(event.target.value);
+  };
+
+  const handleLikeClick = () => {
+    if (!isLiked) {
+      setFeedLikes(feedLikes + 1);
+    } else {
+      setFeedLikes(feedLikes - 1);
+    }
+    setIsLiked(!isLiked);
   };
 
   const handleSubmitComment = (event: React.FormEvent<HTMLFormElement>) => {
@@ -44,9 +55,9 @@ const FeedDetail: React.FC = () => {
     setCommentText('');
   };
 
-  // const handleClickItem = (feedId: string, coordiId: string) => {
-  //   navigate(`/coordi/1/${feedId}/${coordiId}`);
-  // };
+  const handleClickMoveToCoordi = (coordiId: string) => {
+    navigate(`/coordi/1/${coordiId}`);
+  };
 
   const handleIconClick = () => {
     setIsChecked(!isChecked);
@@ -69,14 +80,20 @@ const FeedDetail: React.FC = () => {
     getFeedDetail();
   }, [feedId]);
 
+  useEffect(() => {
+    if (feedInfo?.feedLikes !== undefined) {
+      setFeedLikes(feedInfo.feedLikes);
+    }
+  }, [feedInfo]);
+
   return (
     <>
       <Navbar />
-      <div className="pt-5 mx-auto px-36 h-full">
+      <div className="h-full pt-5 mx-auto px-36">
         <div className="flex flex-col min-w-min hero h-full bg-base-200 bg-[#161A30] text-color p-8 ">
           <div className="flex flex-row pb-5">
             <img src={`data:image/png;base64,${feedInfo?.user.profileImage}`} alt="profileImage" className="w-16 h-16 rounded-full" />
-            <div className="pl-5 author-name flex items-center">작성자 닉네임: {feedInfo?.user.nickname}</div>
+            <div className="flex items-center pl-5 author-name">작성자 닉네임: {feedInfo?.user.nickname}</div>
           </div>
           <div className="flex flex-row">
             <div className="flex flex-col">
@@ -95,7 +112,7 @@ const FeedDetail: React.FC = () => {
                   <div className="p-3">
                     <div className="flex justify-center">드레스</div>
                     <div>
-                      {feedInfo?.dress ? <img src={`data:image/png;base64,${feedInfo?.dress}`} alt="Dress" className="w-48 h-32" /> : <img src={noimage} alt="Default Dress" className=" w-48 h-32" />}
+                      {feedInfo?.dress ? <img src={`data:image/png;base64,${feedInfo?.dress}`} alt="Dress" className="w-48 h-32" /> : <img src={noimage} alt="Default Dress" className="w-48 h-32 " />}
                     </div>
                   </div>
                 </div>
@@ -154,7 +171,7 @@ const FeedDetail: React.FC = () => {
                   <div className="flex items-center">
                     <div className="flex items-center justify-between pt-3">
                       <form onSubmit={handleSubmitComment} className="flex items-center">
-                        <input type="text" value={commentText} onChange={handleChangeComment} placeholder="댓글을 작성하세요" className="border border-gray-300 rounded-md py-2 px-3 mr-2 blackText" />
+                        <input type="text" value={commentText} onChange={handleChangeComment} placeholder="댓글을 작성하세요" className="px-3 py-2 mr-2 border border-gray-300 rounded-md blackText" />
                         <button type="submit" className="btn btn-primary">
                           댓글 작성
                         </button>
@@ -163,11 +180,11 @@ const FeedDetail: React.FC = () => {
                   </div>
                   <div className="flex flex-row">
                     <div className="flex items-center pl-3">
-                      {feedInfo?.feedLikes}
+                      {feedInfo?.feedLikes} {/* 좋아요 수 표시 */}
                       <label className="pl-1 swap swap-flip text-9xl">
                         <input type="checkbox" onChange={() => {}} style={{ display: 'none' }} />
-                        <div className={isChecked ? 'swap-on' : 'swap-off'} onClick={handleIconClick}>
-                          {isChecked ? (
+                        <div className={isLiked ? 'swap-on' : 'swap-off'} onClick={handleLikeClick}>
+                          {isLiked ? (
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
                               <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
                             </svg>
@@ -183,8 +200,13 @@ const FeedDetail: React.FC = () => {
                         </div>
                       </label>
                     </div>
+
                     <div className="pl-4">
-                      <button className="btn btn-outline">피팅 해보기</button>
+                      {feedInfo && (
+                        <button className="btn btn-outline" onClick={() => handleClickMoveToCoordi(feedInfo.coordiContainer.id)}>
+                          코디 해 보기
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>

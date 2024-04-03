@@ -9,25 +9,37 @@ import { axiosError } from '../../shared/utils/axiosError';
 import useLoginStore from '../../shared/store/use-login-store';
 import { ClosetCloth } from '../../entities/closet/closet-types';
 import WhiteButton from '../../shared/ui/button/white-button';
+import useClothStore from '../../shared/store/use-cloth-store';
 
-const MyClosetReadModal = () => {
+interface MyClosetReadFormProps {
+  onClose: () => void;
+  handleClothStore: () => void;
+}
+
+const MyClosetReadForm = (props: MyClosetReadFormProps) => {
   const loginStore = useLoginStore();
+  const clothStore = useClothStore();
   const navigate = useNavigate();
 
   const [ItemList, setItemList] = useState<ClosetCloth[]>([]);
 
   useEffect(() => {
-    getClosets('');
+    handleClickOption('');
   }, []);
-
-  const handleClickOption = (selectedPart: string) => {
-    getClosets(selectedPart);
-  };
 
   // 해당 아이템 코디 해 보기
   const handleClickItem = (selectedItem: ClosetCloth) => {
-    selectedItem;
-    navigate(`/coordi/1/${selectedItem.id}`);
+    const recommendCloth = {
+      image: selectedItem.image,
+      imageUrl: selectedItem.imageUrl,
+      style: '',
+      category: selectedItem.categories[0],
+      color: '',
+      part: selectedItem.part,
+    };
+
+    clothStore.createCloth(recommendCloth);
+    props.onClose();
   };
 
   // 아이템 선택 시 해당 아이템을 삭제
@@ -50,7 +62,7 @@ const MyClosetReadModal = () => {
   };
 
   // 내 옷장 조회
-  const getClosets = (part: string) => {
+  const handleClickOption = (part: string) => {
     api
       .getClosets(part)
       .then((response) => {
@@ -97,4 +109,4 @@ const MyClosetReadModal = () => {
   );
 };
 
-export default MyClosetReadModal;
+export default MyClosetReadForm;

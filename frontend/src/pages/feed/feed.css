@@ -81,3 +81,8 @@
 .blackText {
   color: black;
 }
+
+.abc {
+  display: flex;
+  justify-content: space-between;
+}

@@ -5,13 +5,15 @@ import Dropbox from '../../shared/ui/dropbox/dropbox';
 import api from '../../entities/analysis/analysis-apis';
 
 import { useNavigate } from 'react-router';
-import { HadoopCloth } from '../../entities/analysis/analysis-types';
+import { RecommendCloth } from '../../entities/recommend/recommend-types';
 import { axiosError } from '../../shared/utils/axiosError';
 import useLoginStore from '../../shared/store/use-login-store';
+import useClothStore from '../../shared/store/use-cloth-store';
 
 const RecommendationTastes = () => {
   const navigate = useNavigate();
   const loginStore = useLoginStore();
+  const clothStore = useClothStore();
   const [taste, setTaste] = useState<string>('');
   const tasteList = [
     '',
@@ -40,7 +42,7 @@ const RecommendationTastes = () => {
     '힙합',
   ];
 
-  const [tasteResponseList, setTasteResponseList] = useState<HadoopCloth[]>([]);
+  const [tasteResponseList, setTasteResponseList] = useState<RecommendCloth[]>([]);
 
   // 취향 설정
   const handleSelectedTaste = (selectedItem: string) => {
@@ -69,9 +71,9 @@ const RecommendationTastes = () => {
   };
 
   // 해당 아이템 코디 해 보기
-  const handleClickMoveToCoordi = (selectedItem: HadoopCloth) => {
-    const parsing = selectedItem.imageUrl.split('/')[0];
-    navigate(`/coordi/2/${parsing}/${selectedItem.id}`);
+  const handleClickMoveToCoordi = (selectedItem: RecommendCloth) => {
+    clothStore.createCloth(selectedItem);
+    navigate(`/coordi/0`);
   };
 
   return (
