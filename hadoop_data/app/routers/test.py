@@ -4,6 +4,8 @@ from typing import Optional
 from data.label_data import csv_top, csv_bottom, csv_outer, csv_dress
 from data.spark_name import spark
 from pyspark.sql import functions as F
+from data import spark_name
+
 
 router = APIRouter()
 
@@ -24,7 +26,7 @@ async def get_items_user(
     category_collar: Optional[str] = None,
     category_fit: Optional[str] = None
 ):
-    df = spark.read.csv("hdfs://localhost:9000/user/ubuntu/fashion/output2.csv", header=True, inferSchema=True)
+    df = spark_name.df
 
     if main_category == "상의":
         result_pd_df = top_recommend_item(df, detail_category, category_color, category_sub_color, category_material, category_detail, category_print, category_length, category_neck_line, category_collar, category_fit)

@@ -16,4 +16,6 @@ public class FeedUserDTO {
     @Schema(description = "프로필 이미지", example = "binary")
     byte[] profileImage;
 
+    Boolean isLiked;
+
 }

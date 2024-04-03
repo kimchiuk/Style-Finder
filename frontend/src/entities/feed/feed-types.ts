@@ -10,6 +10,7 @@ export interface FeedUpdateResponseDTO extends FeedContent {}
 export interface FeedUser {
   nickname: string;
   profileImage: string;
+  isLiked: boolean;
 }
 
 export interface FeedContent {
