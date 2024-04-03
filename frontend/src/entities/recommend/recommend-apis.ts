@@ -8,7 +8,7 @@ const api = {
     getStyleRecommend: () => jwtAxiosInstance.get(`${url}/style`),
     getCategoryRecommend: () => jwtAxiosInstance.get(`${url}/category`),
     getColorRecommend: () => jwtAxiosInstance.get(`${url}/color`),
-    createFeedCoordi: (request: any) => jwtAxiosInstance.post(`${url}/create`, request),
+    createFeedCoordi: (request: any) => jwtAxiosInstance.post(`/api/feed/create`, request),
 };
 
 export default api;

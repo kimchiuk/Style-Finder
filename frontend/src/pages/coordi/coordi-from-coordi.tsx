@@ -175,7 +175,6 @@ const CoordiFromCoordi = () => {
     };
 
     const feedCreateRequestDTO = {
-      coordiId: coordiId,
       feedTitle: title,
       feedContent: content,
       outerCloth: outerCloth?.imageUrl,
@@ -185,13 +184,13 @@ const CoordiFromCoordi = () => {
     };
 
     const request = {
-      "feedCreateRequestDTO": feedCreateRequestDTO,
-      "coordiCreateRequestDTO": coordiCreateRequestDTO
+      "feedCreateRequest": feedCreateRequestDTO,
+      "coordiCreateRequest": coordiCreateRequestDTO
     }
 
     api.createFeedCoordi(request)
-    .then((response) => {
-      console.log(response.data)
+    .then(() => {
+      navigate('/feed')
     })
     .catch((error: any) => {
       console.log(error)
@@ -272,7 +271,7 @@ const CoordiFromCoordi = () => {
   };
 
   useEffect(() => {
-    // getRecommends()
+    getRecommends()
   }, [])
 
   return (
@@ -496,7 +495,7 @@ const CoordiFromCoordi = () => {
                 <TextArea className="p-2 m-2 border-2 rounded-md" id="content" value={content} onChange={(event) => handleContentChange(event.target.value)} rows={4} cols={50} label="피드 내용" />
               </div>
               <div className="flex justify-end p-2 m-2">
-                <Button className="p-2 mr-2" value="피드 등록" onClick={() => handleCreateFeed} />
+                <Button className="p-2 mr-2" value="피드 등록" onClick={() => handleCreateFeed()} />
                 <Button className="p-2 ml-2" value="카카오톡 공유" onClick={() => handleShareToKakao} />
               </div>
             </div>
