@@ -50,7 +50,7 @@ public class JWTFilter extends OncePerRequestFilter {
             return false;
         }
 
-        if (path.startsWith("/api/feed") && method.equals("GET")) {
+        if (path.equals("/api/feed")) {
             return true;
         }
 

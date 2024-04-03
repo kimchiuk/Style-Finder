@@ -182,6 +182,11 @@ public class FeedServiceImpl implements FeedService {
     // 피드 상세 조회
     @Override
     public ResponseEntity<FeedReadResponse> read(Long feedId) {
+        String userid = JWTUtil.findEmailByToken();
+
+        User currentUser = userRepository.findByEmail(userid)
+                .orElseThrow(() -> new UnauthorizedAccessException("로그인 해주세요."));
+
         Optional<Feed> optionalFeed = feedRepository.findById(feedId);
         Feed feed = optionalFeed.orElseThrow(() -> new FeedNotFoundException("피드를 찾을 수 없습니다."));
 
@@ -206,9 +211,14 @@ public class FeedServiceImpl implements FeedService {
 
         byte[] userProfileImage = getFeedThumbnailFromS3(bucket, feed.getUserId().getProfileImage());
 
+        Optional<Likes> existingLike = likesRepository.findByFeedIdAndUserId(feedId, currentUser.getId());
+
+        Boolean isLiked = existingLike.isPresent();
+
         FeedUserDTO feedUserDTO = FeedUserDTO.builder()
                 .nickname(feed.getUserId().getNickname())
                 .profileImage(userProfileImage)
+                .isLiked(isLiked)
                 .build();
 
         List<FeedCommentDTO> feedCommentDTOList = new ArrayList<>();

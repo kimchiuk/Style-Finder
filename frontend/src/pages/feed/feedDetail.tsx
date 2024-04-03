@@ -32,7 +32,20 @@ const FeedDetail: React.FC = () => {
     } else {
       setFeedLikes(feedLikes - 1);
     }
-    setIsLiked(!isLiked);
+
+    api
+      .likeFeed(Number(feedId))
+      .then(() => {
+        getFeedDetail();
+      })
+      .catch((error) => {
+        const errorCode = axiosError(error);
+
+        if (errorCode == 401) {
+          loginStore.setLogout();
+          navigate('/login');
+        }
+      });
   };
 
   const handleSubmitComment = (event: React.FormEvent<HTMLFormElement>) => {
@@ -70,21 +83,22 @@ const FeedDetail: React.FC = () => {
       .then((response) => {
         const data = response.data.data;
         setFeedInfo(data);
+        setIsLiked(data.user.isLiked);
+        console.log(data);
       })
       .catch((error: any) => {
-        axiosError(error);
+        const errorCode = axiosError(error);
+
+        if (errorCode == 401) {
+          loginStore.setLogout();
+          navigate('/login');
+        }
       });
   };
 
   useEffect(() => {
     getFeedDetail();
-  }, [feedId]);
-
-  useEffect(() => {
-    if (feedInfo?.feedLikes !== undefined) {
-      setFeedLikes(feedInfo.feedLikes);
-    }
-  }, [feedInfo]);
+  }, []);
 
   return (
     <>
@@ -152,7 +166,7 @@ const FeedDetail: React.FC = () => {
                 <div className="flex justify-center pt-5 author-name">Comments</div>
                 <div className="flex flex-col justify-between max-h-[270px] overflow-y-auto">
                   {feedInfo?.comments.map((comment) => (
-                    <div key={comment.nickname} className="flex items-center justify-center">
+                    <div key={comment.nickname + comment.content} className="flex items-center justify-center">
                       <div className="flex items-start flex-grow max-w-screen-xl mt-5 hero bg-base-200">
                         <div className="avatar">
                           <img src={`data:image/png;base64,${comment.profileImage}`} alt="commentProfileImage" className="w-10 h-10 rounded-full" />
