@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import WordCloud from 'react-d3-cloud';
 import api from '../../entities/user/user-apis';
 import { axiosError } from '../../shared/utils/axiosError';
@@ -13,7 +13,7 @@ const Keywords = () => {
   const loginStore = useLoginStore();
   const navigate = useNavigate();
 
-  const [datas, setDates] = useState([
+  const [datas] = useState([
     // 카테고리
     { text: '재킷', value: 10 },
     { text: '조거팬츠', value: 10 },

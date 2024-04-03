@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import MyClosetItem from './my-closet-Item';
 import MyClosetCreateForm from './my-closet-create-form';
 
-import Button from '../../shared/ui/button/button';
+import CustomButton from '../../shared/ui/button/custom-button';
 import Modal from '../../shared/ui/modal/Modal';
 import useOpenModal from '../../shared/hooks/use-open-modal';
 import { useNavigate } from 'react-router';
@@ -91,7 +91,7 @@ const MyCloset = () => {
         <WhiteButton className="mx-2 my-2" value="상의" onClick={() => handleClickOption('upperBody')} />
         <WhiteButton className="mx-2 my-2" value="하의" onClick={() => handleClickOption('lowerBody')} />
         <WhiteButton className="mx-2 my-2" value="드레스" onClick={() => handleClickOption('dress')} />
-        <Button className="my-2 ml-2" value="옷 등록" onClick={clickModal} />
+        <CustomButton className="my-2 ml-2" value="옷 등록" onClick={clickModal} />
       </div>
       <br className="bg-gray-100 rounded-md " />
       <div className="">

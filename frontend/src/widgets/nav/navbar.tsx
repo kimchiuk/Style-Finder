@@ -18,6 +18,8 @@ const Navbar = () => {
 
   // 컴포넌트가 마운트될 때 로컬 스토리지에서 사용자 정보를 가져옴
   useEffect(() => {
+    userNickname;
+
     const storedUserNickname = localStorage.getItem('userNickname');
     if (storedUserNickname) {
       setUserNickname(storedUserNickname);
@@ -38,7 +40,7 @@ const Navbar = () => {
       </div>
 
       <div className="flex items-center justify-end flex-grow mt-2">
-        <div className="flex justify-between menu mt-3 p-2 m-5 rounded-full">
+        <div className="flex justify-between p-2 m-5 mt-3 rounded-full menu">
           <button className="w-20 h-10">
             <Link to="/coordi/0" replace={true}>
               코디

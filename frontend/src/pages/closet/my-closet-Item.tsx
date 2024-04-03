@@ -1,4 +1,4 @@
-import Button from '../../shared/ui/button/button';
+import CustomButton from '../../shared/ui/button/custom-button';
 import { ClosetCloth } from '../../entities/closet/closet-types';
 import WhiteButton from '../../shared/ui/button/white-button';
 import { useState } from 'react';
@@ -37,7 +37,7 @@ const MyClosetItem = (props: MyClosetItemProps) => {
         )}
       </div>
       <div className="flex m-2">
-        <Button className="w-40 h-16" value="코디 해 보기" onClick={() => props.onClickItem(props.item)} />
+        <CustomButton className="w-40 h-16" value="코디 해 보기" onClick={() => props.onClickItem(props.item)} />
         <WhiteButton className="w-24 h-16" value="휴지통" onClick={() => props.onClickDeleteItem(props.item)} />
       </div>
     </div>

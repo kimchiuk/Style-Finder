@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { RecommendCloth } from '../../entities/recommend/recommend-types';
-import Button from '../../shared/ui/button/button';
+import CustomButton from '../../shared/ui/button/custom-button';
 
 interface CoordiItemProps {
   item: RecommendCloth;
@@ -35,7 +35,7 @@ const CoordiItem = (props: CoordiItemProps) => {
         )}
       </div>
       <div className="flex m-2">
-        <Button className="w-64 h-16" value="코디 해 보기" onClick={() => props.onClickItem(props.item)} />
+        <CustomButton className="w-64 h-16" value="코디 해 보기" onClick={() => props.onClickItem(props.item)} />
       </div>
     </div>
   );

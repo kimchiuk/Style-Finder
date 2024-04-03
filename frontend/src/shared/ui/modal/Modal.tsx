@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import Button from '../button/button';
+import CustomButton from '../button/custom-button';
 
 interface ModalProps {
   classN: string;
@@ -27,7 +27,7 @@ const ModalContent = styled.div`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
-const ModalCloseButton = styled(Button)`
+const ModalCloseButton = styled(CustomButton)`
   position: absolute;
   top: 10px;
   right: 10px;

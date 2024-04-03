@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Navbar from '../../widgets/nav/navbar';
@@ -5,11 +6,10 @@ import Navbar from '../../widgets/nav/navbar';
 import { useEffect, useState } from 'react';
 import './coordi.css';
 
-import Image from '../../assets/images/noimage.png';
 import useOpenModal from '../../shared/hooks/use-open-modal';
 import Modal from '../../shared/ui/modal/Modal';
 import MyClosetReadModal from '../closet/my-closet-read-form';
-import Button from '../../shared/ui/button/button';
+import CustomButton from '../../shared/ui/button/custom-button';
 
 import { RecommendCloth } from '../../entities/recommend/recommend-types';
 import TextArea from '../../shared/ui/input/textarea';
@@ -17,13 +17,11 @@ import Input from '../../shared/ui/input/input';
 import WhiteButton from '../../shared/ui/button/white-button';
 import api from '../../entities/recommend/recommend-apis';
 import { SearchFilter } from '../../entities/recommend/recommend-types';
-import { error } from 'console';
 import { axiosError } from '../../shared/utils/axiosError';
 import useLoginStore from '../../shared/store/use-login-store';
 import { useNavigate, useParams } from 'react-router';
 
 import feedApi from '../../entities/feed/feed-apis';
-import RecommendationItem from '../recommendation/recommendation-Item';
 import useClothStore from '../../shared/store/use-cloth-store';
 import CoordiItem from './coordi-Item';
 import CoordiSelectedItem from './coordi-selected-item';
@@ -38,7 +36,6 @@ const CoordiFromFeed = () => {
 
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
-  const [coordiId, setCoordiId] = useState<string>('');
 
   const [outerCloth, setOuterCloth] = useState<RecommendCloth | null>(null);
   const [upperBody, setUpperBody] = useState<RecommendCloth | null>(null);
@@ -160,10 +157,6 @@ const CoordiFromFeed = () => {
 
   const handleContentChange = (newContent: string) => {
     setContent(newContent);
-  };
-
-  const handleCoordiIdChange = (newCoordiId: string) => {
-    setCoordiId(newCoordiId);
   };
 
   const handleDeleteCloth = (part: string) => {
@@ -468,7 +461,7 @@ const CoordiFromFeed = () => {
             </div>
             <div className="flex justify-between p-4 m-2">
               <div className="p-2">
-                <Button value="내 옷장" onClick={clickModal} />
+                <CustomButton value="내 옷장" onClick={clickModal} />
               </div>
               <div className="flex">
                 <div className="p-2">
@@ -476,7 +469,7 @@ const CoordiFromFeed = () => {
                 </div>
                 <div className="p-2">{isSearchVisible ? <WhiteButton onClick={toggleSearch} value="검색 필터 닫기" /> : <WhiteButton onClick={toggleSearch} value="검색 필터 열기" />}</div>
                 <div className="p-2">
-                  <Button value="검색" onClick={() => handleSearchItems()} />
+                  <CustomButton value="검색" onClick={() => handleSearchItems()} />
                 </div>
               </div>
             </div>
@@ -484,11 +477,14 @@ const CoordiFromFeed = () => {
               <div className="w-auto">
                 {isRecommendListVisible && (
                   <div>
-                    {outerClothes.length == 0 || outerClothes.length == 0 || outerClothes.length == 0 || outerClothes.length == 0 && (
-                      <div className="mx-4 my-20">
-                        <div className="text-center">검색된 추천 리스트가 없습니다!</div>
-                      </div>
-                    )}
+                    {outerClothes.length == 0 ||
+                      outerClothes.length == 0 ||
+                      outerClothes.length == 0 ||
+                      (outerClothes.length == 0 && (
+                        <div className="mx-4 my-20">
+                          <div className="text-center">검색된 추천 리스트가 없습니다!</div>
+                        </div>
+                      ))}
                     <div className="flex justify-center">
                       {outerClothes.length > 0 && (
                         <div className="mx-4 my-2">
@@ -543,8 +539,8 @@ const CoordiFromFeed = () => {
                 <TextArea className="p-2 m-2 border-2 rounded-md" id="content" value={content} onChange={(event) => handleContentChange(event.target.value)} rows={4} cols={50} label="피드 내용" />
               </div>
               <div className="flex justify-end p-2 m-2">
-                <Button className="p-2 mr-2" value="피드 등록" onClick={() => handleCreateFeed()} />
-                <Button className="p-2 ml-2" value="카카오톡 공유" onClick={() => handleShareToKakao} />
+                <CustomButton className="p-2 mr-2" value="피드 등록" onClick={() => handleCreateFeed()} />
+                <CustomButton className="p-2 ml-2" value="카카오톡 공유" onClick={() => handleShareToKakao} />
               </div>
             </div>
           </div>
