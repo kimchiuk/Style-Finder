@@ -73,7 +73,9 @@ const RecommendationCategories = () => {
   };
 
   useEffect(() => {
-    handleGetCategoryList();
+    if (category) {
+      handleGetCategoryList();
+    }
   }, [category])
 
   return (

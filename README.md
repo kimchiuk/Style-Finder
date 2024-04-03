@@ -61,9 +61,8 @@
 - MobaXterm
 - Docker
 - Jenkins 2.426.2
-- AWS EC2
 - AWS S3
-- Server 20.04.6 LTS (GNU/Linux 5.15.0-1051-aws x86_64)
+- AWS EC2 Ubuntu 20.04.6 LTS (GNU/Linux 5.15.0-1051-aws x86_64)
 - Nginx 1.24.0
 
 ### 협업 툴
@@ -157,7 +156,8 @@ BE/domain/feature
 
 ### 김준수
 
-- 팀장이용
+- 팀장이요
+
 ### 정수빈
 
 <br/>
