@@ -7,7 +7,7 @@ const api = {
     return jwtAxiosInstance.post(`${url}/uploadCloset`, { clothPart, clothImage }, { headers });
   },
   getClosets: (clothPart: string) => jwtAxiosInstance.get(`${url}/getAll?part=${clothPart}`),
-  deleteCloth: (closetId: number) => jwtAxiosInstance.post(`${url}/delete/${closetId}`, closetId),
+  deleteCloth: (closetId: number) => jwtAxiosInstance.delete(`${url}/delete/${closetId}`),
 };
 
 export default api;

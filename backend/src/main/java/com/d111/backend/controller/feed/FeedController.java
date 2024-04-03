@@ -6,6 +6,7 @@ import com.d111.backend.dto.feed.request.FittingRequest;
 import com.d111.backend.dto.feed.response.FeedDeleteResponse;
 import com.d111.backend.dto.feed.response.FeedListReadResponse;
 import com.d111.backend.dto.feed.response.FeedReadResponse;
+import com.d111.backend.dto.feed.response.dto.FeedCoordiResponseDTO;
 import com.d111.backend.entity.user.User;
 import com.d111.backend.exception.user.EmailNotFoundException;
 import com.d111.backend.repository.user.UserRepository;
@@ -98,12 +99,10 @@ public class FeedController {
         return feedService.searchByTitle(title, pageable);
     }
 
-    // 피팅해보기
     @PostMapping(value = "/{feedId}/fitting")
-    public ResponseEntity<?> fitting(@RequestBody FittingRequest fittingRequest, @PathVariable Long feedId){
-        return feedService.fitting(fittingRequest, feedId);
+    public ResponseEntity<FeedCoordiResponseDTO> fitting(@PathVariable Long feedId){
+        return feedService.fitting(feedId);
     }
-
 
     private Optional<User> getCurrentUserId() {
         // 현재 로그인한 유저 정보 받아오기

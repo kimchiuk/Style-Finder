@@ -9,4 +9,7 @@ import java.util.Optional;
 @Repository
 public interface MongoCoordiRepository extends MongoRepository<Coordi, String> {
     Optional<Coordi> findById(String id);
+
+    Coordi findBy_id(String id);
+
 }

@@ -22,7 +22,7 @@ const Router = () => {
         <Route path="/signup" element={<SignUpPage />}></Route>
         <Route path="/coordi/0" element={<CoordiFromCoordiPage />}></Route>
         <Route path="/coordi/1/:prevWriterId/:prevCoordiId" element={<CoordiFromFeedPage />}></Route>
-        <Route path="/coordi/2/:clothId" element={<CoordiFromAnalysisPage />}></Route>
+        <Route path="/coordi/2/:parsing/:clothId" element={<CoordiFromAnalysisPage />}></Route>
         <Route path="/feed" element={<FeedPage />}></Route>
         <Route path="/feeddetail/:feedId" element={<FeedDetail />}></Route>
         <Route path="/analysis/*" element={<AnalysisPage />}>

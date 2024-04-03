@@ -1,4 +1,4 @@
-import { Closet } from '../closet/closet-types';
+import { ClosetCloth } from '../closet/closet-types';
 
 export interface SignUpRequestDTO {
   email: string;
@@ -40,7 +40,7 @@ export interface User {
   height: number;
   weight: number;
 
-  closets: Closet[];
+  closets: ClosetCloth[];
 }
 
 export interface UserInfo {

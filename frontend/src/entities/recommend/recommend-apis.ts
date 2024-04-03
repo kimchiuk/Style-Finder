@@ -1,4 +1,5 @@
 import jwtAxiosInstance from '../../shared/utils/jwtAxiosInstance';
+import { FeedCreateRequestDTO } from '../feed/feed-types';
 import { SearchFilter } from './recommend-types';
 
 const url = '/api/recommend';
@@ -7,6 +8,7 @@ const api = {
     getStyleRecommend: () => jwtAxiosInstance.get(`${url}/style`),
     getCategoryRecommend: () => jwtAxiosInstance.get(`${url}/category`),
     getColorRecommend: () => jwtAxiosInstance.get(`${url}/color`),
+    createFeedCoordi: (request: any) => jwtAxiosInstance.post(`/api/feed/create`, request),
 };
 
 export default api;

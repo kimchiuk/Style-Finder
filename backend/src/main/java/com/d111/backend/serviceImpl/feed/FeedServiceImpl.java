@@ -13,6 +13,7 @@ import com.d111.backend.dto.feed.request.FeedUpdateRequest;
 import com.d111.backend.dto.feed.request.FittingRequest;
 import com.d111.backend.dto.feed.response.*;
 import com.d111.backend.dto.feed.response.dto.*;
+import com.d111.backend.dto.recommend.response.ClothResponseDTO;
 import com.d111.backend.entity.comment.Comment;
 import com.d111.backend.entity.coordi.Coordi;
 import com.d111.backend.entity.feed.Feed;
@@ -584,37 +585,65 @@ public class FeedServiceImpl implements FeedService {
     }
 
     @Override
-    public ResponseEntity<?> fitting(FittingRequest fittingRequest, Long feedId) {
-
-        String newFeedTitle = fittingRequest.getNewFeedTitle();
-        String newFeedContent = fittingRequest.getNewFeedContent();
-
-        // 기존 피드 정보 가져오기
-        Feed originFeed = feedRepository.findById(feedId)
+    public ResponseEntity<FeedCoordiResponseDTO> fitting(Long feedId) {
+        Feed feed = feedRepository.findById(feedId)
                 .orElseThrow(() -> new FeedNotFoundException("피드를 찾을 수 없습니다."));
 
-        // 현재 로그인한 유저 정보 받아오기
-        String userid = JWTUtil.findEmailByToken();
-        Optional<User> currentUser = userRepository.findByEmail(userid);
+        Coordi coordi = mongoCoordiRepository.findById(feed.getCoordiId())
+                .orElseThrow(() -> new CoordiNotFoundException("코디를 찾을 수 없습니다."));
 
-        if (currentUser.isEmpty()) {
-            throw new EmailNotFoundException("사용자를 찾을 수 없습니다.");
-        }
+        byte[] outerThumbnail = getThumbnailOrNull(bucket, feed.getOuterCloth());
+        byte[] upperThumbnail = getThumbnailOrNull(bucket, feed.getUpperBody());
+        byte[] dressThumbnail = getThumbnailOrNull(bucket, feed.getDress());
+        byte[] lowerThumbnail = getThumbnailOrNull(bucket, feed.getLowerBody());
 
-        // 새로운 피드 생성
-        Feed newFeed = Feed.builder()
-                .userId(currentUser.get())
-                .feedTitle(newFeedTitle)
-                .feedContent(newFeedContent)
-                .coordiId(originFeed.getCoordiId())
-                .originWriter(originFeed.getOriginWriter())
-                .feedCreatedDate(LocalDate.now(ZoneId.of("UTC")))
-                .feedUpdatedDate(LocalDate.now(ZoneId.of("UTC")))
+        CoordiContainer coordiContainer = createMongoContainer(feed.getCoordiId(), mongoCoordiRepository);
+
+        ClothResponseDTO outerCloth = ClothResponseDTO.builder()
+                .image(outerThumbnail)
+                .imageUrl(feed.getOuterCloth())
+                .style(coordi.getOuterCloth().getStyle())
+                .category(coordi.getOuterCloth().getCategory())
+                .color(coordi.getOuterCloth().getColor())
+                .part("outerCloth")
                 .build();
 
-        feedRepository.save(newFeed);
+        ClothResponseDTO upperBody = ClothResponseDTO.builder()
+                .image(upperThumbnail)
+                .imageUrl(feed.getUpperBody())
+                .style(coordi.getUpperBody().getStyle())
+                .category(coordi.getUpperBody().getCategory())
+                .color(coordi.getUpperBody().getColor())
+                .part("upperBody")
+                .build();
 
-        return ResponseEntity.ok("피드가 생성되었습니다.");
+        ClothResponseDTO lowerBody = ClothResponseDTO.builder()
+                .image(lowerThumbnail)
+                .imageUrl(feed.getLowerBody())
+                .style(coordi.getLowerBody().getStyle())
+                .category(coordi.getLowerBody().getCategory())
+                .color(coordi.getLowerBody().getColor())
+                .part("lowerBody")
+                .build();
+
+        ClothResponseDTO dress = ClothResponseDTO.builder()
+                .image(dressThumbnail)
+                .imageUrl(feed.getDress())
+                .style(coordi.getDress().getStyle())
+                .category(coordi.getDress().getCategory())
+                .color(coordi.getDress().getColor())
+                .part("dress")
+                .build();
+
+        // 새로운 피드 생성
+        FeedCoordiResponseDTO feedCoordiResponseDTO = FeedCoordiResponseDTO.builder()
+                .outerCloth(outerCloth)
+                .upperBody(upperBody)
+                .lowerBody(lowerBody)
+                .dress(dress)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(feedCoordiResponseDTO);
     }
 
     public byte[] getFeedThumbnailFromS3(String bucket, String storeFilePath) throws FeedImageIOException {
