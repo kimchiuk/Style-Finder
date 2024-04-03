@@ -193,7 +193,12 @@ const CoordiFromCoordi = () => {
       navigate('/feed')
     })
     .catch((error: any) => {
-      console.log(error)
+      const errorCode = axiosError(error);
+
+        if (errorCode == 401) {
+          loginStore.setLogout();
+          navigate('/login');
+        }
     })
   };
 
