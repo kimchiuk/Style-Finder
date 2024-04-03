@@ -665,6 +665,7 @@ public class FeedServiceImpl implements FeedService {
         } catch (IOException exception) {
             throw new FeedImageIOException("피드 썸네일을 불러오지 못했습니다.");
         } catch (AmazonS3Exception exception) {
+            log.info(storeFilePath);
             throw new FeedImageIOException("저장된 피드 썸네일이 없습니다.");
         } catch (Exception exception) {
             throw new FeedImageIOException("피드 썸네일을 불러오는 중 오류가 발생했습니다.");

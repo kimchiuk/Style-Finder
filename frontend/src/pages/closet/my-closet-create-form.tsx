@@ -59,6 +59,7 @@ const MyClosetCreateForm = (props: MyClosetCreateFormProps) => {
   // 확인 버튼
   const handleClickSubmit = () => {
     if (selectedOption == null) {
+      alert('부위를 선택해주세요!')
       if (optionDivRef.current) {
         optionDivRef.current.focus();
         shakeElement(optionDivRef.current);
