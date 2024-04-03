@@ -24,7 +24,7 @@ const TextareaElement = styled(TextareaAutosize)`
   border-radius: 0.375rem;
 `;
 
-const TextArea = (props: TextAreaProps) => {
+const CustomTextArea = (props: TextAreaProps) => {
   return (
     <TextAreaDiv>
       <LabelElement>{props.label}</LabelElement>
@@ -33,4 +33,4 @@ const TextArea = (props: TextAreaProps) => {
   );
 };
 
-export default TextArea;
+export default CustomTextArea;

@@ -12,7 +12,7 @@ import MyClosetReadModal from '../closet/my-closet-read-form';
 import CustomButton from '../../shared/ui/button/custom-button';
 
 import { RecommendCloth } from '../../entities/recommend/recommend-types';
-import TextArea from '../../shared/ui/input/textarea';
+import CustomTextArea from '../../shared/ui/input/custom-textarea';
 import Input from '../../shared/ui/input/input';
 import WhiteButton from '../../shared/ui/button/white-button';
 import api from '../../entities/recommend/recommend-apis';
@@ -536,7 +536,15 @@ const CoordiFromFeed = () => {
                 <Input className="p-2 m-2 border-2 rounded-md" type="text" id="title" value={title} onChange={(event) => handleTitleChange(event.target.value)} label="피드 제목" />
               </div>
               <div className="p-2 m-2">
-                <TextArea className="p-2 m-2 border-2 rounded-md" id="content" value={content} onChange={(event) => handleContentChange(event.target.value)} rows={4} cols={50} label="피드 내용" />
+                <CustomTextArea
+                  className="p-2 m-2 border-2 rounded-md"
+                  id="content"
+                  value={content}
+                  onChange={(event) => handleContentChange(event.target.value)}
+                  rows={4}
+                  cols={50}
+                  label="피드 내용"
+                />
               </div>
               <div className="flex justify-end p-2 m-2">
                 <CustomButton className="p-2 mr-2" value="피드 등록" onClick={() => handleCreateFeed()} />
