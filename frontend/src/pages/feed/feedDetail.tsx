@@ -66,8 +66,8 @@ const FeedDetail: React.FC = () => {
     setCommentText('');
   };
 
-  const handleClickMoveToCoordi = (coordiId: string) => {
-    navigate(`/coordi/1/${coordiId}`);
+  const handleClickMoveToCoordi = (feedId: number) => {
+    navigate(`/coordi/1/${feedId}`);
   };
 
   // const handleIconClick = () => {
@@ -82,7 +82,6 @@ const FeedDetail: React.FC = () => {
         const data = response.data.data;
         setFeedInfo(data);
         setIsLiked(data.user.isLiked);
-        console.log(data);
       })
       .catch((error: any) => {
         const errorCode = axiosError(error);
@@ -215,7 +214,7 @@ const FeedDetail: React.FC = () => {
 
                     <div className="pl-4">
                       {feedInfo && (
-                        <button className="btn btn-outline" onClick={() => handleClickMoveToCoordi(feedInfo.coordiContainer.id)}>
+                        <button className="btn btn-outline" onClick={() => handleClickMoveToCoordi(feedInfo?.id)}>
                           코디 해 보기
                         </button>
                       )}

@@ -31,7 +31,7 @@ const CoordiFromFeed = () => {
   const clothStore = useClothStore();
   const navigate = useNavigate();
 
-  const { prevCoordiId } = useParams<{ prevCoordiId: string }>();
+  const { feedId } = useParams<{ feedId: string }>();
   const { isOpenModal, clickModal, closeModal } = useOpenModal();
 
   const [title, setTitle] = useState<string>('');
@@ -228,7 +228,12 @@ const CoordiFromFeed = () => {
         navigate('/feed');
       })
       .catch((error: any) => {
-        console.log(error);
+        const errorCode = axiosError(error);
+
+        if (errorCode == 401) {
+          loginStore.setLogout();
+          navigate('/login');
+        }
       });
   };
 
@@ -334,9 +339,9 @@ const CoordiFromFeed = () => {
   };
 
   // Coordi 불러 오기
-  const getCoordi = (coordiId: string) => {
+  const getCoordi = (feedId: number) => {
     feedApi
-      .readCoordi(coordiId)
+      .readCoordi(Number(feedId))
       .then((response) => {
         const data = response.data;
         setOuterCloth(data?.outerCloth);
@@ -359,8 +364,9 @@ const CoordiFromFeed = () => {
   };
 
   useEffect(() => {
-    if (prevCoordiId != null) getCoordi(prevCoordiId);
-  }, [prevCoordiId]);
+    if (feedId != null) getCoordi(Number(feedId));
+    getRecommends();
+  }, [feedId]);
 
   return (
     <>

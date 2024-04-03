@@ -226,7 +226,7 @@ const My = () => {
               <div className="pb-2 text-lg">
                 키: {userInfo?.height}cm, 몸무게: {userInfo?.weight}kg
               </div>
-              <div className="pb-5">피드 내용: {userInfo?.introduce}</div>
+              <div className="pb-5">한 줄 소개: {userInfo?.introduce}</div>
               <div className="text-md">
                 {userInfo?.likeCategories.map((category, index) => (
                   <span key={index} className="likecate">

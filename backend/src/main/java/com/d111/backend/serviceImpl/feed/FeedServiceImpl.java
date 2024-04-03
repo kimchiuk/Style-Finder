@@ -240,6 +240,7 @@ public class FeedServiceImpl implements FeedService {
         }
 
         FeedReadResponseDTO feedReadResponseDTO = FeedReadResponseDTO.builder()
+                .id(feed.getId())
                 .user(feedUserDTO)
                 .feedTitle(feed.getFeedTitle())
                 .feedContent(feed.getFeedContent())

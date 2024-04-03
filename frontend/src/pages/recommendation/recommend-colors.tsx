@@ -70,8 +70,9 @@ const RecommendationColors = () => {
 
   // 해당 아이템 코디 해 보기
   const handleClickMoveToCoordi = (selectedItem: RecommendCloth) => {
-    clothStore.createCloth(selectedItem);
-    navigate(`/coordi/0}`);
+    console.log(selectedItem)
+    // clothStore.createCloth(selectedItem);
+    // navigate(`/coordi/0}`);
   };
 
   useEffect(() => {

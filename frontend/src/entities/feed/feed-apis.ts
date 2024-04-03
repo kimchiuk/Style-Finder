@@ -18,7 +18,7 @@ const api = {
   likeFeed: (feedId: number) => jwtAxiosInstance.post(`${url}/like/${feedId}`),
 
   uploadFile: (multipartFile: File[]) => jwtAxiosInstance.post(`$/file`, multipartFile),
-  readCoordi: (coordiId: string) => jwtAxiosInstance.get(`${url}/${coordiId}/fitting`),
+  readCoordi: (feedId: number) => jwtAxiosInstance.post(`${url}/${feedId}/fitting`),
 };
 
 export default api;

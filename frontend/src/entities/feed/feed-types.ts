@@ -35,7 +35,7 @@ export interface CoordiContainer {
 }
 
 export interface FeedInfo extends FeedContent {
-  feedId: number;
+  id: number;
 
   user: FeedUser;
   feedThumbnail: string;

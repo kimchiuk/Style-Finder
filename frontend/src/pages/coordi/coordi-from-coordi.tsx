@@ -341,10 +341,6 @@ const CoordiFromCoordi = () => {
     getRecommends();
   }, []);
 
-  useEffect(() => {
-
-  }, [outerCloth, upperBody, lowerBody, dress])
-
   return (
     <div>
       <Navbar></Navbar>

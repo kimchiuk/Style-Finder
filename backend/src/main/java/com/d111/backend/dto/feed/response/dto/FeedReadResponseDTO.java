@@ -16,6 +16,8 @@ import java.util.List;
 @NoArgsConstructor
 public class FeedReadResponseDTO {
 
+    private Long id;
+
     @Schema(description = "피드 작성자")
     private FeedUserDTO user;
 

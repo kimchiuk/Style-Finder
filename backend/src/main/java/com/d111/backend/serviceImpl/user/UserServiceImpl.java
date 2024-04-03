@@ -263,17 +263,19 @@ public class UserServiceImpl implements UserService {
         String storeFilePath = user.getProfileImage();
         byte[] userProfileImage = getUserProfileImageFromS3(bucket, storeFilePath);
 
-        String likeCategories = signUpRequestDTO.getLikeCategories().stream()
-                .filter(s -> !s.isEmpty())
-                .collect(Collectors.joining(","));
-        String dislikeCategories = signUpRequestDTO.getDislikeCategories().stream()
-                .filter(s -> !s.isEmpty())
-                .collect(Collectors.joining(","));
+        List<String> likeCategories =
+                (user.getLikeCategories().isEmpty() ?
+                        new ArrayList() :
+                        Arrays.asList(user.getLikeCategories().split(",")));
+        List<String> dislikeCategories =
+                (user.getDislikeCategories().isEmpty() ?
+                        new ArrayList() :
+                        Arrays.asList(user.getDislikeCategories().split(",")));
 
         GetUserResponseDTO getUserResponseDTO = GetUserResponseDTO.builder()
                 .nickname(user.getNickname())
-                .likeCategories(Arrays.asList(user.getLikeCategories().split(",")))
-                .dislikeCategories(Arrays.asList(user.getDislikeCategories().split(",")))
+                .likeCategories(likeCategories)
+                .dislikeCategories(dislikeCategories)
                 .height(user.getHeight())
                 .weight(user.getWeight())
                 .profileImage(userProfileImage)
