@@ -356,7 +356,7 @@ const CoordiFromFeed = () => {
               <div className="w-auto">
                 {isRecommendListVisible && (
                   <div>
-                    {outerClothes.length == 0 && outerClothes.length == 0 && outerClothes.length == 0 && outerClothes.length == 0 && (
+                    {outerClothes.length == 0 || outerClothes.length == 0 || outerClothes.length == 0 || outerClothes.length == 0 && (
                       <div className="mx-4 my-20">
                         <div className="text-center">검색된 추천 리스트가 없습니다!</div>
                       </div>

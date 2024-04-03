@@ -1,15 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../widgets/nav/navbar';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import api from '../../entities/feed/feed-apis';
 import { axiosError } from '../../shared/utils/axiosError';
 import { FeedInfo } from '../../entities/feed/feed-types';
 import noimage from '../../assets/images/noimage.png';
 import './feed.css';
+import commentApi from '../../entities/comment/comment-apis';
+import { error } from 'console';
+import useLoginStore from '../../shared/store/use-login-store';
 
 const FeedDetail: React.FC = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  const loginStore = useLoginStore();
+
   const { feedId } = useParams<{ feedId: string }>();
   const [feedInfo, setFeedInfo] = useState<FeedInfo>();
   const [isChecked, setIsChecked] = useState(false);
@@ -21,6 +26,21 @@ const FeedDetail: React.FC = () => {
 
   const handleSubmitComment = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    commentApi
+      .createComment(Number(feedId), commentText)
+      .then(() => {
+        getFeedDetail();
+      })
+      .catch((error) => {
+        const errorCode = axiosError(error);
+
+        if (errorCode == 401) {
+          loginStore.setLogout();
+          navigate('/login');
+        }
+      });
+
     setCommentText('');
   };
 
@@ -33,17 +53,20 @@ const FeedDetail: React.FC = () => {
     setLikesCount(isChecked ? likesCount - 1 : likesCount + 1);
   };
 
-  useEffect(() => {
+  const getFeedDetail = () => {
     api
       .readFeed(Number(feedId))
       .then((response) => {
         const data = response.data.data;
-        console.log(data);
         setFeedInfo(data);
       })
       .catch((error: any) => {
         axiosError(error);
       });
+  };
+
+  useEffect(() => {
+    getFeedDetail();
   }, [feedId]);
 
   return (
@@ -105,32 +128,27 @@ const FeedDetail: React.FC = () => {
               </div>
             </div>
             <div className="pl-8">
-              <div className="flex flex-row justify-between">
-                <div className="flex pb-5 author-name">피드 제목: {feedInfo?.feedTitle}</div>
-                <div className="">최초등록자 : {feedInfo?.originWriter}</div>
-              </div>
+              <div className="flex pb-5 author-name">피드 제목: {feedInfo?.feedTitle}</div>
               <div className="pb-5">피드 내용: {feedInfo?.feedContent}</div>
               <hr className="hr" />
               <div className="flex flex-col justify-between">
-                <div className="flex flex-col justify-between">
-                  <div className="flex justify-center pt-5 author-name">Comments</div>
-                  <div className="flex flex-col justify-between max-h-[270px] overflow-y-auto">
-                    {feedInfo?.comments.map((comment) => (
-                      <div key={comment.nickname} className="flex items-center justify-center">
-                        <div className="flex items-start flex-grow max-w-screen-xl mt-5 hero bg-base-200">
-                          <div className="avatar">
-                            <img src={`data:image/png;base64,${comment.profileImage}`} alt="commentProfileImage" className="w-10 h-10 rounded-full" />
-                          </div>
-                          <div className="flex justify-between flex-grow">
-                            <div>
-                              <div className="ml-3">{comment.nickname}</div>
-                              <div className="ml-3">{comment.content}</div>
-                            </div>
+                <div className="flex justify-center pt-5 author-name">Comments</div>
+                <div className="flex flex-col justify-between max-h-[270px] overflow-y-auto">
+                  {feedInfo?.comments.map((comment) => (
+                    <div key={comment.nickname} className="flex items-center justify-center">
+                      <div className="flex items-start flex-grow max-w-screen-xl mt-5 hero bg-base-200">
+                        <div className="avatar">
+                          <img src={`data:image/png;base64,${comment.profileImage}`} alt="commentProfileImage" className="w-10 h-10 rounded-full" />
+                        </div>
+                        <div className="flex justify-between flex-grow">
+                          <div>
+                            <div className="ml-3">{comment.nickname}</div>
+                            <div className="ml-3">{comment.content}</div>
                           </div>
                         </div>
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ))}
                 </div>
                 <div className="flex items-center justify-between pt-3">
                   <div className="flex items-center">

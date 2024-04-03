@@ -1,5 +1,7 @@
 # Style Finder
 
+## 서비스 소개
+
 
 
 ## 개발 환경
@@ -15,27 +17,45 @@
 ### Back-end
 
 - IntelliJ
-- spring boot 3.2.1
+- SpringBoot 3.2.1
 - spring-boot-jpa
 - spring security 6.1.3
 - OpenJDK 17
 - MySQL 8.3.0
+- MongoDB 7.0.7
+- Redis
+
+### AI
+
+- PyCharm
+- MobaXterm
+- python 3.10.0
+- FastAPI 0.110.0
+- uvicorn 0.29.0
+- Pytorch 2.2.1
+
+### Data
+
+- VSCode
+- MobaXterm
+- python 3.8.10
+- java 11.0.22
+- FastAPI 0.110.0
+- uvicorn 0.29.0
+- hadoop 3.3.6
+- pyspark 3.5.1
 
 ### Infra
 
-Docker
-Jenkins 2.426.2
-AWS EC2
-AWS S3
-Server 20.04.6 LTS (GNU/Linux 5.15.0-1051-aws x86_64)
-Nginx 1.24.0
+- MobaXterm
+- Docker
+- Jenkins 2.426.2
+- AWS EC2
+- AWS S3
+- Server 20.04.6 LTS (GNU/Linux 5.15.0-1051-aws x86_64)
+- Nginx 1.24.0
 
-### BigData
-
-Hadoop
-Spark
-
-### 협업툴
+### 협업 툴
 
 - Git
 - Jira
@@ -44,40 +64,9 @@ Spark
 - Figma
 
 
-💥기술 특이점
+## 기술 특이점
 
-- ...
-
-💥 실행
-- 프로젝트 클론 
-  ```
-  // 원격 저장소 로컬 저장
-  git clone {Github 주소}
-
-  // 폴더 이동
-  cd S10P12D204
-  ```
-- 프론트 로컬 실행
-  ```
-  // 폴더 이동
-  cd front-end
-
-  // node.js 설치
-  npm install
-
-  // 로컬 프론트 실행
-  npm run dev 
-  ```
-- 백엔드 로컬 실행
-  ```
-  // 폴더 이동
-  cd backend
-  
-  // 프로젝트 빌드
-  ./gradlew clean build
-
-  // 프로젝트 실행
-  java
+### 
 
 
 ### ⚡️ Git 컨벤션
@@ -117,7 +106,7 @@ issue_key #done         // jira 해당 작업 완료
 <br>
 
 
-### ⚡️ Git Flow
+### Git Flow 전략
 - Git flow 사용한 브랜치
   - master : 배포
   - develop : 개발 및 테스트
@@ -134,29 +123,68 @@ issue_key #done         // jira 해당 작업 완료
 <br>
 
 - Git 브랜치 이름 컨벤션
-  ```
-  backend/domain/feature
-  frontend/domain/feature
-
-  예시 : be/user/login
-  ```
+```
+FE/domain/feature
+BE/domain/feature
+```
 
 
 
-# 추가할 내용
+## ERD 설계도
 
-- ERD
+<img src="./README/ERD.png" />
+
+## 화면 설계도
+
+### 코디 페이지
+
+<img src="./README/CoordiPage.png" />
+
+### 피드 페이지
+<img src="./README/FeedPage.png" />
+
+### 분석 페이지
+<img src="./README/AnalysisPage.png" />
+
+
+## 시스템 아키텍처
+
 - 시스템 아키텍처
-- 피그마 화면 설계도
 
 ### 👨‍👩‍👧 팀원 역할
 
-### 🎨 EC2 포트 정리
+### 김치욱
+
+### 정은진
+
+### 오승현
+
+### 김준수
+
+- 팀장이용
+
+### 정수빈
+
+<br/>
+
+## 🎨 EC2 포트 정리
+
+### EC2 (React + SpringBoot + FastAPI + DB)
+
 | 이름 | 내부 포트 | 외부 포트 |
 | :-----: | :-----: | :-----: |
-| Vue | 3000 | 3000 |
+| React | 3000 | 3000 |
 | SpringBoot | 8081 | 8081 |
+| FastAPI | 8000 | 8000 |
 | Jenkins | 9090 | 9090 |
 | MySQL | 3306 | 3306 |
-| http | 80 | ----- |
-| https | 443 | ----- |
+| Redis | 6379 | 6379 |
+| MongoDB | 27017 | 27017 |
+
+<br/>
+
+### EC2 (Hadoop FastAPI)
+
+| 이름 | 내부 포트 | 외부 포트 |
+| :-----: | :-----: | :-----: |
+| FastAPI | 8000 | 8000 |

@@ -231,7 +231,16 @@ public class RecommendServiceImpl implements RecommendService {
         } catch (IOException exception) {
             throw new ItemImageIOException("이미지를 불러오지 못했습니다.");
         } catch (AmazonS3Exception exception) {
-            throw new ItemImageIOException("저장된 이미지가 없습니다.");
+            try {
+                log.info(storeFilePath);
+                GetObjectRequest getObjectRequest = new GetObjectRequest(bucket, "PROFILE/defaultProfileImage.jpeg");
+                S3Object s3Object = amazonS3Client.getObject(getObjectRequest);
+                S3ObjectInputStream s3ObjectInputStream = s3Object.getObjectContent();
+
+                return IOUtils.toByteArray(s3ObjectInputStream);
+            } catch (IOException ioException) {
+                throw new ItemImageIOException("이미지를 불러오지 못했습니다.");
+            }
         }
     }
 
