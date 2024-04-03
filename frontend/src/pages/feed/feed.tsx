@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Navbar from '../../widgets/nav/navbar';
-
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; // Link import
 import './feed.css';
@@ -8,7 +7,6 @@ import api from '../../entities/feed/feed-apis';
 import { axiosError } from '../../shared/utils/axiosError';
 import useLoginStore from '../../shared/store/use-login-store';
 import noimage from '../../assets/images/noimage.png';
-import { userInfo } from 'os';
 
 const Feed = () => {
   const navigate = useNavigate();
@@ -223,11 +221,7 @@ const Feed = () => {
                           ) : (
                             <img src={noimage} alt="Default Outer Cloth" className="w-2/4 h-32" />
                           )}
-                          {feed?.dress ? (
-                            <img src={`data:image/png;base64,${feed?.dress}`} alt="Dress" className="w-2/4 h-32" /> 
-                          ): (
-                            <img src={noimage} alt="Default Dress" className="w-2/4 h-32" />
-                          )}
+                          {feed?.dress ? <img src={`data:image/png;base64,${feed?.dress}`} alt="Dress" className="w-2/4 h-32" /> : <img src={noimage} alt="Default Dress" className="w-2/4 h-32" />}
                         </div>
                         <div className="flex flex-row">
                           {feed?.upperBody ? (
@@ -269,11 +263,6 @@ const Feed = () => {
                                 <p className="pt-2 pr-2">{category}</p>
                               ))}
                             </div>
-                            {/* <div className="flex likebox">
-                              {feed.user.dislikeCategories.map((category: string) => (
-                                <p className="pt-2 pr-2">{category}</p>
-                              ))}
-                            </div> */}
                             <div>
                               <button className="modal-close-btn closebutton" onClick={() => setModalOpen(0)}>
                                 모달 닫기
@@ -297,22 +286,28 @@ const Feed = () => {
                     )}
                   </Link>
                 </div>
-                <div className="flex justify-between">
+                <div className='flex justify-between'>
                   <button className={'modal-open-btn'} onClick={() => setModalOpen(feed.feedId)}>
-                    <div className="flex justify-between pt-2">
-                      <div>
-                        <img src={`data:image/png;base64,${feed.user.profileImage}`} className="rounded-lg w-12 h-12" />
-                      </div>
-                      <div className="text-center">
-                        <div className="flex flex-row ml-4">
-                          <div className="flex flex-col">
-                            <div>{feed.user.nickname}</div>
-                            <h2>{feed?.feedTitle}</h2>
-                          </div>
-                        </div>
-                      </div>
-                      {/* <div>{feed.feedLikes}</div> */}
-                    </div>
+                    <div className="grid grid-cols-12 gap-4 pt-2 w-full">
+  <div className="col-span-4 flex items-center">
+    <img src={`data:image/png;base64,${feed.user.profileImage}`} className="rounded-lg w-12 h-12" />
+  </div>
+
+  <div className="col-span-6">
+    <div>
+      <div>{feed.user.nickname}</div>
+      <h2>{feed?.feedTitle}</h2>
+    </div>
+  </div>
+
+  <div className="col-span-2 flex items-center justify-end">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+      <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
+    </svg>
+    <div>{feed?.feedLikes}</div>
+  </div>
+</div>
+
                   </button>
                 </div>
               </div>
