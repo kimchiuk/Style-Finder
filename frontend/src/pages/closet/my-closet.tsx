@@ -48,9 +48,7 @@ const MyCloset = () => {
   const handleClickDeleteItem = (selectedItem: ClosetCloth) => {
     api
       .deleteCloth(selectedItem.id)
-      .then((response) => {
-        const data = response.data;
-      })
+      .then(() => {})
       .catch((error) => {
         const errorCode = axiosError(error);
         if (errorCode == 401) {

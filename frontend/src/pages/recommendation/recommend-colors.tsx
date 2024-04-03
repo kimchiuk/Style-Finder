@@ -7,14 +7,12 @@ import { RecommendCloth } from '../../entities/recommend/recommend-types';
 import api from '../../entities/analysis/analysis-apis';
 import { axiosError } from '../../shared/utils/axiosError';
 import useLoginStore from '../../shared/store/use-login-store';
-import useClothStore from '../../shared/store/use-cloth-store';
 // import { useParams } from 'react-router';
 
 const RecommendationColors = () => {
   // const { info } = useParams<{ id: string; image: string }>();
   const navigate = useNavigate();
   const loginStore = useLoginStore();
-  const clothStore = useClothStore();
 
   const [color, setColor] = useState<string>('');
   const colorList = [
