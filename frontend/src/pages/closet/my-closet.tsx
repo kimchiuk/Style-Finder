@@ -40,6 +40,7 @@ const MyCloset = () => {
     };
 
     clothStore.createCloth(recommendCloth);
+    console.log(clothStore.cloth);
     navigate(`/coordi/0`);
   };
 
@@ -48,7 +49,7 @@ const MyCloset = () => {
     api
       .deleteCloth(selectedItem.id)
       .then((response) => {
-        const data = response.data.data;
+        const data = response.data;
         console.log(data);
       })
       .catch((error) => {
@@ -92,9 +93,6 @@ const MyCloset = () => {
         <WhiteButton className="mx-2 my-2" value="드레스" onClick={() => handleClickOption('dress')} />
         <Button className="my-2 ml-2" value="옷 등록" onClick={clickModal} />
       </div>
-      <Modal isOpen={isOpenModal} onClose={closeModal}>
-        <MyClosetCreateForm onClose={closeModal} />
-      </Modal>
       <br className="bg-gray-100 rounded-md " />
       <div className="">
         {ItemList.length == 0 ? (
@@ -102,15 +100,16 @@ const MyCloset = () => {
             <div className="my-20 text-center">해당 카테고리의 옷이 없습니다!</div>
           </div>
         ) : (
-          <div className="flex flex-row flex-wrap my-2">
-            <div className="flex">
-              {ItemList.map((item, index) => (
-                <MyClosetItem item={item} key={index} onClickItem={() => handleClickItem(item)} onClickDeleteItem={() => handleClickDeleteItem(item)} />
-              ))}
-            </div>
+          <div className="grid justify-between grid-cols-3 gap-4 my-2">
+            {ItemList.map((item, index) => (
+              <MyClosetItem item={item} key={index} onClickItem={() => handleClickItem(item)} onClickDeleteItem={() => handleClickDeleteItem(item)} />
+            ))}
           </div>
         )}
       </div>
+      <Modal isOpen={isOpenModal} onClose={closeModal} classN="w-full h-full">
+        <MyClosetCreateForm onClose={closeModal} />
+      </Modal>
     </div>
   );
 };

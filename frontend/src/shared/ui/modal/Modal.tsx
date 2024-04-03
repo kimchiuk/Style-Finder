@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import Button from '../button/button';
 
 interface ModalProps {
+  classN: string;
   isOpen: boolean;
   onClose: () => void;
   children?: React.ReactNode;
@@ -39,7 +40,7 @@ const Modal = (props: ModalProps) => {
     <ModalOverlay>
       <ModalContent>
         <ModalCloseButton onClick={props.onClose} value="close" />
-        {props.children}
+        <div className="max-w-196 max-h-196">{props.children}</div>
       </ModalContent>
     </ModalOverlay>
   );
