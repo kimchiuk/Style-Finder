@@ -38,7 +38,7 @@ const Navbar = () => {
       </div>
 
       <div className="flex items-center justify-end flex-grow mt-2">
-        <div className="flex justify-between menu menu-sm dropdown-content mt-3 z-[1] p-2 m-5 rounded-full">
+        <div className="flex justify-between menu mt-3 p-2 m-5 rounded-full">
           <button className="w-20 h-10">
             <Link to="/coordi/0" replace={true}>
               코디
@@ -59,9 +59,11 @@ const Navbar = () => {
 
       <div className="flex items-center justify-center w-20 m-5 text-center rounded-full navbar-end menu">
         {!loginStore.isLogin ? (
-          <Link to="/login" replace={true} className="mr-2">
-            로그인
-          </Link>
+          <button>
+            <Link to="/login" replace={true} className="mr-2">
+              로그인
+            </Link>
+          </button>
         ) : (
           <div className="flex items-center justify-center">
             <button onClick={handleLogout}>로그아웃</button>
