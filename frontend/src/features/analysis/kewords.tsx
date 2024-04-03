@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useCallback, useEffect, useState } from 'react';
 import WordCloud from 'react-d3-cloud';
-import api from '../../entities/analysis/analysis-apis';
+import api from '../../entities/user/user-apis';
 import { axiosError } from '../../shared/utils/axiosError';
 import useLoginStore from '../../shared/store/use-login-store';
 import { useNavigate } from 'react-router';
@@ -112,7 +112,10 @@ const Keywords = () => {
 
   return (
     <div>
-      <WordCloud data={datas} width={500} height={200} font="Times" fontWeight="bold" spiral="rectangular" rotate={(word) => word.value % 1} fontSize={(word) => Math.log2(word.value) * 5} />
+      <div className="pt-4 text-lg">당신의 취향은?</div>
+      <div>
+        <WordCloud data={datas} width={500} height={200} font="Times" fontWeight="bold" spiral="rectangular" rotate={(word) => word.value % 1} fontSize={(word) => Math.log2(word.value) * 5} />
+      </div>
     </div>
   );
 };

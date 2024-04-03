@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Navbar from '../../widgets/nav/navbar';
 
 import { useEffect, useState } from 'react';
@@ -8,7 +10,8 @@ import useOpenModal from '../../shared/hooks/use-open-modal';
 import Modal from '../../shared/ui/modal/Modal';
 import MyClosetReadModal from '../closet/my-closet-read-modal';
 import Button from '../../shared/ui/button/button';
-import { Cloth, RecommendCloth } from '../../entities/closet/closet-types';
+
+import { RecommendCloth } from '../../entities/closet/closet-types';
 import TextArea from '../../shared/ui/input/textarea';
 import Input from '../../shared/ui/input/input';
 import WhiteButton from '../../shared/ui/button/white-button';
@@ -121,6 +124,7 @@ const CoordiFromCoordi = () => {
   ];
 
   // 부위별 아이템 선택 시 이미지 변경
+
   const handleClickItem = (newItem: RecommendCloth) => {
     if (newItem.part === 'outer') setOuterCloth(newItem);
     else if (newItem.part === 'upper') setUpperBody(newItem);
@@ -155,22 +159,22 @@ const CoordiFromCoordi = () => {
       outerCloth: {
         style: outerCloth?.style,
         category: outerCloth?.category,
-        color: outerCloth?.color
+        color: outerCloth?.color,
       },
       upperBody: {
         style: upperBody?.style,
         category: upperBody?.category,
-        color: upperBody?.color
+        color: upperBody?.color,
       },
       lowerBody: {
         style: lowerBody?.style,
         category: lowerBody?.category,
-        color: lowerBody?.color
+        color: lowerBody?.color,
       },
       dress: {
         style: dress?.style,
         category: dress?.category,
-        color: dress?.color
+        color: dress?.color,
       },
     };
 
@@ -184,9 +188,9 @@ const CoordiFromCoordi = () => {
     };
 
     const request = {
-      "feedCreateRequest": feedCreateRequestDTO,
-      "coordiCreateRequest": coordiCreateRequestDTO
-    }
+      feedCreateRequest: feedCreateRequestDTO,
+      coordiCreateRequest: coordiCreateRequestDTO,
+    };
 
     api.createFeedCoordi(request)
     .then(() => {
@@ -243,41 +247,42 @@ const CoordiFromCoordi = () => {
     const filter: SearchFilter = {
       style: selectedStyles,
       category: selectedCategories,
-      color: selectedColors
-    }
+      color: selectedColors,
+    };
 
-    console.log(filter)
+    console.log(filter);
 
-    api.getRecommends(filter)
-    .then((response) => {
-      const data = response.data
-      setOuterClothes(data?.outerCloth)
-      setUpperBodys(data?.upperBody)
-      setLowerBodys(data?.lowerBody)
-      setDresses(data?.dress)
-      console.log(data)
-    })
-    .then(() => {
-      setIsRecommendListVisible(true)
-    })
-    .catch((error) => {
-      const errorCode = axiosError(error);
+    api
+      .getRecommends(filter)
+      .then((response) => {
+        const data = response.data;
+        setOuterClothes(data?.outerCloth);
+        setUpperBodys(data?.upperBody);
+        setLowerBodys(data?.lowerBody);
+        setDresses(data?.dress);
+        console.log(data);
+      })
+      .then(() => {
+        setIsRecommendListVisible(true);
+      })
+      .catch((error) => {
+        const errorCode = axiosError(error);
 
-      if (errorCode == 401) {
-        loginStore.setLogout();
-        navigate('/login');
-      }
-    })
-  }
+        if (errorCode == 401) {
+          loginStore.setLogout();
+          navigate('/login');
+        }
+      });
+  };
 
   // 검색 버튼
   const handleSearchItems = () => {
-    getRecommends()
+    getRecommends();
   };
 
   useEffect(() => {
-    getRecommends()
-  }, [])
+    getRecommends();
+  }, []);
 
   return (
     <>
@@ -290,7 +295,7 @@ const CoordiFromCoordi = () => {
               <div className="mx-8 my-2">
                 <div className="flex justify-center">
                   <div>아우터 </div>
-                  <button className="text-gray-400" onClick={() => handleDeleteCloth('outer')}>
+                  <button className="text-gray-400" onClick={() => handleDeleteCloth('outerCloth')}>
                     (삭제)
                   </button>
                 </div>
@@ -303,7 +308,7 @@ const CoordiFromCoordi = () => {
               <div className="mx-8 my-2">
                 <div className="flex justify-center">
                   <div>상의 </div>
-                  <button className="text-gray-400" onClick={() => handleDeleteCloth('upper')}>
+                  <button className="text-gray-400" onClick={() => handleDeleteCloth('upperBody')}>
                     (삭제)
                   </button>
                 </div>
@@ -316,7 +321,7 @@ const CoordiFromCoordi = () => {
               <div className="mx-8 my-2">
                 <div className="flex justify-center">
                   <div>하의 </div>
-                  <button className="text-gray-400" onClick={() => handleDeleteCloth('lowet')}>
+                  <button className="text-gray-400" onClick={() => handleDeleteCloth('lowerBody')}>
                     (삭제)
                   </button>
                 </div>
@@ -392,17 +397,22 @@ const CoordiFromCoordi = () => {
                 )}
               </div>
             </div>
-            <div className="flex justify-end p-2 m-2">
+            <div className="flex justify-between p-2 m-2">
               <div className="p-2">
-                {isRecommendListVisible ? <WhiteButton onClick={toggleRecommendList} value="추천 리스트 닫기" /> : <WhiteButton onClick={toggleRecommendList} value="추천 리스트 열기" />}
+                <Button value="내 옷장" onClick={() => clickModal} />
               </div>
-              <div className="p-2">{isSearchVisible ? <WhiteButton onClick={toggleSearch} value="검색 필터 닫기" /> : <WhiteButton onClick={toggleSearch} value="검색 필터 열기" />}</div>
+              <div className="flex">
+                <div className="p-2">
+                  {isRecommendListVisible ? <WhiteButton onClick={toggleRecommendList} value="추천 리스트 닫기" /> : <WhiteButton onClick={toggleRecommendList} value="추천 리스트 열기" />}
+                </div>
+                <div className="p-2">{isSearchVisible ? <WhiteButton onClick={toggleSearch} value="검색 필터 닫기" /> : <WhiteButton onClick={toggleSearch} value="검색 필터 열기" />}</div>
 
-              <div className="p-2">
-                <Button value="옷장" onClick={() => clickModal()} />
-              </div>
-              <div className="p-2">
-                <Button value="검색" onClick={() => handleSearchItems()} />
+                <div className="p-2">
+                  <Button value="옷장" onClick={() => clickModal()} />
+                </div>
+                <div className="p-2">
+                  <Button value="검색" onClick={() => handleSearchItems()} />
+                </div>
               </div>
             </div>
             <div className="">
@@ -492,7 +502,7 @@ const CoordiFromCoordi = () => {
                 )}
               </div>
             </div>
-            <div className="p-2 m-2 border-2 rounded-md">
+            <div className="p-2 m-6 border-2 rounded-md">
               <div className="p-2 m-2">
                 <Input className="p-2 m-2 border-2 rounded-md" type="text" id="title" value={title} onChange={(event) => handleTitleChange(event.target.value)} label="피드 제목" />
               </div>

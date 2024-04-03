@@ -2,14 +2,19 @@ import { useState } from 'react';
 import RecommendationItem from './recommendation-Item';
 import Dropbox from '../../shared/ui/dropbox/dropbox';
 
+import api from '../../entities/analysis/analysis-apis';
+
 import { useNavigate } from 'react-router';
 import { HadoopCloth } from '../../entities/analysis/analysis-types';
+import { axiosError } from '../../shared/utils/axiosError';
+import useLoginStore from '../../shared/store/use-login-store';
 
 const RecommendationTastes = () => {
   const navigate = useNavigate();
-  const [taste, setTaste] = useState<string>('전체');
+  const loginStore = useLoginStore();
+  const [taste, setTaste] = useState<string>('');
   const tasteList = [
-    '전체',
+    '',
     '레트로',
     '로맨틱',
     '리조트',
@@ -45,25 +50,50 @@ const RecommendationTastes = () => {
 
   // 해당 taste 에 대한 추천 결과 리스트를 조회
   const handleGetTasteList = () => {
-    taste;
-    setTasteResponseList([]);
+    api
+      .recommendByStyle(taste)
+      .then((response) => {
+        const data = response.data;
+
+        setTasteResponseList(data);
+        console.log(data);
+      })
+      .catch((error) => {
+        const errorCode = axiosError(error);
+
+        if (errorCode == 401) {
+          loginStore.setLogout();
+          navigate('/login');
+        }
+      });
   };
 
   // 해당 아이템 코디 해 보기
   const handleClickMoveToCoordi = (selectedItem: HadoopCloth) => {
-    navigate(`/coordi/2/${selectedItem.id}`);
+    const parsing = selectedItem.imageUrl.split('/')[0];
+    navigate(`/coordi/2/${parsing}/${selectedItem.id}`);
   };
 
   return (
-    <>
-      <Dropbox options={tasteList} onSelected={() => handleSelectedTaste}></Dropbox>
-
-      <div className="flex">
-        {tasteResponseList.map((item, index) => (
-          <RecommendationItem key={index} item={item} onClickItem={() => handleClickMoveToCoordi(item)} />
-        ))}
+    <div className="py-4 my-4">
+      <div className="flex justify-between">
+        <div className="text-lg">취향별 추천</div>
+        <Dropbox options={tasteList} onSelected={() => handleSelectedTaste}></Dropbox>
       </div>
-    </>
+      {tasteResponseList.length == 0 ? (
+        <div className="mx-4 my-20">
+          <div className="my-20 text-center">검색된 추천 리스트가 없습니다!</div>
+        </div>
+      ) : (
+        <div className="mx-4 my-2">
+          <div className="flex">
+            {tasteResponseList.map((item, index) => (
+              <RecommendationItem key={index} item={item} onClickItem={() => handleClickMoveToCoordi(item)} />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
