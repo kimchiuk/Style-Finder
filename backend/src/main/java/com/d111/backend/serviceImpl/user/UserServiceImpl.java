@@ -9,11 +9,16 @@ import com.d111.backend.dto.user.request.TokenReissueRequestDTO;
 import com.d111.backend.dto.user.request.UpdateUserInfoRequestDTO;
 import com.d111.backend.dto.user.response.*;
 import com.d111.backend.entity.closet.Closet;
+import com.d111.backend.entity.coordi.ClothCategory;
+import com.d111.backend.entity.coordi.ClothInfo;
+import com.d111.backend.entity.coordi.Coordi;
+import com.d111.backend.entity.feed.Feed;
 import com.d111.backend.entity.multipart.S3File;
 import com.d111.backend.entity.user.RefreshToken;
 import com.d111.backend.entity.user.User;
 import com.d111.backend.exception.feed.FeedImageIOException;
 import com.d111.backend.exception.user.*;
+import com.d111.backend.repository.feed.FeedRepository;
 import com.d111.backend.repository.mongo.MongoCoordiRepository;
 import com.d111.backend.repository.s3.S3Repository;
 import com.d111.backend.repository.user.RefreshTokenRepository;
@@ -45,6 +50,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final AmazonS3Client amazonS3Client;
     private final MongoCoordiRepository mongoCoordiRepository;
+    private final FeedRepository feedRepository;
 
     @Value("${DEFAULT_PROFILE_URL}")
     private String DEFAULT_PROFILE_URL;
@@ -287,24 +293,40 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new EmailNotFoundException("유저 정보가 존재하지 않습니다."));
 
         Map<String, Integer> likeCategories = new HashMap<>();
+        Map<String, Integer> feedCategories = new HashMap<>();
 
-        for (String category: user.getLikeCategories().split(",")) {
+        List<String> coordiIdList = feedRepository.findCoordiIdsByUserId(user).stream()
+                .map(Feed::getCoordiId)
+                .collect(Collectors.toList());
+
+        for (String coordiId : coordiIdList) {
+            Coordi coordi = mongoCoordiRepository.findBy_id(coordiId);
+
+            for (ClothInfo clothInfo : Arrays.asList(coordi.getOuterCloth(), coordi.getUpperBody(), coordi.getLowerBody(), coordi.getDress())) {
+                if (clothInfo != null && clothInfo.getCategory() != null) {
+                    // isValidCategory 메서드를 통해 Enum에 등록된 카테고리만 분석에 포함
+                    if (isValidCategory(clothInfo.getCategory())) {
+                        feedCategories.put(clothInfo.getCategory(), feedCategories.getOrDefault(clothInfo.getCategory(), 0) + 1);
+                    }
+                }
+            }
+        }
+
+        for (String category : user.getLikeCategories().split(",")) {
             likeCategories.put(category, likeCategories.getOrDefault(category, 0) + 1);
         }
 
         Map<String, Integer> closetCategories = new HashMap<>();
 
-        for (Closet closet: user.getClosets()) {
+        for (Closet closet : user.getClosets()) {
             String categories = closet.getCategories();
 
-            for (String category: categories.split(",")) {
+            for (String category : categories.split(",")) {
                 closetCategories.put(category, closetCategories.getOrDefault(category, 0) + 1);
             }
         }
 
         Map<String, Integer> feedStyles = new HashMap<>();
-        Map<String, Integer> feedCategories = new HashMap<>();
-
 
         AnalysisFavorResponseDTO analysisFavorResponseDTO = AnalysisFavorResponseDTO.builder()
                 .likeCategories(likeCategories)
@@ -315,6 +337,7 @@ public class UserServiceImpl implements UserService {
 
         return ResponseEntity.status(HttpStatus.OK).body(analysisFavorResponseDTO);
     }
+
 
 
     public byte[] getUserProfileImageFromS3(String bucket, String storeFilePath) throws FeedImageIOException {
@@ -329,4 +352,26 @@ public class UserServiceImpl implements UserService {
             throw new ProfileImageIOException("저장된 유저 프로필이 없습니다.");
         }
     }
+
+    private List<String> findcoordiIdsByUserId(Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        System.out.println(user + "유저");
+        if (user.isPresent()) {
+            List<Feed> feeds = feedRepository.findAllByuserId(user);
+            return feeds.stream()
+                    .map(Feed::getCoordiId)
+                    .collect(Collectors.toList());
+        } else {
+            return Collections.emptyList(); // 유저가 존재하지 않는 경우 빈 리스트 반환
+        }
+    }
+    private boolean isValidCategory(String category) {
+        for (ClothCategory clothCategory : ClothCategory.values()) {
+            if (clothCategory.name().equals(category)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
+
