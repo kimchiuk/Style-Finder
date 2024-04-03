@@ -2,6 +2,7 @@ package com.d111.backend.controller.closet;
 
 import com.d111.backend.dto.closet.response.ClosetListReadResponseDTO;
 import com.d111.backend.dto.closet.response.ClosetUploadResponseDTO;
+import com.d111.backend.dto.recommend.response.ClothResponseDTO;
 import com.d111.backend.dto.sample.response.SampleTestResponseDTO;
 import com.d111.backend.service.closet.ClosetService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,6 +50,11 @@ public class ClosetController {
     @GetMapping("/delete/{closetId}")
     ResponseEntity<String> deleteCloset(@PathVariable Long closetId) {
         return closetService.deleteCloset(closetId);
+    }
+
+    @GetMapping("/getCloth/{closetId}")
+    ResponseEntity<ClothResponseDTO> getCloset(@PathVariable Long closetId) {
+        return closetService.getCloset(closetId);
     }
 
 }

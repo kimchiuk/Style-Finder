@@ -195,14 +195,18 @@ const CoordiFromCoordi = () => {
       coordiCreateRequest: coordiCreateRequestDTO,
     };
 
-    api
-      .createFeedCoordi(request)
-      .then(() => {
-        navigate('/feed');
-      })
-      .catch((error: any) => {
-        console.log(error);
-      });
+    api.createFeedCoordi(request)
+    .then(() => {
+      navigate('/feed')
+    })
+    .catch((error: any) => {
+      const errorCode = axiosError(error);
+
+        if (errorCode == 401) {
+          loginStore.setLogout();
+          navigate('/login');
+        }
+    })
   };
 
   // 카카오톡 공유 버튼
