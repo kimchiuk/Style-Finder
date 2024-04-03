@@ -18,7 +18,6 @@ const SignUp = () => {
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
   const [nickname, setNickname] = useState('');
-  const [gender, setGender] = useState('');
   const [image, setImage] = useState<File | null>(null);
 
   const [emailValid, setEmailValid] = useState(false);
@@ -43,8 +42,8 @@ const SignUp = () => {
   };
 
   useEffect(() => {
-    setNotAllow(!(emailValid && pwValid && confirmPwValid && heightValid && weightValid && nickname && gender && image));
-  }, [emailValid, pwValid, confirmPwValid, heightValid, weightValid, nickname, gender, image]);
+    setNotAllow(!(emailValid && pwValid && confirmPwValid && heightValid && weightValid && nickname));
+  }, [emailValid, pwValid, confirmPwValid, heightValid, weightValid, nickname]);
 
   const validateEmail = (email: string) => {
     const regex = /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
@@ -172,13 +171,6 @@ const SignUp = () => {
                       kg
                     </div>
                   </div>
-                </div>
-                <div className="mb-5 inputWrap">
-                  <select className="input" value={gender} onChange={(e) => setGender(e.target.value)}>
-                    <option value="">성별 선택</option>
-                    <option value="male">남성</option>
-                    <option value="female">여성</option>
-                  </select>
                 </div>
                 <div className="mb-2 inputTitle">프로필 이미지 업로드</div>
                 <div className="mb-5 inputWrap customInputWrap">
