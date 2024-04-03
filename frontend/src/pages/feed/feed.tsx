@@ -290,7 +290,7 @@ const Feed = () => {
                   <button className={'modal-open-btn'} onClick={() => setModalOpen(feed.feedId)}>
                     <div className="grid grid-cols-12 gap-4 pt-2 w-full">
                       <div className="col-span-4 flex items-center">
-                        <img src={`data:image/png;base64,${feed.user.profileImage}`} className="rounded-lg w-12 h-12" />
+                        {feed?.user.profileImage && <img src={`data:image/png;base64,${feed.user.profileImage}`} className="rounded-lg w-12 h-12" />}
                       </div>
 
                       <div className="col-span-6">

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RecommendationItem from './recommendation-Item';
 import Dropbox from '../../shared/ui/dropbox/dropbox';
 
@@ -46,7 +46,6 @@ const RecommendationColors = () => {
   // 색상 설정
   const handleSelectedColor = (selectedItem: string) => {
     setColor(selectedItem);
-    handleGetColorList();
   };
 
   // 해당 color 에 대한 추천 결과 리스트를 조회
@@ -75,11 +74,15 @@ const RecommendationColors = () => {
     navigate(`/coordi/0}`);
   };
 
+  useEffect(() => {
+    handleGetColorList();
+  }, [color])
+
   return (
     <div className="py-4 my-4">
       <div className="flex justify-between">
         <div className="text-lg">색상별 추천</div>
-        <Dropbox options={colorList} onSelected={handleSelectedColor}></Dropbox>
+        <Dropbox options={colorList} onSelected={(select) => handleSelectedColor(select)}></Dropbox>
       </div>
       {colorResponseList.length == 0 ? (
         <div className="mx-4 my-20">

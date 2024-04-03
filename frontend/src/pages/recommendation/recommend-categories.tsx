@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RecommendationItem from './recommendation-Item';
 import Dropbox from '../../shared/ui/dropbox/dropbox';
 
@@ -44,7 +44,6 @@ const RecommendationCategories = () => {
   // 카테고리 설정
   const handleSelectedCategory = (selectedItem: string) => {
     setCategory(selectedItem);
-    handleGetCategoryList();
   };
 
   // 해당 category 에 대한 추천 결과 리스트를 조회
@@ -73,11 +72,15 @@ const RecommendationCategories = () => {
     navigate(`/coordi/0`);
   };
 
+  useEffect(() => {
+    handleGetCategoryList();
+  }, [category])
+
   return (
     <div className="py-4 my-4">
       <div className="flex justify-between">
         <div className="text-lg">카테고리별 추천</div>
-        <Dropbox options={categoryList} onSelected={() => handleSelectedCategory}></Dropbox>
+        <Dropbox options={categoryList} onSelected={(select) => handleSelectedCategory(select)}></Dropbox>
       </div>
       {categoryResponseList.length == 0 ? (
         <div className="mx-4 my-20">

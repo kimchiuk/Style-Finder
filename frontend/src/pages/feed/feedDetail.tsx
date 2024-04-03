@@ -106,7 +106,7 @@ const FeedDetail: React.FC = () => {
       <div className="h-full pt-5 mx-auto px-36">
         <div className="flex flex-col min-w-min hero h-full bg-base-200 bg-[#161A30] text-color p-8 ">
           <div className="flex flex-row pb-5">
-            <img src={`data:image/png;base64,${feedInfo?.user.profileImage}`} alt="profileImage" className="w-16 h-16 rounded-full" />
+            {feedInfo?.user.profileImage && <img src={`data:image/png;base64,${feedInfo?.user.profileImage}`} alt="profileImage" className="w-16 h-16 rounded-full" />}
             <div className="flex items-center pl-5 author-name">작성자 닉네임: {feedInfo?.user.nickname}</div>
           </div>
           <div className="flex flex-row">

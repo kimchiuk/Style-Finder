@@ -311,6 +311,7 @@ const CoordiFromCoordi = () => {
 
   // 옷장의 아이템을 store 저장 완료, 값 반영
   const handleClothStore = () => {
+    console.log(clothStore.cloth)
     if (clothStore.cloth != null) {
       switch (clothStore.cloth.part) {
         case 'outerCloth':
@@ -340,6 +341,10 @@ const CoordiFromCoordi = () => {
     handleClothStore();
     getRecommends();
   }, []);
+
+  useEffect(() => {
+
+  }, [outerCloth, upperBody, lowerBody, dress])
 
   return (
     <div>

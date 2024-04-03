@@ -133,7 +133,7 @@ public class RecommendServiceImpl implements RecommendService {
 
     @Override
     public ResponseEntity<List<ClothResponseDTO>> getCategoryRecommend(String category) {
-        String apiUrl = "http://j10d111.p.ssafy.io:8000/get_category_items?category=" + category;
+        String apiUrl = "http://j10d111.p.ssafy.io:8000/get_category_items?item=" + category;
 
         List<ClothResponseDTO> clothResponseDTOList = getClothItems(apiUrl);
 
