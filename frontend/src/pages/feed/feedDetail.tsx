@@ -17,8 +17,6 @@ const FeedDetail: React.FC = () => {
 
   const { feedId } = useParams<{ feedId: string }>();
   const [feedInfo, setFeedInfo] = useState<FeedInfo>();
-  const [isChecked, setIsChecked] = useState(false);
-  const [likesCount, setLikesCount] = useState(0);
   const [commentText, setCommentText] = useState('');
   const [feedLikes, setFeedLikes] = useState<number>(feedInfo?.feedLikes || 0);
   const [isLiked, setIsLiked] = useState<boolean>(false);
