@@ -55,13 +55,13 @@ public class RecommendServiceImpl implements RecommendService {
 
         for (String category: recommendListRequestDTO.getCategory()) {
             if (TOP.contains(category)) {
-                outerApiUrl.append("category=").append(category).append("&");
+                topApiUrl.append("category=").append(category).append("&");
             } else if (BOTTOM.contains(category)) {
-                outerApiUrl.append("category=").append(category).append("&");
+                bottomApiUrl.append("category=").append(category).append("&");
             } else if (OUTER.contains(category)) {
                 outerApiUrl.append("category=").append(category).append("&");
             } else if (DRESS.contains(category)) {
-                outerApiUrl.append("category=").append(category).append("&");
+                dressApiUrl.append("category=").append(category).append("&");
             }
         }
 
@@ -163,38 +163,6 @@ public class RecommendServiceImpl implements RecommendService {
         return ResponseEntity.status(HttpStatus.OK).body(clothResponseDTOList);
     }
 
-    public List<ClothResponseDTO> getOuterClothItems(String apiUrl) {
-        // RestTemplate 인스턴스 생성
-        RestTemplate restTemplate = new RestTemplate();
-
-        // HTTP 요청 헤더 설정
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        List<Map<String, Object>> responses = restTemplate.getForObject(apiUrl, List.class);
-
-        List<ClothResponseDTO> clothResponseDTOList = new ArrayList<>();
-
-        for (Map<String, Object> response: responses) {
-            Integer filename = (Integer) response.get("데이터셋 정보_파일 번호");
-            String style = (String) response.get("데이터셋 정보_데이터셋 상세설명_라벨링_스타일_0_스타일");
-            String category = (String) response.get("데이터셋 정보_데이터셋 상세설명_라벨링_아우터_0_카테고리");
-            String color = (String) response.get("데이터셋 정보_데이터셋 상세설명_라벨링_아우터_0_색상");
-
-            clothResponseDTOList.add(
-                    ClothResponseDTO.builder()
-                            .imageUrl("big_date_image/" + filename + ".jpg")
-                            .style(style)
-                            .category(category)
-                            .color(color)
-                            .build()
-            );
-        }
-
-        // FastAPI 서버에 POST 요청 보내기
-        return clothResponseDTOList;
-    }
-
     public List<ClothResponseDTO> getClothItems(String apiUrl) {
         // RestTemplate 인스턴스 생성
         RestTemplate restTemplate = new RestTemplate();
@@ -204,6 +172,7 @@ public class RecommendServiceImpl implements RecommendService {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         List<Map<String, Object>> responses = restTemplate.getForObject(apiUrl, List.class);
+        log.info(apiUrl);
 
         List<ClothResponseDTO> clothResponseDTOList = new ArrayList<>();
 
