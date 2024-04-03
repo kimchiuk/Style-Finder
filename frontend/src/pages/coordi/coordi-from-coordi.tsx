@@ -1,6 +1,6 @@
 import Navbar from '../../widgets/nav/navbar';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './coordi.css';
 
 import Image from '../../assets/images/noimage.png';
@@ -8,27 +8,36 @@ import useOpenModal from '../../shared/hooks/use-open-modal';
 import Modal from '../../shared/ui/modal/Modal';
 import MyClosetReadModal from '../closet/my-closet-read-modal';
 import Button from '../../shared/ui/button/button';
-import { Cloth } from '../../entities/closet/closet-types';
+import { Cloth, RecommendCloth } from '../../entities/closet/closet-types';
 import TextArea from '../../shared/ui/input/textarea';
 import Input from '../../shared/ui/input/input';
 import WhiteButton from '../../shared/ui/button/white-button';
+import api from '../../entities/recommend/recommend-apis';
+import { SearchFilter } from '../../entities/recommend/recommend-types';
+import { error } from 'console';
+import { axiosError } from '../../shared/utils/axiosError';
+import useLoginStore from '../../shared/store/use-login-store';
+import { useNavigate } from 'react-router';
 
 const CoordiFromCoordi = () => {
+  const loginStore = useLoginStore();
+  const navigate = useNavigate();
+
   const { isOpenModal, clickModal, closeModal } = useOpenModal();
 
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [coordiId, setCoordiId] = useState<string>('');
 
-  const [outerCloth, setOuterCloth] = useState<Cloth | null>(null);
-  const [upperBody, setUpperBody] = useState<Cloth | null>(null);
-  const [lowerBody, setLowerBody] = useState<Cloth | null>(null);
-  const [dress, setDress] = useState<Cloth | null>(null);
+  const [outerCloth, setOuterCloth] = useState<RecommendCloth | null>(null);
+  const [upperBody, setUpperBody] = useState<RecommendCloth | null>(null);
+  const [lowerBody, setLowerBody] = useState<RecommendCloth | null>(null);
+  const [dress, setDress] = useState<RecommendCloth | null>(null);
 
-  const [outerClothes, setOuterClothes] = useState<Cloth[]>([]);
-  const [upperBodys, setUpperBodys] = useState<Cloth[]>([]);
-  const [lowerBodys, setLowerBodys] = useState<Cloth[]>([]);
-  const [dresses, setDresses] = useState<Cloth[]>([]);
+  const [outerClothes, setOuterClothes] = useState<RecommendCloth[]>([]);
+  const [upperBodys, setUpperBodys] = useState<RecommendCloth[]>([]);
+  const [lowerBodys, setLowerBodys] = useState<RecommendCloth[]>([]);
+  const [dresses, setDresses] = useState<RecommendCloth[]>([]);
 
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [isRecommendListVisible, setIsRecommendListVisible] = useState(false);
@@ -112,7 +121,7 @@ const CoordiFromCoordi = () => {
   ];
 
   // 부위별 아이템 선택 시 이미지 변경
-  const handleClickItem = (newItem: Cloth) => {
+  const handleClickItem = (newItem: RecommendCloth) => {
     if (newItem.part === 'outer') setOuterCloth(newItem);
     else if (newItem.part === 'upper') setUpperBody(newItem);
     else if (newItem.part === 'lower') setLowerBody(newItem);
@@ -140,25 +149,53 @@ const CoordiFromCoordi = () => {
 
   // 피드 등록 버튼
   const handleCreateFeed = () => {
-    if (!outerCloth || !upperBody || !lowerBody || !dress) return;
+    if (!outerCloth && !upperBody && !lowerBody && !dress) return;
 
     const coordiCreateRequestDTO = {
-      outerCloth: outerCloth.image,
-      upperBody: upperBody.image,
-      lowerBody: lowerBody.image,
-      dress: dress.image,
+      outerCloth: {
+        style: outerCloth?.style,
+        category: outerCloth?.category,
+        color: outerCloth?.color
+      },
+      upperBody: {
+        style: upperBody?.style,
+        category: upperBody?.category,
+        color: upperBody?.color
+      },
+      lowerBody: {
+        style: lowerBody?.style,
+        category: lowerBody?.category,
+        color: lowerBody?.color
+      },
+      dress: {
+        style: dress?.style,
+        category: dress?.category,
+        color: dress?.color
+      },
     };
-
-    coordiCreateRequestDTO;
-    handleCoordiIdChange('9000'); // coordi api
 
     const feedCreateRequestDTO = {
       coordiId: coordiId,
       feedTitle: title,
       feedContent: content,
+      outerCloth: outerCloth?.imageUrl,
+      upperBody: upperBody?.imageUrl,
+      lowerBody: lowerBody?.imageUrl,
+      dress: dress?.imageUrl,
     };
 
-    feedCreateRequestDTO; // feed api
+    const request = {
+      "feedCreateRequestDTO": feedCreateRequestDTO,
+      "coordiCreateRequestDTO": coordiCreateRequestDTO
+    }
+
+    api.createFeedCoordi(request)
+    .then((response) => {
+      console.log(response.data)
+    })
+    .catch((error: any) => {
+      console.log(error)
+    })
   };
 
   // 카카오톡 공유 버튼
@@ -198,13 +235,45 @@ const CoordiFromCoordi = () => {
     }
   };
 
+  const getRecommends = () => {
+    const filter: SearchFilter = {
+      style: selectedStyles,
+      category: selectedCategories,
+      color: selectedColors
+    }
+
+    console.log(filter)
+
+    api.getRecommends(filter)
+    .then((response) => {
+      const data = response.data
+      setOuterClothes(data?.outerCloth)
+      setUpperBodys(data?.upperBody)
+      setLowerBodys(data?.lowerBody)
+      setDresses(data?.dress)
+      console.log(data)
+    })
+    .then(() => {
+      setIsRecommendListVisible(true)
+    })
+    .catch((error) => {
+      const errorCode = axiosError(error);
+
+      if (errorCode == 401) {
+        loginStore.setLogout();
+        navigate('/login');
+      }
+    })
+  }
+
   // 검색 버튼
   const handleSearchItems = () => {
-    setOuterClothes([]); // outer api
-    setUpperBodys([]); // upper api
-    setLowerBodys([]); // lower api
-    setDresses([]); // dress api
+    getRecommends()
   };
+
+  useEffect(() => {
+    // getRecommends()
+  }, [])
 
   return (
     <>
@@ -212,7 +281,7 @@ const CoordiFromCoordi = () => {
       <div className="grid px-20 mx-auto my-16 justify-items-center">
         <div className="justify-around">
           <div className="text-center">코디</div>
-          <div className="p-8 m-2 bg-gray-100 rounded-lg">
+          <div className="p-8 m-2 rounded-lg">
             <div className="flex justify-center">
               <div className="mx-8 my-2">
                 <div className="flex justify-center">
@@ -224,7 +293,7 @@ const CoordiFromCoordi = () => {
                 {!outerCloth ? (
                   <img className="w-64 h-auto border-2 rounded-md max-h-64" id="outer" src={Image} />
                 ) : (
-                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="outer" src={outerCloth.image} />
+                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="outer" src={`data:image/png;base64,${outerCloth.image}`} />
                 )}
               </div>
               <div className="mx-8 my-2">
@@ -237,7 +306,7 @@ const CoordiFromCoordi = () => {
                 {!upperBody ? (
                   <img className="w-64 h-auto border-2 rounded-md max-h-64" id="upper" src={Image} />
                 ) : (
-                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="upper" src={upperBody.image} />
+                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="upper" src={`data:image/png;base64,${upperBody.image}`} />
                 )}
               </div>
               <div className="mx-8 my-2">
@@ -250,7 +319,7 @@ const CoordiFromCoordi = () => {
                 {!lowerBody ? (
                   <img className="w-64 h-auto border-2 rounded-md max-h-64" id="lower" src={Image} />
                 ) : (
-                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="lower" src={lowerBody.image} />
+                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="lower" src={`data:image/png;base64,${lowerBody.image}`} />
                 )}
               </div>
               <div className="mx-8 my-2">
@@ -263,7 +332,7 @@ const CoordiFromCoordi = () => {
                 {!dress ? (
                   <img className="w-64 h-auto border-2 rounded-md max-h-64" id="dress" src={Image} />
                 ) : (
-                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="dress" src={dress.image} />
+                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="dress" src={`data:image/png;base64,${dress.image}`} />
                 )}
               </div>
             </div>
@@ -314,7 +383,7 @@ const CoordiFromCoordi = () => {
                         ))}
                       </div>
                     </div>
-                    <button value="검색" onClick={() => handleSearchItems} />
+                    <button value="검색" onClick={() => handleSearchItems()} />
                   </div>
                 )}
               </div>
@@ -326,10 +395,10 @@ const CoordiFromCoordi = () => {
               <div className="p-2">{isSearchVisible ? <WhiteButton onClick={toggleSearch} value="검색 필터 닫기" /> : <WhiteButton onClick={toggleSearch} value="검색 필터 열기" />}</div>
 
               <div className="p-2">
-                <Button value="옷장" onClick={() => clickModal} />
+                <Button value="옷장" onClick={() => clickModal()} />
               </div>
               <div className="p-2">
-                <Button value="검색" onClick={() => handleSearchItems} />
+                <Button value="검색" onClick={() => handleSearchItems()} />
               </div>
             </div>
             <div className="">
@@ -348,7 +417,7 @@ const CoordiFromCoordi = () => {
                           <div className="">
                             {outerClothes.map((item, index) => (
                               <div key={index}>
-                                <img className="w-64 h-64" src={item.image} alt="" />
+                                <img className="w-64 h-64" src={`data:image/png;base64,${item.image}`} alt="" />
                                 <Button
                                   onClick={() => {
                                     handleClickItem(item);
@@ -366,7 +435,7 @@ const CoordiFromCoordi = () => {
                           <div className="">
                             {upperBodys.map((item, index) => (
                               <div key={index}>
-                                <img className="w-64 h-64" src={item.image} alt="" />
+                                <img className="w-64 h-64" src={`data:image/png;base64,${item.image}`} alt="" />
                                 <Button
                                   onClick={() => {
                                     handleClickItem(item);
@@ -384,7 +453,7 @@ const CoordiFromCoordi = () => {
                           <div className="">
                             {lowerBodys.map((item, index) => (
                               <div key={index}>
-                                <img className="w-64 h-64" src={item.image} alt="" />
+                                <img className="w-64 h-64" src={`data:image/png;base64,${item.image}`} alt="" />
                                 <Button
                                   onClick={() => {
                                     handleClickItem(item);
@@ -402,7 +471,7 @@ const CoordiFromCoordi = () => {
                           <div className="">
                             {dresses.map((item, index) => (
                               <div key={index}>
-                                <img className="w-64 h-64" src={item.image} alt="" />
+                                <img className="w-64 h-64" src={`data:image/png;base64,${item.image}`} alt="" />
                                 <Button
                                   onClick={() => {
                                     handleClickItem(item);
