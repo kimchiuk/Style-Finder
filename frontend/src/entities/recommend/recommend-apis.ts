@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import jwtAxiosInstance from '../../shared/utils/jwtAxiosInstance';
-import { FeedCreateRequestDTO } from '../feed/feed-types';
 import { SearchFilter } from './recommend-types';
 
 const url = '/api/recommend';

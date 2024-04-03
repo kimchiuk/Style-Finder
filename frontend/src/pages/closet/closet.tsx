@@ -3,7 +3,7 @@ import MyCloset from './my-closet';
 
 const Closet = () => {
   return (
-    <div className="mx-auto px-36">
+    <div className="px-16 mx-auto">
       <div className="justify-around">
         <div>
           <My></My>

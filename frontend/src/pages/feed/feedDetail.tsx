@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../widgets/nav/navbar';
@@ -8,7 +9,6 @@ import { FeedInfo } from '../../entities/feed/feed-types';
 import noimage from '../../assets/images/noimage.png';
 import './feed.css';
 import commentApi from '../../entities/comment/comment-apis';
-import { error } from 'console';
 import useLoginStore from '../../shared/store/use-login-store';
 
 const FeedDetail: React.FC = () => {
@@ -72,10 +72,10 @@ const FeedDetail: React.FC = () => {
     navigate(`/coordi/1/${coordiId}`);
   };
 
-  const handleIconClick = () => {
-    setIsChecked(!isChecked);
-    setLikesCount(isChecked ? likesCount - 1 : likesCount + 1);
-  };
+  // const handleIconClick = () => {
+  //   setIsChecked(!isChecked);
+  //   setLikesCount(isChecked ? likesCount - 1 : likesCount + 1);
+  // };
 
   const getFeedDetail = () => {
     api

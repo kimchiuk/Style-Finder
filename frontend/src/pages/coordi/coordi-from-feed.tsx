@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Navbar from '../../widgets/nav/navbar';
@@ -5,11 +6,10 @@ import Navbar from '../../widgets/nav/navbar';
 import { useEffect, useState } from 'react';
 import './coordi.css';
 
-import Image from '../../assets/images/noimage.png';
 import useOpenModal from '../../shared/hooks/use-open-modal';
 import Modal from '../../shared/ui/modal/Modal';
 import MyClosetReadModal from '../closet/my-closet-read-form';
-import Button from '../../shared/ui/button/button';
+import CustomButton from '../../shared/ui/button/custom-button';
 
 import { RecommendCloth } from '../../entities/recommend/recommend-types';
 import TextArea from '../../shared/ui/input/textarea';
@@ -17,14 +17,14 @@ import Input from '../../shared/ui/input/input';
 import WhiteButton from '../../shared/ui/button/white-button';
 import api from '../../entities/recommend/recommend-apis';
 import { SearchFilter } from '../../entities/recommend/recommend-types';
-import { error } from 'console';
 import { axiosError } from '../../shared/utils/axiosError';
 import useLoginStore from '../../shared/store/use-login-store';
 import { useNavigate, useParams } from 'react-router';
 
 import feedApi from '../../entities/feed/feed-apis';
-import RecommendationItem from '../recommendation/recommendation-Item';
 import useClothStore from '../../shared/store/use-cloth-store';
+import CoordiItem from './coordi-Item';
+import CoordiSelectedItem from './coordi-selected-item';
 
 const CoordiFromFeed = () => {
   const loginStore = useLoginStore();
@@ -36,7 +36,6 @@ const CoordiFromFeed = () => {
 
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
-  const [coordiId, setCoordiId] = useState<string>('');
 
   const [outerCloth, setOuterCloth] = useState<RecommendCloth | null>(null);
   const [upperBody, setUpperBody] = useState<RecommendCloth | null>(null);
@@ -131,10 +130,25 @@ const CoordiFromFeed = () => {
 
   // 부위별 아이템 선택 시 이미지 변경
   const handleClickItem = (newItem: RecommendCloth) => {
-    if (newItem.part === 'outer') setOuterCloth(newItem);
-    else if (newItem.part === 'upper') setUpperBody(newItem);
-    else if (newItem.part === 'lower') setLowerBody(newItem);
-    else setDress(newItem);
+    switch (newItem.part) {
+      case 'outerCloth':
+      case 'outer':
+        setOuterCloth(newItem);
+        break;
+      case 'upperBody':
+      case 'upper':
+        setUpperBody(newItem);
+        break;
+      case 'lowerBody':
+      case 'lower':
+        setLowerBody(newItem);
+        break;
+      case 'dress':
+        setDress(newItem);
+        break;
+      default:
+        break;
+    }
   };
 
   const handleTitleChange = (newTitle: string) => {
@@ -145,15 +159,26 @@ const CoordiFromFeed = () => {
     setContent(newContent);
   };
 
-  const handleCoordiIdChange = (newCoordiId: string) => {
-    setCoordiId(newCoordiId);
-  };
-
   const handleDeleteCloth = (part: string) => {
-    if (part === 'outer') setOuterCloth(null);
-    else if (part === 'upper') setUpperBody(null);
-    else if (part === 'lower') setLowerBody(null);
-    else setDress(null);
+    switch (part) {
+      case 'outerCloth':
+      case 'outer':
+        setOuterCloth(null);
+        break;
+      case 'upperBody':
+      case 'upper':
+        setUpperBody(null);
+        break;
+      case 'lowerBody':
+      case 'lower':
+        setLowerBody(null);
+        break;
+      case 'dress':
+        setDress(null);
+        break;
+      default:
+        break;
+    }
   };
 
   // 피드 등록 버튼
@@ -285,16 +310,19 @@ const CoordiFromFeed = () => {
   const handleClothStore = () => {
     if (clothStore.cloth != null) {
       switch (clothStore.cloth.part) {
-        case '아우터':
+        case 'outerCloth':
+        case 'outer':
           setOuterCloth(clothStore.cloth);
           break;
-        case '상의':
+        case 'upperBody':
+        case 'upper':
           setUpperBody(clothStore.cloth);
           break;
-        case '하의':
+        case 'lowerBody':
+        case 'lower':
           setLowerBody(clothStore.cloth);
           break;
-        case '드레스':
+        case 'dress':
           setDress(clothStore.cloth);
           break;
         default:
@@ -349,11 +377,7 @@ const CoordiFromFeed = () => {
                     (삭제)
                   </button>
                 </div>
-                {!outerCloth ? (
-                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="outer" src={Image} />
-                ) : (
-                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="outer" src={`data:image/png;base64,${outerCloth.image}`} />
-                )}
+                {!outerCloth ? <CoordiSelectedItem item={null} id="outer"></CoordiSelectedItem> : <CoordiSelectedItem item={outerCloth} id="outer"></CoordiSelectedItem>}
               </div>
               <div className="mx-8 my-2">
                 <div className="flex justify-center">
@@ -362,11 +386,7 @@ const CoordiFromFeed = () => {
                     (삭제)
                   </button>
                 </div>
-                {!upperBody ? (
-                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="upper" src={Image} />
-                ) : (
-                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="upper" src={`data:image/png;base64,${upperBody.image}`} />
-                )}
+                {!upperBody ? <CoordiSelectedItem item={null} id="upper"></CoordiSelectedItem> : <CoordiSelectedItem item={upperBody} id="upper"></CoordiSelectedItem>}
               </div>
               <div className="mx-8 my-2">
                 <div className="flex justify-center">
@@ -375,11 +395,7 @@ const CoordiFromFeed = () => {
                     (삭제)
                   </button>
                 </div>
-                {!lowerBody ? (
-                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="lower" src={Image} />
-                ) : (
-                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="lower" src={`data:image/png;base64,${lowerBody.image}`} />
-                )}
+                {!lowerBody ? <CoordiSelectedItem item={null} id="lower"></CoordiSelectedItem> : <CoordiSelectedItem item={lowerBody} id="lower"></CoordiSelectedItem>}
               </div>
               <div className="mx-8 my-2">
                 <div className="flex justify-center">
@@ -388,11 +404,7 @@ const CoordiFromFeed = () => {
                     (삭제)
                   </button>
                 </div>
-                {!dress ? (
-                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="dress" src={Image} />
-                ) : (
-                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="dress" src={`data:image/png;base64,${dress.image}`} />
-                )}
+                {!dress ? <CoordiSelectedItem item={null} id="dress"></CoordiSelectedItem> : <CoordiSelectedItem item={dress} id="dress"></CoordiSelectedItem>}
               </div>
             </div>
             <div className="">
@@ -447,9 +459,9 @@ const CoordiFromFeed = () => {
                 )}
               </div>
             </div>
-            <div className="flex justify-between p-2 m-2">
+            <div className="flex justify-between p-4 m-2">
               <div className="p-2">
-                <Button value="내 옷장" onClick={() => clickModal} />
+                <CustomButton value="내 옷장" onClick={clickModal} />
               </div>
               <div className="flex">
                 <div className="p-2">
@@ -457,7 +469,7 @@ const CoordiFromFeed = () => {
                 </div>
                 <div className="p-2">{isSearchVisible ? <WhiteButton onClick={toggleSearch} value="검색 필터 닫기" /> : <WhiteButton onClick={toggleSearch} value="검색 필터 열기" />}</div>
                 <div className="p-2">
-                  <Button value="검색" onClick={() => handleSearchItems()} />
+                  <CustomButton value="검색" onClick={() => handleSearchItems()} />
                 </div>
               </div>
             </div>
@@ -465,18 +477,21 @@ const CoordiFromFeed = () => {
               <div className="w-auto">
                 {isRecommendListVisible && (
                   <div>
-                    {outerClothes.length == 0 || outerClothes.length == 0 || outerClothes.length == 0 || outerClothes.length == 0 && (
-                      <div className="mx-4 my-20">
-                        <div className="text-center">검색된 추천 리스트가 없습니다!</div>
-                      </div>
-                    )}
+                    {outerClothes.length == 0 ||
+                      outerClothes.length == 0 ||
+                      outerClothes.length == 0 ||
+                      (outerClothes.length == 0 && (
+                        <div className="mx-4 my-20">
+                          <div className="text-center">검색된 추천 리스트가 없습니다!</div>
+                        </div>
+                      ))}
                     <div className="flex justify-center">
                       {outerClothes.length > 0 && (
                         <div className="mx-4 my-2">
                           <div className="text-center">아우터</div>
                           <div className="">
                             {outerClothes.map((item, index) => (
-                              <RecommendationItem key={index} item={item} onClickItem={() => handleClickItem(item)}></RecommendationItem>
+                              <CoordiItem key={index} item={item} onClickItem={() => handleClickItem(item)}></CoordiItem>
                             ))}
                           </div>
                         </div>
@@ -486,7 +501,7 @@ const CoordiFromFeed = () => {
                           <div className="text-center">상의</div>
                           <div className="">
                             {upperBodys.map((item, index) => (
-                              <RecommendationItem key={index} item={item} onClickItem={() => handleClickItem(item)}></RecommendationItem>
+                              <CoordiItem key={index} item={item} onClickItem={() => handleClickItem(item)}></CoordiItem>
                             ))}
                           </div>
                         </div>
@@ -496,7 +511,7 @@ const CoordiFromFeed = () => {
                           <div className="text-center">하의</div>
                           <div className="">
                             {lowerBodys.map((item, index) => (
-                              <RecommendationItem key={index} item={item} onClickItem={() => handleClickItem(item)}></RecommendationItem>
+                              <CoordiItem key={index} item={item} onClickItem={() => handleClickItem(item)}></CoordiItem>
                             ))}
                           </div>
                         </div>
@@ -506,7 +521,7 @@ const CoordiFromFeed = () => {
                           <div className="text-center">드레스</div>
                           <div className="">
                             {dresses.map((item, index) => (
-                              <RecommendationItem key={index} item={item} onClickItem={() => handleClickItem(item)}></RecommendationItem>
+                              <CoordiItem key={index} item={item} onClickItem={() => handleClickItem(item)}></CoordiItem>
                             ))}
                           </div>
                         </div>
@@ -524,14 +539,14 @@ const CoordiFromFeed = () => {
                 <TextArea className="p-2 m-2 border-2 rounded-md" id="content" value={content} onChange={(event) => handleContentChange(event.target.value)} rows={4} cols={50} label="피드 내용" />
               </div>
               <div className="flex justify-end p-2 m-2">
-                <Button className="p-2 mr-2" value="피드 등록" onClick={() => handleCreateFeed()} />
-                <Button className="p-2 ml-2" value="카카오톡 공유" onClick={() => handleShareToKakao} />
+                <CustomButton className="p-2 mr-2" value="피드 등록" onClick={() => handleCreateFeed()} />
+                <CustomButton className="p-2 ml-2" value="카카오톡 공유" onClick={() => handleShareToKakao} />
               </div>
             </div>
           </div>
         </div>
       </div>
-      <Modal isOpen={isOpenModal} onClose={closeModal}>
+      <Modal isOpen={isOpenModal} onClose={closeModal} classN="h-96 w-96">
         <div>내 옷장</div>
         <MyClosetReadModal onClose={closeModal} handleClothStore={handleClothStore} />
       </Modal>

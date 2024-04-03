@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { RecommendCloth } from '../../entities/recommend/recommend-types';
 import CustomButton from '../../shared/ui/button/custom-button';
 
-interface RecommendationItemProps {
+interface CoordiItemProps {
   item: RecommendCloth;
   onClickItem(item: RecommendCloth): void;
 }
 
-const RecommendationItem = (props: RecommendationItemProps) => {
+const CoordiItem = (props: CoordiItemProps) => {
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
 
   // Hover 로 상세 정보 확인
@@ -35,10 +35,10 @@ const RecommendationItem = (props: RecommendationItemProps) => {
         )}
       </div>
       <div className="flex m-2">
-        <CustomButton className="w-40 h-16" value="코디 해 보기" onClick={() => props.onClickItem(props.item)} />
+        <CustomButton className="w-64 h-16" value="코디 해 보기" onClick={() => props.onClickItem(props.item)} />
       </div>
     </div>
   );
 };
 
-export default RecommendationItem;
+export default CoordiItem;

@@ -1,7 +1,8 @@
 import styled from 'styled-components';
-import Button from '../button/button';
+import CustomButton from '../button/custom-button';
 
 interface ModalProps {
+  classN: string;
   isOpen: boolean;
   onClose: () => void;
   children?: React.ReactNode;
@@ -26,7 +27,7 @@ const ModalContent = styled.div`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
-const ModalCloseButton = styled(Button)`
+const ModalCloseButton = styled(CustomButton)`
   position: absolute;
   top: 10px;
   right: 10px;
@@ -39,7 +40,7 @@ const Modal = (props: ModalProps) => {
     <ModalOverlay>
       <ModalContent>
         <ModalCloseButton onClick={props.onClose} value="close" />
-        {props.children}
+        <div className="max-w-196 max-h-196">{props.children}</div>
       </ModalContent>
     </ModalOverlay>
   );

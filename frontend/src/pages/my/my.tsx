@@ -1,8 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useRef, useState } from 'react';
-import useUserStore from '../../shared/store/use-user-store';
 import api from '../../entities/user/user-apis';
 import { axiosError } from '../../shared/utils/axiosError';
 import { UserInfo } from '../../entities/user/user-types';
@@ -61,7 +61,6 @@ const categories = [
 ];
 
 const My = () => {
-  const userStore = useUserStore();
   const loginStore = useLoginStore();
   const navigate = useNavigate();
 
@@ -76,7 +75,7 @@ const My = () => {
   const [nickname, setNickname] = useState('');
   const [image, setImage] = useState<File | null>(null);
   const [introduce, setIntroduce] = useState('');
-  const [dislikeCategories, setDislikeCategories] = useState<string[]>([]);
+  const [dislikeCategories] = useState<string[]>([]);
 
   const [heightValid, setHeightValid] = useState(true);
   const [weightValid, setWeightValid] = useState(true);
@@ -149,7 +148,7 @@ const My = () => {
 
     api
       .updateUserInfo(request)
-      .then((response) => {
+      .then(() => {
         setIsUpdate(false);
         getUserInfo();
       })
@@ -197,6 +196,9 @@ const My = () => {
 
   useEffect(() => {
     getUserInfo();
+    categories;
+    style;
+    introduce;
   }, []);
 
   useEffect(() => {
