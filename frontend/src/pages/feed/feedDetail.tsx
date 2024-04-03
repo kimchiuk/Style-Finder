@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../widgets/nav/navbar';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import api from '../../entities/feed/feed-apis';
 import { axiosError } from '../../shared/utils/axiosError';
 import { FeedInfo } from '../../entities/feed/feed-types';
@@ -9,7 +9,7 @@ import noimage from '../../assets/images/noimage.png';
 import './feed.css';
 
 const FeedDetail: React.FC = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const { feedId } = useParams<{ feedId: string }>();
   const [feedInfo, setFeedInfo] = useState<FeedInfo>();
   const [isChecked, setIsChecked] = useState(false);
@@ -24,9 +24,9 @@ const FeedDetail: React.FC = () => {
     setCommentText('');
   };
 
-  // const handleClickItem = (feedId: string, coordiId: string) => {
-  //   navigate(`/coordi/1/${feedId}/${coordiId}`);
-  // };
+  const handleClickMoveToCoordi = (coordiId: string) => {
+    navigate(`/coordi/1/${coordiId}`);
+  };
 
   const handleIconClick = () => {
     setIsChecked(!isChecked);
@@ -49,11 +49,11 @@ const FeedDetail: React.FC = () => {
   return (
     <>
       <Navbar />
-      <div className="pt-5 mx-auto px-36 h-full">
+      <div className="h-full pt-5 mx-auto px-36">
         <div className="flex flex-col min-w-min hero h-full bg-base-200 bg-[#161A30] text-color p-8 ">
           <div className="flex flex-row pb-5">
             <img src={`data:image/png;base64,${feedInfo?.user.profileImage}`} alt="profileImage" className="w-16 h-16 rounded-full" />
-            <div className="pl-5 author-name flex items-center">작성자 닉네임: {feedInfo?.user.nickname}</div>
+            <div className="flex items-center pl-5 author-name">작성자 닉네임: {feedInfo?.user.nickname}</div>
           </div>
           <div className="flex flex-row">
             <div className="flex flex-col">
@@ -72,7 +72,7 @@ const FeedDetail: React.FC = () => {
                   <div className="p-3">
                     <div className="flex justify-center">드레스</div>
                     <div>
-                      {feedInfo?.dress ? <img src={`data:image/png;base64,${feedInfo?.dress}`} alt="Dress" className="w-48 h-32" /> : <img src={noimage} alt="Default Dress" className=" w-48 h-32" />}
+                      {feedInfo?.dress ? <img src={`data:image/png;base64,${feedInfo?.dress}`} alt="Dress" className="w-48 h-32" /> : <img src={noimage} alt="Default Dress" className="w-48 h-32 " />}
                     </div>
                   </div>
                 </div>
@@ -136,7 +136,7 @@ const FeedDetail: React.FC = () => {
                   <div className="flex items-center">
                     <div className="flex items-center justify-between pt-3">
                       <form onSubmit={handleSubmitComment} className="flex items-center">
-                        <input type="text" value={commentText} onChange={handleChangeComment} placeholder="댓글을 작성하세요" className="border border-gray-300 rounded-md py-2 px-3 mr-2 blackText" />
+                        <input type="text" value={commentText} onChange={handleChangeComment} placeholder="댓글을 작성하세요" className="px-3 py-2 mr-2 border border-gray-300 rounded-md blackText" />
                         <button type="submit" className="btn btn-primary">
                           댓글 작성
                         </button>
@@ -166,7 +166,11 @@ const FeedDetail: React.FC = () => {
                       </label>
                     </div>
                     <div className="pl-4">
-                      <button className="btn btn-outline">피팅 해보기</button>
+                      {feedInfo && (
+                        <button className="btn btn-outline" onClick={() => handleClickMoveToCoordi(feedInfo.coordiContainer.id)}>
+                          코디 해 보기
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>

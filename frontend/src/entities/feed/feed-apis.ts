@@ -17,6 +17,7 @@ const api = {
   searchByTitle: (title: string, page: number) => jwtAxiosInstance.get(`${url}/search?title=${title}&page=${page}`),
 
   uploadFile: (multipartFile: File[]) => jwtAxiosInstance.post(`$/file`, multipartFile),
+  readCoordi: (coordiId: string) => jwtAxiosInstance.get(`${url}/${coordiId}/fitting`),
 };
 
 export default api;

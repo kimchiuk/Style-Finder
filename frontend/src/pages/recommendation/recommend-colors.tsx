@@ -3,16 +3,18 @@ import RecommendationItem from './recommendation-Item';
 import Dropbox from '../../shared/ui/dropbox/dropbox';
 
 import { useNavigate } from 'react-router';
-import { HadoopCloth } from '../../entities/analysis/analysis-types';
+import { RecommendCloth } from '../../entities/recommend/recommend-types';
 import api from '../../entities/analysis/analysis-apis';
 import { axiosError } from '../../shared/utils/axiosError';
 import useLoginStore from '../../shared/store/use-login-store';
+import useClothStore from '../../shared/store/use-cloth-store';
 // import { useParams } from 'react-router';
 
 const RecommendationColors = () => {
   // const { info } = useParams<{ id: string; image: string }>();
   const navigate = useNavigate();
   const loginStore = useLoginStore();
+  const clothStore = useClothStore();
 
   const [color, setColor] = useState<string>('');
   const colorList = [
@@ -39,7 +41,7 @@ const RecommendationColors = () => {
     '골드',
     '네이비',
   ];
-  const [colorResponseList, setColorResponseList] = useState<HadoopCloth[]>([]);
+  const [colorResponseList, setColorResponseList] = useState<RecommendCloth[]>([]);
 
   // 색상 설정
   const handleSelectedColor = (selectedItem: string) => {
@@ -68,9 +70,9 @@ const RecommendationColors = () => {
   };
 
   // 해당 아이템 코디 해 보기
-  const handleClickMoveToCoordi = (selectedItem: HadoopCloth) => {
-    const parsing = selectedItem.imageUrl.split('/')[0];
-    navigate(`/coordi/2/${parsing}/${selectedItem.id}`);
+  const handleClickMoveToCoordi = (selectedItem: RecommendCloth) => {
+    clothStore.createCloth(selectedItem);
+    navigate(`/coordi/0}`);
   };
 
   return (
