@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../../widgets/nav/navbar';
 import api from '../../entities/user/user-apis';
 import { axiosError } from '../../shared/utils/axiosError';
-import './signUp.css';
+import './signup.css';
 
 const SignUp = () => {
   const navigate = useNavigate();
