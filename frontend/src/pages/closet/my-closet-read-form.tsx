@@ -25,7 +25,7 @@ const MyClosetReadForm = (props: MyClosetReadFormProps) => {
 
   useEffect(() => {
     handleClickOption('');
-  }, []);
+  }, [ItemList]);
 
   // 해당 아이템 코디 해 보기
   const handleClickItem = (selectedItem: ClosetCloth) => {

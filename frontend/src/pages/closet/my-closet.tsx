@@ -26,7 +26,7 @@ const MyCloset = () => {
 
   useEffect(() => {
     handleClickOption('');
-  }, [ItemList]);
+  }, []);
 
   // 해당 아이템 코디 해 보기
   const handleClickItem = (selectedItem: ClosetCloth) => {
@@ -48,7 +48,9 @@ const MyCloset = () => {
   const handleClickDeleteItem = (selectedItem: ClosetCloth) => {
     api
       .deleteCloth(selectedItem.id)
-      .then(() => {})
+      .then(() => {
+        getClosets('')
+      })
       .catch((error) => {
         const errorCode = axiosError(error);
         if (errorCode == 401) {
@@ -56,12 +58,9 @@ const MyCloset = () => {
           navigate('/login');
         }
       });
-
-    handleClickOption(selectedItem.part);
   };
 
-  // 내 옷장 조회
-  const handleClickOption = (part: string) => {
+  const getClosets = (part: string) => {
     api
       .getClosets(part)
       .then((response) => {
@@ -76,6 +75,11 @@ const MyCloset = () => {
           navigate('/login');
         }
       });
+  }
+
+  // 내 옷장 조회
+  const handleClickOption = (part: string) => {
+    getClosets(part);
   };
 
   return (
@@ -103,7 +107,7 @@ const MyCloset = () => {
         )}
       </div>
       <Modal isOpen={isOpenModal} onClose={closeModal} classN="w-full h-full">
-        <MyClosetCreateForm onClose={closeModal} />
+        <MyClosetCreateForm onClose={closeModal} getCloset={() => getClosets('')} />
       </Modal>
     </div>
   );

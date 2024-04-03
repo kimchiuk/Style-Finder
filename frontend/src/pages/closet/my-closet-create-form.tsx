@@ -12,6 +12,7 @@ import Dropbox from '../../shared/ui/dropbox/dropbox';
 
 interface MyClosetCreateFormProps {
   onClose: () => void;
+  getCloset: () => void;
 }
 const MyClosetCreateForm = (props: MyClosetCreateFormProps) => {
   const navigate = useNavigate();
@@ -85,7 +86,7 @@ const MyClosetCreateForm = (props: MyClosetCreateFormProps) => {
       .uploadCloth(option, selectedFile)
       .then((response) => {
         const data = response.data.data;
-
+        props.getCloset();
         console.log(data);
         props.onClose();
       })
