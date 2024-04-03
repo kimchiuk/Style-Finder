@@ -1,7 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
-
-import Image from '../../assets/images/aimodel.png';
-import Image2 from '../../assets/images/main1.png';
 
 import MyClosetItem from './my-closet-Item';
 import MyClosetCreateForm from './my-closet-create-form';
@@ -14,33 +12,62 @@ import { useNavigate } from 'react-router';
 import api from '../../entities/closet/closet-apis';
 import { axiosError } from '../../shared/utils/axiosError';
 import useLoginStore from '../../shared/store/use-login-store';
+import { ClosetCloth } from '../../entities/closet/closet-types';
+import WhiteButton from '../../shared/ui/button/white-button';
+import useClothStore from '../../shared/store/use-cloth-store';
 
 const MyCloset = () => {
   const loginStore = useLoginStore();
+  const clothStore = useClothStore();
   const navigate = useNavigate();
 
   const { isOpenModal, clickModal, closeModal } = useOpenModal();
+  const [ItemList, setItemList] = useState<ClosetCloth[]>([]);
 
-  const [selectedItem, setSelectedItem] = useState<string>('all');
-  const [ItemList, setItemList] = useState<string[]>([Image, Image, Image, Image, Image, Image, Image, Image2, Image2]);
+  useEffect(() => {
+    handleClickOption('');
+  }, []);
 
-  useEffect(() => {});
+  // 해당 아이템 코디 해 보기
+  const handleClickItem = (selectedItem: ClosetCloth) => {
+    const recommendCloth = {
+      image: selectedItem.image,
+      imageUrl: selectedItem.imageUrl,
+      style: '',
+      category: selectedItem.categories[0],
+      color: '',
+      part: selectedItem.part,
+    };
 
-  // 옷 변경
-  const handleClickOption = (part: string) => {
-    setSelectedItem(part);
-    handleGetClosets();
+    clothStore.createCloth(recommendCloth);
+    navigate(`/coordi/0`);
+  };
+
+  // 아이템 선택 시 해당 아이템을 삭제
+  const handleClickDeleteItem = (selectedItem: ClosetCloth) => {
+    api
+      .deleteCloth(selectedItem.id)
+      .then((response) => {
+        const data = response.data.data;
+        console.log(data);
+      })
+      .catch((error) => {
+        const errorCode = axiosError(error);
+        if (errorCode == 401) {
+          loginStore.setLogout();
+          navigate('/login');
+        }
+      });
+
+    handleClickOption(selectedItem.part);
   };
 
   // 내 옷장 조회
-  const handleGetClosets = () => {
-    // 일단은 전체 조회만 가능
-    if (selectedItem != 'all') return;
-
+  const handleClickOption = (part: string) => {
     api
-      .getClosets()
+      .getClosets(part)
       .then((response) => {
-        const data = response.data.data;
+        const data = response.data;
 
         setItemList(data);
         console.log(data);
@@ -56,25 +83,33 @@ const MyCloset = () => {
   };
 
   return (
-    <div className="p-2 m-2 bg-gray-100 rounded-lgs">
-      <div>
-        <Button value="옷 등록" onClick={clickModal} />
-
-        <Modal isOpen={isOpenModal} onClose={closeModal}>
-          <div>옷 저장</div>
-          <MyClosetCreateForm />
-        </Modal>
-
-        <Button value="전체" onClick={() => handleClickOption('all')} />
-        <Button value="아우터" onClick={() => handleClickOption('outer')} />
-        <Button value="상의" onClick={() => handleClickOption('upper')} />
-        <Button value="하의" onClick={() => handleClickOption('lower')} />
-        <Button value="드레스" onClick={() => handleClickOption('dress')} />
+    <div className="">
+      <div className="flex justify-end">
+        <WhiteButton className="my-2 mr-2" value="전체" onClick={() => handleClickOption('')} />
+        <WhiteButton className="my-2 mr-2" value="아우터" onClick={() => handleClickOption('outerCloth')} />
+        <WhiteButton className="mx-2 my-2" value="상의" onClick={() => handleClickOption('upperBody')} />
+        <WhiteButton className="mx-2 my-2" value="하의" onClick={() => handleClickOption('lowerBody')} />
+        <WhiteButton className="mx-2 my-2" value="드레스" onClick={() => handleClickOption('dress')} />
+        <Button className="my-2 ml-2" value="옷 등록" onClick={clickModal} />
       </div>
-      <div className="flex flex-wrap">
-        {ItemList.map((item, index) => (
-          <MyClosetItem key={index} image={item} index={index} />
-        ))}
+      <Modal isOpen={isOpenModal} onClose={closeModal}>
+        <MyClosetCreateForm onClose={closeModal} />
+      </Modal>
+      <br className="bg-gray-100 rounded-md " />
+      <div className="">
+        {ItemList.length == 0 ? (
+          <div className="mx-4 my-20">
+            <div className="my-20 text-center">해당 카테고리의 옷이 없습니다!</div>
+          </div>
+        ) : (
+          <div className="flex flex-row flex-wrap my-2">
+            <div className="flex">
+              {ItemList.map((item, index) => (
+                <MyClosetItem item={item} key={index} onClickItem={() => handleClickItem(item)} onClickDeleteItem={() => handleClickDeleteItem(item)} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

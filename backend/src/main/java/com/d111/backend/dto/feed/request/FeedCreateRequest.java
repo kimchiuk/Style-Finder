@@ -18,7 +18,14 @@ public class FeedCreateRequest {
     @Schema(description = "피드 내용", example = "이렇게 입으셈")
     private String feedContent;
 
-    private String coordiId; // Coordi의 _id 추가
+    private String outerCloth;
 
+    private String upperBody;
+
+    private String lowerBody;
+
+    private String dress;
+
+    private String coordiId; // Coordi의 _id 추가
 
 }

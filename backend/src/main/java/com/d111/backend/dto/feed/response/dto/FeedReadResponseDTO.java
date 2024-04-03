@@ -1,7 +1,6 @@
 package com.d111.backend.dto.feed.response.dto;
 
 import com.d111.backend.dto.coordi.response.dto.CoordiContainer;
-import com.d111.backend.entity.coordi.Coordi;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,18 +16,6 @@ import java.util.List;
 @NoArgsConstructor
 public class FeedReadResponseDTO {
 
-    @Schema(description = "아우터", example = "패딩")
-    private String outerCloth;
-
-    @Schema(description = "상의", example = "티셔츠")
-    private String upperBody;
-
-    @Schema(description = "하의", example = "바지")
-    private String lowerBody;
-
-    @Schema(description = "원피스", example = "원피스")
-    private String dress;
-
     @Schema(description = "피드 작성자")
     private FeedUserDTO user;
 
@@ -38,8 +25,17 @@ public class FeedReadResponseDTO {
     @Schema(description = "피드 제목", example = "멋있는 코디")
     private String feedTitle;
 
-    @Schema(description = "피드 썸네일", example = "example.com")
-    private byte[] feedThumbnail;
+    @Schema(description = "아우터 이미지", example = "example.com")
+    private byte[] outerCloth;
+
+    @Schema(description = "드레스 이미지", example = "example.com")
+    private byte[] dress;
+
+    @Schema(description = "상의 이미지", example = "example.com")
+    private byte[] upperBody;
+
+    @Schema(description = "하의 이미지", example = "example.com")
+    private byte[] lowerBody;
 
     @Schema(description = "피드 내용", example = "내용입니다")
     private String feedContent;

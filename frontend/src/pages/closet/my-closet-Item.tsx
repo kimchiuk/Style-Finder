@@ -1,55 +1,46 @@
 import Button from '../../shared/ui/button/button';
-
-import closetApi from '../../entities/closet/closet-apis';
-// import coordiApi from '../../entities/coordi/coordi-apis';
-import { axiosError } from '../../shared/utils/axiosError';
-
-import useLoginStore from '../../shared/store/use-login-store';
-import { useNavigate } from 'react-router';
+import { ClosetCloth } from '../../entities/closet/closet-types';
+import WhiteButton from '../../shared/ui/button/white-button';
+import { useState } from 'react';
 
 interface MyClosetItemProps {
-  index: number;
-  image: string;
+  item: ClosetCloth;
+  onClickItem(item: ClosetCloth): void;
+  onClickDeleteItem(item: ClosetCloth): void;
 }
 
 const MyClosetItem = (props: MyClosetItemProps) => {
-  const navigate = useNavigate();
-  const loginStore = useLoginStore();
+  const [isOverlayVisible, setIsOverlayVisible] = useState(false);
 
-  // 아이템 선택 시 해당 아이템을 코디 해 보기
-  const onClickMoveToCoordi = (index: number) => {
-    index;
+  // Hover 로 상세 정보 확인
+  const handleMouseLeave = () => {
+    setIsOverlayVisible(false);
   };
 
-  // 아이템 선택 시 해당 아이템을 삭제
-  const onClickDeleteItem = (index: number) => {
-    closetApi
-      .deleteCloth(index)
-      .then((response) => {
-        const data = response.data.data;
-
-        console.log(data);
-      })
-      .catch((error) => {
-        const errorCode = axiosError(error);
-
-        if (errorCode == 401) {
-          loginStore.setLogout();
-          navigate('/login');
-        }
-      });
+  const handleMouseEnter = () => {
+    setIsOverlayVisible(true);
   };
 
   return (
-    <>
-      <div>
-        <img style={{ width: '200px', height: '200px' }} src={props.image}></img>
-        <div className="flex">
-          <Button style={{ width: '100px', height: '50px' }} value="코디 해 보기" onClick={() => onClickMoveToCoordi(props.index)} />
-          <Button style={{ width: '100px', height: '50px' }} value="휴지통" onClick={() => onClickDeleteItem(props.index)} />
-        </div>
+    <div className="my-2">
+      <div className="relative">
+        <img className="w-64 h-64 m-2 rounded-md" src={`data:image/png;base64,${props.item.image}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}></img>
+        {isOverlayVisible && (
+          <div className="absolute inset-0 w-64 h-64 ml-2 bg-black rounded-md opacity-90">
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+              {props.item.part && <p>착용 부위: {props.item.part}</p>}
+              {props.item.categories && <p>카테고리: {props.item.categories}</p>}
+              {props.item.details && <p>디테일: {props.item.details}</p>}
+              {props.item.textures && <p>소재: {props.item.textures}</p>}
+            </div>
+          </div>
+        )}
       </div>
-    </>
+      <div className="flex m-2">
+        <Button className="w-40 h-16" value="코디 해 보기" onClick={() => props.onClickItem(props.item)} />
+        <WhiteButton className="w-24 h-16" value="휴지통" onClick={() => props.onClickDeleteItem(props.item)} />
+      </div>
+    </div>
   );
 };
 

@@ -5,12 +5,14 @@ import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
 import com.d111.backend.dto.closet.response.ClosetListReadResponseDTO;
 import com.d111.backend.dto.closet.response.ClosetUploadResponseDTO;
+import com.d111.backend.dto.recommend.response.ClothResponseDTO;
 import com.d111.backend.entity.closet.Closet;
 import com.d111.backend.entity.closet.Part;
 import com.d111.backend.entity.multipart.S3File;
 import com.d111.backend.entity.user.User;
 import com.d111.backend.exception.closet.ClosetImageIOException;
 import com.d111.backend.exception.closet.ClosetNotFoundException;
+import com.d111.backend.exception.recommend.ItemImageIOException;
 import com.d111.backend.exception.user.EmailNotFoundException;
 import com.d111.backend.exception.user.ProfileImageIOException;
 import com.d111.backend.exception.user.UnauthorizedAccessException;
@@ -111,7 +113,7 @@ public class ClosetServiceImpl implements ClosetService {
     }
 
     @Override
-    public ResponseEntity<List<ClosetListReadResponseDTO>> getClosets() {
+    public ResponseEntity<List<ClosetListReadResponseDTO>> getClosets(String part) {
         String email = JWTUtil.findEmailByToken();
 
         User user = userRepository.findByEmail(email)
@@ -122,36 +124,40 @@ public class ClosetServiceImpl implements ClosetService {
         List<ClosetListReadResponseDTO> closetListReadResponseDTOList = new ArrayList<>();
 
         for (Closet closet: closets) {
-            List<String> categories = Arrays.asList(closet.getCategories().split(","));
-            List<String> details = Arrays.asList(closet.getDetails().split(","));
-            List<String> textures = Arrays.asList(closet.getTextures().split(","));
+            if (part.isEmpty() || part.equals(closet.getPart().toString())) {
+                List<String> categories = Arrays.asList(closet.getCategories().split(","));
+                List<String> details = Arrays.asList(closet.getDetails().split(","));
+                List<String> textures = Arrays.asList(closet.getTextures().split(","));
 
-            byte[] closetImage;
+                byte[] closetImage;
 
-            String storeFilePath = closet.getImage();
+                String storeFilePath = closet.getImage();
 
-            try {
-                GetObjectRequest getObjectRequest = new GetObjectRequest(bucket, storeFilePath);
+                try {
+                    GetObjectRequest getObjectRequest = new GetObjectRequest(bucket, storeFilePath);
 
-                S3Object s3Object = amazonS3Client.getObject(getObjectRequest);
-                S3ObjectInputStream s3ObjectInputStream = s3Object.getObjectContent();
+                    S3Object s3Object = amazonS3Client.getObject(getObjectRequest);
+                    S3ObjectInputStream s3ObjectInputStream = s3Object.getObjectContent();
 
-                closetImage = IOUtils.toByteArray(s3ObjectInputStream);
-            } catch (IOException exception) {
-                throw new ProfileImageIOException("프로필 이미지를 불러오지 못했습니다.");
-            } catch (AmazonS3Exception exception) {
-                throw new ProfileImageIOException("저장된 프로필 이미지가 없습니다.");
+                    closetImage = IOUtils.toByteArray(s3ObjectInputStream);
+                } catch (IOException exception) {
+                    throw new ProfileImageIOException("프로필 이미지를 불러오지 못했습니다.");
+                } catch (AmazonS3Exception exception) {
+                    throw new ProfileImageIOException("저장된 프로필 이미지가 없습니다.");
+                }
+
+                ClosetListReadResponseDTO closetListReadResponseDTO = ClosetListReadResponseDTO.builder()
+                        .id(closet.getId())
+                        .image(closetImage)
+                        .imageUrl(closet.getImage())
+                        .categories(categories)
+                        .details(details)
+                        .textures(textures)
+                        .part(closet.getPart())
+                        .build();
+
+                closetListReadResponseDTOList.add(closetListReadResponseDTO);
             }
-
-            ClosetListReadResponseDTO closetListReadResponseDTO = ClosetListReadResponseDTO.builder()
-                    .image(closetImage)
-                    .categories(categories)
-                    .details(details)
-                    .textures(textures)
-                    .part(closet.getPart())
-                    .build();
-
-            closetListReadResponseDTOList.add(closetListReadResponseDTO);
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(closetListReadResponseDTOList);
@@ -177,6 +183,21 @@ public class ClosetServiceImpl implements ClosetService {
         closetRepository.delete(closet);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("삭제가 완료되었습니다.");
+    }
+
+    @Override
+    public ResponseEntity<ClothResponseDTO> getCloset(Long closetId) {
+        Closet cloth = closetRepository.findById(closetId)
+                .orElseThrow(() -> new ClosetNotFoundException("해당하는 옷이 없습니다."));
+
+        ClothResponseDTO clothResponseDTO = ClothResponseDTO.builder()
+                .image(getImage(cloth.getImage()))
+                .imageUrl(cloth.getImage())
+                .part(cloth.getPart().toString())
+                .category(cloth.getCategories())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(clothResponseDTO);
     }
 
     public ResponseEntity<ClosetUploadResponseDTO> closetAttributeClassifier(String storeFilePath, MultipartFile clothImage) {
@@ -214,6 +235,21 @@ public class ClosetServiceImpl implements ClosetService {
 
         // FastAPI 서버에 POST 요청 보내기
         return restTemplate.postForEntity(FAST_API_ENDPOINT, requestEntity, ClosetUploadResponseDTO.class);
+    }
+
+    public byte[] getImage(String storeFilePath) {
+        try {
+            // 파일 이름을 사용하여 S3에서 이미지를 가져옴
+            GetObjectRequest getObjectRequest = new GetObjectRequest(bucket, storeFilePath);
+            S3Object s3Object = amazonS3Client.getObject(getObjectRequest);
+            S3ObjectInputStream s3ObjectInputStream = s3Object.getObjectContent();
+
+            return IOUtils.toByteArray(s3ObjectInputStream);
+        } catch (IOException exception) {
+            throw new ItemImageIOException("이미지를 불러오지 못했습니다.");
+        } catch (AmazonS3Exception exception) {
+            throw new ItemImageIOException("저장된 이미지가 없습니다.");
+        }
     }
 
 }

@@ -18,6 +18,8 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
     Page<Feed> findByfeedTitleContaining(String title, Pageable pageable);
 
     Page<Feed> findAllByuserId(Optional<User> userId, Pageable pageable);
+
+    List<Feed> findAllByuserId(Optional<User> userId);
+
+    List<Feed> findCoordiIdsByUserId(User userId);
 }
-
-

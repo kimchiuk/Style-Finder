@@ -12,7 +12,11 @@ import java.util.List;
 @AllArgsConstructor
 public class ClosetListReadResponseDTO {
 
+    private Long id;
+
     private byte[] image;
+
+    private String imageUrl;
 
     private Enum<Part> part;
 

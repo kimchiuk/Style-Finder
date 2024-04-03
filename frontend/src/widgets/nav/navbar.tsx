@@ -26,7 +26,7 @@ const Navbar = () => {
 
   return (
     <div className="navbar flex flex-row h-20 bg-[#161A30]">
-      <div className="navbar-start flex items-center justify-center rounded-full m-5 w-48">
+      <div className="flex items-center justify-center w-48 m-5 rounded-full navbar-start">
         <div className="flex items-center logo">
           <Link to="/" replace={true}>
             <img className="w-10 h-10" src={logo} alt="" />
@@ -38,9 +38,9 @@ const Navbar = () => {
       </div>
 
       <div className="flex items-center justify-end flex-grow mt-2">
-        <div className="flex justify-between menu menu-sm dropdown-content mt-3 z-[1] p-2 m-5 rounded-full">
+        <div className="flex justify-between menu mt-3 p-2 m-5 rounded-full">
           <button className="w-20 h-10">
-            <Link to="/coordi" replace={true}>
+            <Link to="/coordi/0" replace={true}>
               코디
             </Link>
           </button>
@@ -57,11 +57,13 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="navbar-end flex items-center justify-center text-center m-5 menu rounded-full w-20">
+      <div className="flex items-center justify-center w-20 m-5 text-center rounded-full navbar-end menu">
         {!loginStore.isLogin ? (
-          <Link to="/login" replace={true} className="mr-2">
-            로그인
-          </Link>
+          <button>
+            <Link to="/login" replace={true} className="mr-2">
+              로그인
+            </Link>
+          </button>
         ) : (
           <div className="flex items-center justify-center">
             <button onClick={handleLogout}>로그아웃</button>

@@ -29,14 +29,18 @@ public class CoordiReadResponseDTO {
     @Schema(description = "원피스", example = "원피스")
     private String dress;
 
+    @Schema(description = "원피스", example = "원피스")
+    private byte[] imageUrl;
+
+
     public static CoordiReadResponseDTO createCoordiReadResponseDTO(Optional<Coordi> coordiOptional) {
             Coordi coordi = coordiOptional.get();
             return CoordiReadResponseDTO.builder()
                     ._id(coordi.get_id())
-                    .outerCloth(coordi.getOuterCloth())
-                    .upperBody(coordi.getUpperBody())
-                    .lowerBody(coordi.getLowerBody())
-                    .dress(coordi.getDress())
+                    .outerCloth(String.valueOf(coordi.getOuterCloth()))
+                    .upperBody(String.valueOf(coordi.getUpperBody()))
+                    .lowerBody(String.valueOf(coordi.getLowerBody()))
+                    .dress(String.valueOf(coordi.getDress()))
                     .build();
     }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface FeedCreateRequestDTO extends FeedContent {
   coordiId: string;
 }
@@ -11,26 +12,25 @@ export interface FeedUser {
   profileImage: string;
 }
 
-
 export interface FeedContent {
   feedTitle: string;
   feedContent: string;
 }
 
 export interface FeedComment {
-    nickname: string;
-    profileImage: string;
-    content: string;
-    commentCreatedDate: Date;
-    commentUpdatedDate: Date;
+  nickname: string;
+  profileImage: string;
+  content: string;
+  commentCreatedDate: Date;
+  commentUpdatedDate: Date;
 }
 
 export interface CoordiContainer {
   id: string;
-  outerCloth: string;
-  upperBody: string;
-  lowerBody: string;
-  dress: string;
+  outerCloth: any;
+  upperBody: any;
+  lowerBody: any;
+  dress: any;
 }
 
 export interface FeedInfo extends FeedContent {

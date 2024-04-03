@@ -4,10 +4,7 @@ import com.d111.backend.dto.feed.request.FeedCreateRequest;
 import com.d111.backend.entity.comment.Comment;
 import com.d111.backend.entity.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,6 +15,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 @Table(name = "Feed")
 public class Feed {
 
@@ -36,9 +34,6 @@ public class Feed {
     @JoinColumn(name = "user_id")
     public User userId;
 
-    @Column(nullable = false, name = "feed_thumbnail")
-    private String feedThumbnail = "";
-
     @Temporal(TemporalType.DATE)
     @Column(nullable = false, name = "feed_created_date")
     private LocalDate feedCreatedDate;
@@ -56,6 +51,18 @@ public class Feed {
 
     @Column(name = "origin_writer")
     private Long originWriter;
+
+    @Column(name = "outer_cloth")
+    private String outerCloth;
+
+    @Column(name = "upper_body")
+    private String upperBody;
+
+    @Column(name = "lower_body")
+    private String lowerBody;
+
+    @Column(name = "dress")
+    private String dress;
 
     @Builder.Default
     @OneToMany(mappedBy = "feedId", cascade = CascadeType.REMOVE)

@@ -4,9 +4,9 @@ import styled from 'styled-components';
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
 
 const ButtonElement = styled.button`
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-  background-color: #aaaaaa;
+  padding: 0.7rem 1.2rem;
+  border-radius: 0.5rem;
+  background-color: #161a30;
   color: #ffffff;
   font-weight: bold;
   cursor: pointer;
@@ -18,7 +18,11 @@ const ButtonElement = styled.button`
 `;
 
 const Button = (props: ButtonProps) => {
-  return <ButtonElement {...props}>{props.value}</ButtonElement>;
+  return (
+    <ButtonElement className="border-2 shadow-md border-md" {...props}>
+      {props.value}
+    </ButtonElement>
+  );
 };
 
 export default Button;

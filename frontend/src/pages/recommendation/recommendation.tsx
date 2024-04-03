@@ -3,15 +3,10 @@
 
 // import { Link } from 'react-router-dom';
 
-<<<<<<< HEAD
-=======
-// import My from '../my/my';
->>>>>>> origin/develop
 import RecommendTastes from './recommend-tastes';
 import RecommendColors from './recommend-colors';
 import RecommendCategories from './recommend-categories';
 import Keywords from '../../features/analysis/kewords';
-
 
 const Recommendation = () => {
   // const loginStore = useLoginStore();
@@ -21,20 +16,24 @@ const Recommendation = () => {
   // const handleClickMoveToCoordi = () => {};
 
   return (
-    <>
-      <div>당신의 취향은?</div>
+    <div>
       <div className="content-center">
         <Keywords />
       </div>
-      <div>취향별 추천</div>
-      <RecommendTastes />
+      <div className="pt-4 mt-4">
+        <div className="content-center">
+          <RecommendTastes />
+        </div>
 
-      <div>카테고리별 추천</div>
-      <RecommendCategories />
+        <div className="content-center">
+          <RecommendCategories />
+        </div>
 
-      <div>색상별 추천</div>
-      <RecommendColors />
-    </>
+        <div className="content-center">
+          <RecommendColors />
+        </div>
+      </div>
+    </div>
   );
 };
 

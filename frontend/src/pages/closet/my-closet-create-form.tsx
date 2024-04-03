@@ -6,11 +6,14 @@ import { useNavigate } from 'react-router';
 
 import useLoginStore from '../../shared/store/use-login-store';
 
-import Image from '../../assets/images/aimodel.png';
+import Image from '../../assets/images/noimage.png';
 import Button from '../../shared/ui/button/button';
 import Dropbox from '../../shared/ui/dropbox/dropbox';
 
-const MyClosetCreateForm = () => {
+interface MyClosetCreateFormProps {
+  onClose: () => void;
+}
+const MyClosetCreateForm = (props: MyClosetCreateFormProps) => {
   const navigate = useNavigate();
   const loginStore = useLoginStore();
 
@@ -71,12 +74,19 @@ const MyClosetCreateForm = () => {
       return;
     }
 
+    let option;
+    if (selectedOption == '아우터') option = 'outerCloth';
+    else if (selectedOption == '상의') option = 'upperBody';
+    else if (selectedOption == '하의') option = 'lowerBody';
+    else option = 'dress';
+
     api
-      .uploadCloth(selectedOption, selectedFile)
+      .uploadCloth(option, selectedFile)
       .then((response) => {
         const data = response.data.data;
 
         console.log(data);
+        props.onClose();
       })
       .catch((error) => {
         const errorCode = axiosError(error);
@@ -98,19 +108,21 @@ const MyClosetCreateForm = () => {
 
   return (
     <>
-      <div>
+      <div className="grid mx-4 my-2 justify-items-center">
+        <div>옷 보관하기</div>
+        <div>
+          {imageURL && <img className="w-64 h-64 mx-4 my-2 border-2 rounded-md" src={imageURL} alt="Selected" />}
+          <input className="hidden" id="fileInput" type="file" accept="image/*" onChange={handleChangeFileInput} />
+        </div>
+        <div ref={fileDivRef}>
+          <Button className="w-64 h-auto mx-4 my-2" value="옷 이미지 업로드" onClick={handleClickUpload} />
+        </div>
         <div ref={optionDivRef}>
           <Dropbox options={options} onSelected={handleSelectedDropbox} />
         </div>
         <div>
-          {imageURL && <img style={{ width: '200px', height: 'auto' }} src={imageURL} alt="Selected" />}
-          <input id="filseInput" type="file" accept="image/*" style={{ display: 'none' }} onChange={handleChangeFileInput} />
-        </div>
-        <div ref={fileDivRef}>
-          <Button value="업로드" onClick={handleClickUpload} />
-        </div>
-        <div>
-          <Button value="등록" onClick={handleClickSubmit} />
+          <Button className="h-auto mx-4 my-2 w-28" value="취소" onClick={props.onClose} />
+          <Button className="h-auto mx-4 my-2 w-28" value="등록" onClick={handleClickSubmit} />
         </div>
       </div>
     </>

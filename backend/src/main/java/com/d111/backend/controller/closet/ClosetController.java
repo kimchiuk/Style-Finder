@@ -2,6 +2,7 @@ package com.d111.backend.controller.closet;
 
 import com.d111.backend.dto.closet.response.ClosetListReadResponseDTO;
 import com.d111.backend.dto.closet.response.ClosetUploadResponseDTO;
+import com.d111.backend.dto.recommend.response.ClothResponseDTO;
 import com.d111.backend.dto.sample.response.SampleTestResponseDTO;
 import com.d111.backend.service.closet.ClosetService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,8 +39,8 @@ public class ClosetController {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = String.class))),
     })
     @GetMapping("/getAll")
-    ResponseEntity<List<ClosetListReadResponseDTO>> getClosets() {
-        return closetService.getClosets();
+    ResponseEntity<List<ClosetListReadResponseDTO>> getClosets(@RequestParam String part) {
+        return closetService.getClosets(part);
     }
 
     @Operation(summary = "내 옷 제거", description = "내 옷장에서 옷을 제거합니다")
@@ -49,6 +50,11 @@ public class ClosetController {
     @GetMapping("/delete/{closetId}")
     ResponseEntity<String> deleteCloset(@PathVariable Long closetId) {
         return closetService.deleteCloset(closetId);
+    }
+
+    @GetMapping("/getCloth/{closetId}")
+    ResponseEntity<ClothResponseDTO> getCloset(@PathVariable Long closetId) {
+        return closetService.getCloset(closetId);
     }
 
 }

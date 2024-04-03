@@ -13,15 +13,12 @@ export interface ClosetListReadResponseDTO {
   textures: string[];
 }
 
-export interface Closet {
+export interface ClosetCloth {
   id: number;
-
   image: string;
-  category: string;
-  details: string;
-  textures: string;
-
+  imageUrl: string;
   part: string;
-
-  userId: number;
+  categories: string[];
+  details: string[];
+  textures: string[];
 }
