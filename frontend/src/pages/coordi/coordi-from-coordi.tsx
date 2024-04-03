@@ -8,7 +8,7 @@ import './coordi.css';
 import Image from '../../assets/images/noimage.png';
 import useOpenModal from '../../shared/hooks/use-open-modal';
 import Modal from '../../shared/ui/modal/Modal';
-import MyClosetReadModal from '../closet/my-closet-read-modal';
+import MyClosetReadForm from '../closet/my-closet-read-form';
 import Button from '../../shared/ui/button/button';
 
 import RecommendationItem from '../recommendation/recommendation-Item';
@@ -195,18 +195,19 @@ const CoordiFromCoordi = () => {
       coordiCreateRequest: coordiCreateRequestDTO,
     };
 
-    api.createFeedCoordi(request)
-    .then(() => {
-      navigate('/feed')
-    })
-    .catch((error: any) => {
-      const errorCode = axiosError(error);
+    api
+      .createFeedCoordi(request)
+      .then(() => {
+        navigate('/feed');
+      })
+      .catch((error: any) => {
+        const errorCode = axiosError(error);
 
         if (errorCode == 401) {
           loginStore.setLogout();
           navigate('/login');
         }
-    })
+      });
   };
 
   // 카카오톡 공유 버튼
@@ -283,7 +284,8 @@ const CoordiFromCoordi = () => {
     getRecommends();
   };
 
-  useEffect(() => {
+  // 옷장의 아이템을 store 저장 완료, 값 반영
+  const handleClothStore = () => {
     if (clothStore.cloth != null) {
       switch (clothStore.cloth.part) {
         case '아우터':
@@ -304,7 +306,10 @@ const CoordiFromCoordi = () => {
 
       clothStore.deleteCloth();
     }
+  };
 
+  useEffect(() => {
+    handleClothStore();
     getRecommends();
   }, []);
 
@@ -430,10 +435,6 @@ const CoordiFromCoordi = () => {
                   {isRecommendListVisible ? <WhiteButton onClick={toggleRecommendList} value="추천 리스트 닫기" /> : <WhiteButton onClick={toggleRecommendList} value="추천 리스트 열기" />}
                 </div>
                 <div className="p-2">{isSearchVisible ? <WhiteButton onClick={toggleSearch} value="검색 필터 닫기" /> : <WhiteButton onClick={toggleSearch} value="검색 필터 열기" />}</div>
-
-                <div className="p-2">
-                  <Button value="옷장" onClick={() => clickModal()} />
-                </div>
                 <div className="p-2">
                   <Button value="검색" onClick={() => handleSearchItems()} />
                 </div>
@@ -511,7 +512,7 @@ const CoordiFromCoordi = () => {
       </div>
       <Modal isOpen={isOpenModal} onClose={closeModal}>
         <div>내 옷장</div>
-        <MyClosetReadModal />
+        <MyClosetReadForm onClose={closeModal} handleClothStore={handleClothStore} />
       </Modal>
     </>
   );

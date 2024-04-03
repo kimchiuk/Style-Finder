@@ -8,7 +8,7 @@ import './coordi.css';
 import Image from '../../assets/images/noimage.png';
 import useOpenModal from '../../shared/hooks/use-open-modal';
 import Modal from '../../shared/ui/modal/Modal';
-import MyClosetReadModal from '../closet/my-closet-read-modal';
+import MyClosetReadModal from '../closet/my-closet-read-form';
 import Button from '../../shared/ui/button/button';
 
 import { RecommendCloth } from '../../entities/recommend/recommend-types';
@@ -24,9 +24,11 @@ import { useNavigate, useParams } from 'react-router';
 
 import feedApi from '../../entities/feed/feed-apis';
 import RecommendationItem from '../recommendation/recommendation-Item';
+import useClothStore from '../../shared/store/use-cloth-store';
 
 const CoordiFromFeed = () => {
   const loginStore = useLoginStore();
+  const clothStore = useClothStore();
   const navigate = useNavigate();
 
   const { prevCoordiId } = useParams<{ prevCoordiId: string }>();
@@ -279,6 +281,31 @@ const CoordiFromFeed = () => {
     getRecommends();
   };
 
+  // 옷장의 아이템을 store 저장 완료, 값 반영
+  const handleClothStore = () => {
+    if (clothStore.cloth != null) {
+      switch (clothStore.cloth.part) {
+        case '아우터':
+          setOuterCloth(clothStore.cloth);
+          break;
+        case '상의':
+          setUpperBody(clothStore.cloth);
+          break;
+        case '하의':
+          setLowerBody(clothStore.cloth);
+          break;
+        case '드레스':
+          setDress(clothStore.cloth);
+          break;
+        default:
+          break;
+      }
+
+      clothStore.deleteCloth();
+    }
+  };
+
+  // Coordi 불러 오기
   const getCoordi = (coordiId: string) => {
     feedApi
       .readCoordi(coordiId)
@@ -429,10 +456,6 @@ const CoordiFromFeed = () => {
                   {isRecommendListVisible ? <WhiteButton onClick={toggleRecommendList} value="추천 리스트 닫기" /> : <WhiteButton onClick={toggleRecommendList} value="추천 리스트 열기" />}
                 </div>
                 <div className="p-2">{isSearchVisible ? <WhiteButton onClick={toggleSearch} value="검색 필터 닫기" /> : <WhiteButton onClick={toggleSearch} value="검색 필터 열기" />}</div>
-
-                <div className="p-2">
-                  <Button value="옷장" onClick={() => clickModal()} />
-                </div>
                 <div className="p-2">
                   <Button value="검색" onClick={() => handleSearchItems()} />
                 </div>
@@ -510,7 +533,7 @@ const CoordiFromFeed = () => {
       </div>
       <Modal isOpen={isOpenModal} onClose={closeModal}>
         <div>내 옷장</div>
-        <MyClosetReadModal />
+        <MyClosetReadModal onClose={closeModal} handleClothStore={handleClothStore} />
       </Modal>
     </>
   );
