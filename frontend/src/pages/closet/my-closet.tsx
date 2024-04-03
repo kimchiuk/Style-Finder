@@ -26,7 +26,7 @@ const MyCloset = () => {
 
   useEffect(() => {
     handleClickOption('');
-  }, []);
+  }, [ItemList]);
 
   // 해당 아이템 코디 해 보기
   const handleClickItem = (selectedItem: ClosetCloth) => {
@@ -50,7 +50,6 @@ const MyCloset = () => {
       .deleteCloth(selectedItem.id)
       .then((response) => {
         const data = response.data;
-        console.log(data);
       })
       .catch((error) => {
         const errorCode = axiosError(error);
@@ -69,9 +68,7 @@ const MyCloset = () => {
       .getClosets(part)
       .then((response) => {
         const data = response.data;
-
         setItemList(data);
-        console.log(data);
       })
       .catch((error) => {
         const errorCode = axiosError(error);

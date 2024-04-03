@@ -47,7 +47,7 @@ public class ClosetController {
     @ApiResponses({
             @ApiResponse(responseCode = "203", description = "삭제 성공", content = @Content(schema = @Schema(implementation = String.class))),
     })
-    @GetMapping("/delete/{closetId}")
+    @DeleteMapping("/delete/{closetId}")
     ResponseEntity<String> deleteCloset(@PathVariable Long closetId) {
         return closetService.deleteCloset(closetId);
     }
