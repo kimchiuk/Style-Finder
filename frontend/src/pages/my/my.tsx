@@ -11,7 +11,6 @@ import { useNavigate } from 'react-router';
 import './my.css';
 import CustomButton from '../../shared/ui/button/custom-button';
 import WhiteButton from '../../shared/ui/button/white-button';
-import Dropbox from '../../shared/ui/dropbox/dropbox';
 
 const style = [
   '레트로',
