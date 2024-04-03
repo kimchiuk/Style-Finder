@@ -37,8 +37,8 @@ const MyClosetItem = (props: MyClosetItemProps) => {
         )}
       </div>
       <div className="flex m-2">
-        <CustomButton className="w-40 h-16" value="코디 해 보기" onClick={() => props.onClickItem(props.item)} />
-        <WhiteButton className="w-24 h-16" value="휴지통" onClick={() => props.onClickDeleteItem(props.item)} />
+        <CustomButton className="w-40 h-12" value="코디 해 보기" onClick={() => props.onClickItem(props.item)} />
+        <WhiteButton className="w-24 h-12 border-2" value="휴지통" onClick={() => props.onClickDeleteItem(props.item)} />
       </div>
     </div>
   );

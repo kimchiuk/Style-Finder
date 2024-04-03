@@ -35,7 +35,7 @@ const CoordiItem = (props: CoordiItemProps) => {
         )}
       </div>
       <div className="flex m-2">
-        <CustomButton className="w-64 h-16" value="코디 해 보기" onClick={() => props.onClickItem(props.item)} />
+        <CustomButton className="w-64 h-12" value="코디 해 보기" onClick={() => props.onClickItem(props.item)} />
       </div>
     </div>
   );

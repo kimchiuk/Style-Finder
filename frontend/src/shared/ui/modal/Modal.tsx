@@ -38,7 +38,7 @@ const Modal = (props: ModalProps) => {
 
   return (
     <ModalOverlay>
-      <ModalContent>
+      <ModalContent className={props.classN}>
         <ModalCloseButton onClick={props.onClose} value="close" />
         <div className="max-w-196 max-h-196">{props.children}</div>
       </ModalContent>

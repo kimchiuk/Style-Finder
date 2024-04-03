@@ -16,21 +16,23 @@ const Recommendation = () => {
   // const handleClickMoveToCoordi = () => {};
 
   return (
-    <div>
-      <div className="content-center">
-        <Keywords />
-      </div>
-      <div className="pt-4 mt-4">
+    <div className="mx-auto px-36">
+      <div className="pt-20">
         <div className="content-center">
-          <RecommendTastes />
+          <Keywords />
         </div>
+        <div className="pt-4 mt-4">
+          <div className="content-center">
+            <RecommendTastes />
+          </div>
 
-        <div className="content-center">
-          <RecommendCategories />
-        </div>
+          <div className="content-center">
+            <RecommendCategories />
+          </div>
 
-        <div className="content-center">
-          <RecommendColors />
+          <div className="content-center">
+            <RecommendColors />
+          </div>
         </div>
       </div>
     </div>

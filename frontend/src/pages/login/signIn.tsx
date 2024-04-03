@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import useLoginStore from '../../shared/store/use-login-store';
 import api from '../../entities/user/user-apis';
+import CustomButton from '../../shared/ui/button/custom-button';
 //import useUserStore from '../shared/store/useUserStore';
 
 const SignIn = () => {
@@ -67,32 +68,29 @@ const SignIn = () => {
         {!loginStore.isLogin ? (
           <div className="box-border flex justify-center w-2/3 p-4 border-4 h-72">
             <div className="contentWrap">
-              <div className="inputTitle">이메일 주소</div>
+              <div className="mt-5 inputTitle">이메일 주소</div>
               <div className="inputWrap">
                 <input className="input" placeholder="이메일 입력" value={email} onChange={handleEmail} />
               </div>
-              <div className="errorMessageWrap">{!emailValid && email.length > 0 && <div>올바른 이메일을 입력해 주세요.</div>}</div>
-              <div className="inputTitle">비밀번호</div>
+              <div className="errorMessageWrap text-slate-400">{!emailValid && email.length > 0 && <div>올바른 이메일을 입력해 주세요.</div>}</div>
+              <div className="mt-2 inputTitle">비밀번호</div>
               <div className="inputWrap">
                 <input type="password" className="input" placeholder="비밀번호 입력" value={pw} onChange={handlePw} />
               </div>
-              <div className="errorMessageWrap">{!pwValid && pw.length > 0 && <div>올바른 비밀번호를 입력해주세요.</div>}</div>
-              <div>
-                <button onClick={onClickConfirmButton} disabled={notAllow} className="bottomButton">
-                  확인
-                </button>
+              <div className="errorMessageWrap text-slate-400">{!pwValid && pw.length > 0 && <div>올바른 비밀번호를 입력해주세요.</div>}</div>
+              <div className="flex justify-between mt-4 mb-2">
                 <Link to="/signup">
-                  <div>회원가입</div>
+                  <CustomButton onClick={() => {}} value="회원 가입" />
                 </Link>
+                <CustomButton onClick={onClickConfirmButton} disabled={notAllow} className="bottomButton" value="로그인" />
               </div>
-              <Link to="/feed">
-                <div>피드로 이동하기</div>
-              </Link>
             </div>
           </div>
         ) : (
           <div>
-            <Link to="/feed"></Link>
+            <Link to="/feed">
+              <CustomButton onClick={() => {}} value="피드로 이동하기" />
+            </Link>
           </div>
         )}
       </div>

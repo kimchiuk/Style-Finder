@@ -7,6 +7,8 @@ import api from '../../entities/feed/feed-apis';
 import { axiosError } from '../../shared/utils/axiosError';
 import useLoginStore from '../../shared/store/use-login-store';
 import noimage from '../../assets/images/noimage.png';
+import CustomButton from '../../shared/ui/button/custom-button';
+import WhiteButton from '../../shared/ui/button/white-button';
 
 const Feed = () => {
   const navigate = useNavigate();
@@ -188,24 +190,19 @@ const Feed = () => {
     <>
       <Navbar></Navbar>
       <div className="mx-auto px-36 ">
-        <div className="flex justify-around ">
-          <button className="p-2 m-2 border-2" onClick={getPopularFeed}>
-            인기순 조회
-          </button>
+        <div className="flex justify-around pt-20">
+          <WhiteButton className="p-2 m-2 border-2" onClick={getPopularFeed} value="인기순 조회" />
           <div className="w-100">
             <input className="p-2 m-2 border-2" value={query} onChange={(event) => setQuery(event.target.value)} required></input>
-            <button
+            <CustomButton
               onClick={() => {
                 searchFeed();
                 setPage(1);
               }}
-            >
-              검색
-            </button>
+              value="검색"
+            />
           </div>
-          <button className="p-2 m-2 border-2" onClick={getMyFeed}>
-            내 피드 조회
-          </button>
+          <WhiteButton className="p-2 m-2 border-2" onClick={getMyFeed} value="내 피드 조회" />
         </div>
         <div className="grid grid-flow-row-dense grid-cols-4">
           {feeds.map((feed: any) => (
@@ -217,22 +214,26 @@ const Feed = () => {
                       <div className="flex flex-col">
                         <div className="flex flex-row">
                           {feed?.outerCloth ? (
-                            <img src={`data:image/png;base64,${feed?.outerCloth}`} alt="Outer Cloth" className="w-2/4 h-32" />
+                            <img src={`data:image/png;base64,${feed?.outerCloth}`} alt="Outer Cloth" className="w-32 h-32 border-2 rounded-md max-h-32" />
                           ) : (
-                            <img src={noimage} alt="Default Outer Cloth" className="w-2/4 h-32" />
+                            <img src={noimage} alt="Default Outer Cloth" className="w-32 h-32 border-2 rounded-md max-h-32" />
                           )}
-                          {feed?.dress ? <img src={`data:image/png;base64,${feed?.dress}`} alt="Dress" className="w-2/4 h-32" /> : <img src={noimage} alt="Default Dress" className="w-2/4 h-32" />}
+                          {feed?.dress ? (
+                            <img src={`data:image/png;base64,${feed?.dress}`} alt="Dress" className="w-32 h-32 border-2 rounded-md max-h-32" />
+                          ) : (
+                            <img src={noimage} alt="Default Dress" className="w-32 h-32 border-2 rounded-md max-h-32" />
+                          )}
                         </div>
                         <div className="flex flex-row">
                           {feed?.upperBody ? (
-                            <img src={`data:image/png;base64,${feed?.upperBody}`} alt="Upper Body" className="w-2/4 h-32" />
+                            <img src={`data:image/png;base64,${feed?.upperBody}`} alt="Upper Body" className="w-32 h-32 border-2 rounded-md max-h-32" />
                           ) : (
-                            <img src={noimage} alt="Default Upper Body" className="w-2/4 h-32" />
+                            <img src={noimage} alt="Default Upper Body" className="w-32 h-32 border-2 rounded-md max-h-32" />
                           )}
                           {feed?.lowerBody ? (
-                            <img src={`data:image/png;base64,${feed?.lowerBody}`} alt="Lower Body" className="w-2/4 h-32" />
+                            <img src={`data:image/png;base64,${feed?.lowerBody}`} alt="Lower Body" className="w-32 h-32 border-2 rounded-md max-h-32" />
                           ) : (
-                            <img src={noimage} alt="Default Lower Body" className="w-2/4 h-32" />
+                            <img src={noimage} alt="Default Lower Body" className="w-32 h-32 border-2 rounded-md max-h-32" />
                           )}
                         </div>
                       </div>
@@ -247,9 +248,9 @@ const Feed = () => {
                           }
                         }}
                       >
-                        <div className="flex items-center w-1/2 modal-content h-2/5 justify-evenly ">
+                        <div className="flex items-center w-1/2 rounded-md modal-content h-2/5 justify-evenly ">
                           <div className="pl-5 pr-5 basis-1/3">
-                            <img src={`data:image/png;base64,${feed.user.profileImage}`} alt="feedImage" className="rounded-lg w-36 h-36" />
+                            <img src={`data:image/png;base64,${feed.user.profileImage}`} alt="feedImage" className="ml-5 rounded-lg w-36 h-36" />
                             <p>{feed.user.instagram}</p>
                             <p>{feed.user.youtube}</p>
                           </div>
@@ -258,15 +259,13 @@ const Feed = () => {
                             <div className="introduction-box">
                               <p>{feed.user.introduce}</p>
                             </div>
-                            <div className="flex likebox">
+                            <div className="flex pt-2 likebox">
                               {feed.user.likeCategories.map((category: string) => (
                                 <p className="pt-2 pr-2">{category}</p>
                               ))}
                             </div>
-                            <div>
-                              <button className="modal-close-btn closebutton" onClick={() => setModalOpen(0)}>
-                                모달 닫기
-                              </button>
+                            <div className="flex justify-end pt-2 mr-24">
+                              <CustomButton className="modal-close-btn closebutton" onClick={() => setModalOpen(0)} value="닫기" />
                             </div>
                           </div>
                         </div>
@@ -275,7 +274,7 @@ const Feed = () => {
                   </div>
                   <Link to={`/feeddetail/${feed.feedId}`}>
                     {isOverlayVisible == feed.feedId && (
-                      <div className="absolute inset-0 bg-black opacity-50">
+                      <div className="absolute inset-0 w-64 h-64 bg-black border-2 rounded-md opacity-50 max-h-64">
                         <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
                           {feed.coordiContainer?.outerCloth?.category && <p>아우터: {feed.coordiContainer?.outerCloth?.category}</p>}
                           {feed.coordiContainer?.upperBody?.category && <p>상의: {feed.coordiContainer?.upperBody?.category}</p>}
@@ -288,19 +287,17 @@ const Feed = () => {
                 </div>
                 <div className="flex justify-between">
                   <button className={'modal-open-btn'} onClick={() => setModalOpen(feed.feedId)}>
-                    <div className="grid grid-cols-12 gap-4 pt-2 w-full">
-                      <div className="col-span-4 flex items-center">
-                        {feed?.user.profileImage && <img src={`data:image/png;base64,${feed.user.profileImage}`} className="rounded-lg w-12 h-12" />}
-                      </div>
+                    <div className="grid w-full grid-cols-12 gap-4 pt-2">
+                      <div className="flex items-center col-span-4">{feed?.user.profileImage && <img src={`data:image/png;base64,${feed.user.profileImage}`} className="w-12 h-12 rounded-lg" />}</div>
 
-                      <div className="col-span-6">
+                      <div className="col-span-5">
                         <div>
                           <div>{feed.user.nickname}</div>
                           <h2>{feed?.feedTitle}</h2>
                         </div>
                       </div>
 
-                      <div className="col-span-2 flex items-center justify-end">
+                      <div className="flex items-center justify-end col-span-2">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
                           <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
                         </svg>

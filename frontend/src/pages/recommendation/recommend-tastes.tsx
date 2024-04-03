@@ -77,7 +77,7 @@ const RecommendationTastes = () => {
 
   useEffect(() => {
     handleGetTasteList();
-  }, [taste])
+  }, [taste]);
 
   return (
     <div className="py-4 my-4">
@@ -86,14 +86,16 @@ const RecommendationTastes = () => {
         <Dropbox options={tasteList} onSelected={(select) => handleSelectedTaste(select)}></Dropbox>
       </div>
       {tasteResponseList.length == 0 ? (
-        <div className="mx-4 my-20">
+        <div className="mx-4 my-32">
           <div className="my-20 text-center">검색된 추천 리스트가 없습니다!</div>
         </div>
       ) : (
         <div className="mx-4 my-2">
-          <div className="flex">
+          <div className="flex w-full h-auto pt-3 overflow-x-scroll pl-7 scrollbar-hide">
             {tasteResponseList.map((item, index) => (
-              <RecommendationItem key={index} item={item} onClickItem={() => handleClickMoveToCoordi(item)} />
+              <div className="mr-5">
+                <RecommendationItem key={index} item={item} onClickItem={() => handleClickMoveToCoordi(item)} />
+              </div>
             ))}
           </div>
         </div>

@@ -310,7 +310,7 @@ const CoordiFromCoordi = () => {
 
   // 옷장의 아이템을 store 저장 완료, 값 반영
   const handleClothStore = () => {
-    console.log(clothStore.cloth)
+    console.log(clothStore.cloth);
     if (clothStore.cloth != null) {
       switch (clothStore.cloth.part) {
         case 'outerCloth':
@@ -346,7 +346,6 @@ const CoordiFromCoordi = () => {
       <Navbar></Navbar>
       <div className="grid px-20 mx-auto my-16 justify-items-center">
         <div className="justify-around">
-          <div className="text-center">코디</div>
           <div className="p-8 m-2 rounded-lg">
             <div className="flex justify-center">
               <div className="mx-8 my-2">
@@ -465,46 +464,63 @@ const CoordiFromCoordi = () => {
                         </div>
                       ))}
                     <div className="flex justify-center">
-                      {outerClothes.length > 0 && (
-                        <div className="mx-4 my-2">
-                          <div className="text-center">아우터</div>
-                          <div className="">
+                      <div className="mx-4 my-2">
+                        <div className="text-center">아우터</div>
+                        {dresses.length == 0 ? (
+                          <div className="mx-4 my-20">
+                            <div className="w-64 my-20 text-center">검색된 추천 리스트가 없습니다!</div>
+                          </div>
+                        ) : (
+                          <div>
                             {outerClothes.map((item, index) => (
                               <CoordiItem key={index} item={item} onClickItem={() => handleClickItem(item)}></CoordiItem>
                             ))}
                           </div>
-                        </div>
-                      )}
-                      {upperBodys.length > 0 && (
-                        <div className="mx-4 my-2">
-                          <div className="text-center">상의</div>
-                          <div className="">
+                        )}
+                      </div>
+                      <div className="mx-4 my-2">
+                        <div className="text-center">상의</div>
+                        {dresses.length == 0 ? (
+                          <div className="mx-4 my-20">
+                            <div className="w-64 my-20 text-center">검색된 추천 리스트가 없습니다!</div>
+                          </div>
+                        ) : (
+                          <div>
                             {upperBodys.map((item, index) => (
                               <CoordiItem key={index} item={item} onClickItem={() => handleClickItem(item)}></CoordiItem>
                             ))}
                           </div>
-                        </div>
-                      )}
-                      {lowerBodys.length > 0 && (
-                        <div className="mx-4 my-2">
-                          <div className="text-center">하의</div>
-                          <div className="">
+                        )}
+                      </div>
+                      <div className="mx-4 my-2">
+                        <div className="text-center">하의</div>
+                        {dresses.length == 0 ? (
+                          <div className="mx-4 my-20">
+                            <div className="w-64 my-20 text-center">검색된 추천 리스트가 없습니다!</div>
+                          </div>
+                        ) : (
+                          <div>
                             {lowerBodys.map((item, index) => (
                               <CoordiItem key={index} item={item} onClickItem={() => handleClickItem(item)}></CoordiItem>
                             ))}
                           </div>
-                        </div>
-                      )}
-                      {dresses.length > 0 && (
-                        <div className="mx-4 my-2">
-                          <div className="text-center">드레스</div>
-                          <div className="">
+                        )}
+                      </div>
+
+                      <div className="mx-4 my-2">
+                        <div className="text-center">드레스</div>
+                        {dresses.length == 0 ? (
+                          <div className="mx-4 my-20">
+                            <div className="w-64 my-20 text-center">검색된 추천 리스트가 없습니다!</div>
+                          </div>
+                        ) : (
+                          <div>
                             {dresses.map((item, index) => (
                               <CoordiItem key={index} item={item} onClickItem={() => handleClickItem(item)}></CoordiItem>
                             ))}
                           </div>
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </div>
                   </div>
                 )}
@@ -533,7 +549,7 @@ const CoordiFromCoordi = () => {
           </div>
         </div>
       </div>
-      <Modal isOpen={isOpenModal} onClose={closeModal} classN="h-96 w-96">
+      <Modal isOpen={isOpenModal} onClose={closeModal} classN="w-2/3 h-4/5">
         <MyClosetReadForm onClose={closeModal} handleClothStore={handleClothStore} />
       </Modal>
     </div>

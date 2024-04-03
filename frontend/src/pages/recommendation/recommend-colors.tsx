@@ -7,11 +7,11 @@ import { RecommendCloth } from '../../entities/recommend/recommend-types';
 import api from '../../entities/analysis/analysis-apis';
 import { axiosError } from '../../shared/utils/axiosError';
 import useLoginStore from '../../shared/store/use-login-store';
-// import { useParams } from 'react-router';
+import useClothStore from '../../shared/store/use-cloth-store';
 
 const RecommendationColors = () => {
-  // const { info } = useParams<{ id: string; image: string }>();
   const navigate = useNavigate();
+  const clothStore = useClothStore();
   const loginStore = useLoginStore();
 
   const [color, setColor] = useState<string>('');
@@ -68,14 +68,14 @@ const RecommendationColors = () => {
 
   // 해당 아이템 코디 해 보기
   const handleClickMoveToCoordi = (selectedItem: RecommendCloth) => {
-    console.log(selectedItem)
-    // clothStore.createCloth(selectedItem);
-    // navigate(`/coordi/0}`);
+    console.log(selectedItem);
+    clothStore.createCloth(selectedItem);
+    navigate(`/coordi/0}`);
   };
 
   useEffect(() => {
     handleGetColorList();
-  }, [color])
+  }, [color]);
 
   return (
     <div className="py-4 my-4">
@@ -84,14 +84,16 @@ const RecommendationColors = () => {
         <Dropbox options={colorList} onSelected={(select) => handleSelectedColor(select)}></Dropbox>
       </div>
       {colorResponseList.length == 0 ? (
-        <div className="mx-4 my-20">
+        <div className="mx-4 my-32">
           <div className="my-20 text-center">검색된 추천 리스트가 없습니다!</div>
         </div>
       ) : (
         <div className="mx-4 my-2">
-          <div className="flex">
+          <div className="flex w-full h-auto pt-3 overflow-x-scroll pl-7 scrollbar-hide">
             {colorResponseList.map((item, index) => (
-              <RecommendationItem key={index} item={item} onClickItem={() => handleClickMoveToCoordi(item)} />
+              <div className="mr-5">
+                <RecommendationItem key={index} item={item} onClickItem={() => handleClickMoveToCoordi(item)} />
+              </div>
             ))}
           </div>
         </div>

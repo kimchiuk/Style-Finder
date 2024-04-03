@@ -98,10 +98,12 @@ const MyClosetReadForm = (props: MyClosetReadFormProps) => {
             <div className="my-20 text-center">해당 카테고리의 옷이 없습니다!</div>
           </div>
         ) : (
-          <div className="grid justify-between grid-cols-3 gap-4 ">
-            {ItemList.map((item, index) => (
-              <MyClosetItem key={index} item={item} onClickItem={() => handleClickItem(item)} onClickDeleteItem={() => handleClickDeleteItem(item)} />
-            ))}
+          <div className="flex w-auto pt-3 overflow-y-scroll h-96 pl-7 scrollbar-hide">
+            <div className="grid justify-between grid-cols-3 gap-10">
+              {ItemList.map((item, index) => (
+                <MyClosetItem key={index} item={item} onClickItem={() => handleClickItem(item)} onClickDeleteItem={() => handleClickDeleteItem(item)} />
+              ))}
+            </div>
           </div>
         )}
       </div>

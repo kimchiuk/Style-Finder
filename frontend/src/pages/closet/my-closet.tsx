@@ -49,7 +49,7 @@ const MyCloset = () => {
     api
       .deleteCloth(selectedItem.id)
       .then(() => {
-        getClosets('')
+        getClosets('');
       })
       .catch((error) => {
         const errorCode = axiosError(error);
@@ -75,7 +75,7 @@ const MyCloset = () => {
           navigate('/login');
         }
       });
-  }
+  };
 
   // 내 옷장 조회
   const handleClickOption = (part: string) => {
@@ -99,14 +99,14 @@ const MyCloset = () => {
             <div className="my-20 text-center">해당 카테고리의 옷이 없습니다!</div>
           </div>
         ) : (
-          <div className="grid justify-between grid-cols-3 gap-4 my-2">
+          <div className="grid justify-between grid-cols-3 gap-16">
             {ItemList.map((item, index) => (
               <MyClosetItem item={item} key={index} onClickItem={() => handleClickItem(item)} onClickDeleteItem={() => handleClickDeleteItem(item)} />
             ))}
           </div>
         )}
       </div>
-      <Modal isOpen={isOpenModal} onClose={closeModal} classN="w-full h-full">
+      <Modal isOpen={isOpenModal} onClose={closeModal} classN="w-auto h-auto">
         <MyClosetCreateForm onClose={closeModal} getCloset={() => getClosets('')} />
       </Modal>
     </div>
