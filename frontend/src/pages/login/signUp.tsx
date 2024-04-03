@@ -99,7 +99,6 @@ const SignUp = () => {
   };
 
   const onClickConfirmButton = () => {
-    return;
     if (notAllow) {
       setError('입력한 정보를 다시 확인해주세요.');
       return;
