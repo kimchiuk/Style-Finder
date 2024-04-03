@@ -151,7 +151,7 @@ BE/domain/feature
 
 ## 🛠️ 시스템 아키텍처
 
-- 시스템 아키텍처
+![시스템 아키텍처](./README/Architecture.png)
 
 <br />
 
