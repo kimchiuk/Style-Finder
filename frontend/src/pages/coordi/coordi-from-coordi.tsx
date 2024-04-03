@@ -1,20 +1,23 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Navbar from '../../widgets/nav/navbar';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './coordi.css';
 
-import api from '../../entities/analysis/analysis-apis';
 import Image from '../../assets/images/noimage.png';
 import useOpenModal from '../../shared/hooks/use-open-modal';
 import Modal from '../../shared/ui/modal/Modal';
 import MyClosetReadModal from '../closet/my-closet-read-modal';
 import Button from '../../shared/ui/button/button';
-// import { ClosetCloth } from '../../entities/closet/closet-types';
-// import { HadoopCloth } from '../../entities/analysis/analysis-types';
+
+import { RecommendCloth } from '../../entities/closet/closet-types';
 import TextArea from '../../shared/ui/input/textarea';
 import Input from '../../shared/ui/input/input';
 import WhiteButton from '../../shared/ui/button/white-button';
-import { CoordiCloth } from '../../entities/coordi/coordi-types';
+import api from '../../entities/recommend/recommend-apis';
+import { SearchFilter } from '../../entities/recommend/recommend-types';
+import { error } from 'console';
 import { axiosError } from '../../shared/utils/axiosError';
 import useLoginStore from '../../shared/store/use-login-store';
 import { useNavigate } from 'react-router';
@@ -22,21 +25,22 @@ import { useNavigate } from 'react-router';
 const CoordiFromCoordi = () => {
   const loginStore = useLoginStore();
   const navigate = useNavigate();
+
   const { isOpenModal, clickModal, closeModal } = useOpenModal();
 
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [coordiId, setCoordiId] = useState<string>('');
 
-  const [outerCloth, setOuterCloth] = useState<CoordiCloth | null>(null);
-  const [upperBody, setUpperBody] = useState<CoordiCloth | null>(null);
-  const [lowerBody, setLowerBody] = useState<CoordiCloth | null>(null);
-  const [dress, setDress] = useState<CoordiCloth | null>(null);
+  const [outerCloth, setOuterCloth] = useState<RecommendCloth | null>(null);
+  const [upperBody, setUpperBody] = useState<RecommendCloth | null>(null);
+  const [lowerBody, setLowerBody] = useState<RecommendCloth | null>(null);
+  const [dress, setDress] = useState<RecommendCloth | null>(null);
 
-  const [outerClothes, setOuterClothes] = useState<CoordiCloth[]>([]);
-  const [upperBodys, setUpperBodys] = useState<CoordiCloth[]>([]);
-  const [lowerBodys, setLowerBodys] = useState<CoordiCloth[]>([]);
-  const [dresses, setDresses] = useState<CoordiCloth[]>([]);
+  const [outerClothes, setOuterClothes] = useState<RecommendCloth[]>([]);
+  const [upperBodys, setUpperBodys] = useState<RecommendCloth[]>([]);
+  const [lowerBodys, setLowerBodys] = useState<RecommendCloth[]>([]);
+  const [dresses, setDresses] = useState<RecommendCloth[]>([]);
 
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [isRecommendListVisible, setIsRecommendListVisible] = useState(false);
@@ -120,10 +124,11 @@ const CoordiFromCoordi = () => {
   ];
 
   // 부위별 아이템 선택 시 이미지 변경
-  const handleClickItem = (newItem: CoordiCloth) => {
-    if (newItem.part === 'outerCloth') setOuterCloth(newItem);
-    else if (newItem.part === 'upperBody') setUpperBody(newItem);
-    else if (newItem.part === 'lowerBody') setLowerBody(newItem);
+
+  const handleClickItem = (newItem: RecommendCloth) => {
+    if (newItem.part === 'outer') setOuterCloth(newItem);
+    else if (newItem.part === 'upper') setUpperBody(newItem);
+    else if (newItem.part === 'lower') setLowerBody(newItem);
     else setDress(newItem);
   };
 
@@ -148,25 +153,53 @@ const CoordiFromCoordi = () => {
 
   // 피드 등록 버튼
   const handleCreateFeed = () => {
-    if (!outerCloth || !upperBody || !lowerBody || !dress) return;
+    if (!outerCloth && !upperBody && !lowerBody && !dress) return;
 
     const coordiCreateRequestDTO = {
-      outerCloth: outerCloth.image,
-      upperBody: upperBody.image,
-      lowerBody: lowerBody.image,
-      dress: dress.image,
+      outerCloth: {
+        style: outerCloth?.style,
+        category: outerCloth?.category,
+        color: outerCloth?.color,
+      },
+      upperBody: {
+        style: upperBody?.style,
+        category: upperBody?.category,
+        color: upperBody?.color,
+      },
+      lowerBody: {
+        style: lowerBody?.style,
+        category: lowerBody?.category,
+        color: lowerBody?.color,
+      },
+      dress: {
+        style: dress?.style,
+        category: dress?.category,
+        color: dress?.color,
+      },
     };
-
-    coordiCreateRequestDTO;
-    handleCoordiIdChange('9000'); // coordi api
 
     const feedCreateRequestDTO = {
-      coordiId: coordiId,
       feedTitle: title,
       feedContent: content,
+      outerCloth: outerCloth?.imageUrl,
+      upperBody: upperBody?.imageUrl,
+      lowerBody: lowerBody?.imageUrl,
+      dress: dress?.imageUrl,
     };
 
-    feedCreateRequestDTO; // feed api
+    const request = {
+      feedCreateRequest: feedCreateRequestDTO,
+      coordiCreateRequest: coordiCreateRequestDTO,
+    };
+
+    api
+      .createFeedCoordi(request)
+      .then(() => {
+        navigate('/feed');
+      })
+      .catch((error: any) => {
+        console.log(error);
+      });
   };
 
   // 카카오톡 공유 버튼
@@ -206,75 +239,27 @@ const CoordiFromCoordi = () => {
     }
   };
 
-  // get outers api
-  const getOuterClothes = () => {
+  const getRecommends = () => {
+    const filter: SearchFilter = {
+      style: selectedStyles,
+      category: selectedCategories,
+      color: selectedColors,
+    };
+
+    console.log(filter);
+
     api
-      .getOuterItems()
+      .getRecommends(filter)
       .then((response) => {
         const data = response.data;
-
-        setOuterClothes(data);
+        setOuterClothes(data?.outerCloth);
+        setUpperBodys(data?.upperBody);
+        setLowerBodys(data?.lowerBody);
+        setDresses(data?.dress);
         console.log(data);
       })
-      .catch((error) => {
-        const errorCode = axiosError(error);
-
-        if (errorCode == 401) {
-          loginStore.setLogout();
-          navigate('/login');
-        }
-      });
-  };
-
-  // get uppers api
-  const getUpperBodys = () => {
-    api
-      .getTopItems()
-      .then((response) => {
-        const data = response.data;
-
-        setUpperBodys(data);
-        console.log(data);
-      })
-      .catch((error) => {
-        const errorCode = axiosError(error);
-
-        if (errorCode == 401) {
-          loginStore.setLogout();
-          navigate('/login');
-        }
-      });
-  };
-
-  // get lowers api
-  const getLowerBodys = () => {
-    api
-      .getBottomItems()
-      .then((response) => {
-        const data = response.data;
-
-        setLowerBodys(data);
-        console.log(data);
-      })
-      .catch((error) => {
-        const errorCode = axiosError(error);
-
-        if (errorCode == 401) {
-          loginStore.setLogout();
-          navigate('/login');
-        }
-      });
-  };
-
-  // get outers api
-  const getDresses = () => {
-    api
-      .getDressItems()
-      .then((response) => {
-        const data = response.data;
-
-        setDresses(data);
-        console.log(data);
+      .then(() => {
+        setIsRecommendListVisible(true);
       })
       .catch((error) => {
         const errorCode = axiosError(error);
@@ -288,11 +273,12 @@ const CoordiFromCoordi = () => {
 
   // 검색 버튼
   const handleSearchItems = () => {
-    getOuterClothes();
-    getUpperBodys();
-    getLowerBodys();
-    getDresses();
+    getRecommends();
   };
+
+  useEffect(() => {
+    getRecommends();
+  }, []);
 
   return (
     <>
@@ -300,7 +286,7 @@ const CoordiFromCoordi = () => {
       <div className="grid px-20 mx-auto my-16 justify-items-center">
         <div className="justify-around">
           <div className="text-center">코디</div>
-          <div className="p-8 m-2 bg-gray-100 rounded-lg">
+          <div className="p-8 m-2 rounded-lg">
             <div className="flex justify-center">
               <div className="mx-8 my-2">
                 <div className="flex justify-center">
@@ -312,7 +298,7 @@ const CoordiFromCoordi = () => {
                 {!outerCloth ? (
                   <img className="w-64 h-auto border-2 rounded-md max-h-64" id="outer" src={Image} />
                 ) : (
-                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="outer" src={outerCloth.image} />
+                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="outer" src={`data:image/png;base64,${outerCloth.image}`} />
                 )}
               </div>
               <div className="mx-8 my-2">
@@ -325,7 +311,7 @@ const CoordiFromCoordi = () => {
                 {!upperBody ? (
                   <img className="w-64 h-auto border-2 rounded-md max-h-64" id="upper" src={Image} />
                 ) : (
-                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="upper" src={upperBody.image} />
+                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="upper" src={`data:image/png;base64,${upperBody.image}`} />
                 )}
               </div>
               <div className="mx-8 my-2">
@@ -338,7 +324,7 @@ const CoordiFromCoordi = () => {
                 {!lowerBody ? (
                   <img className="w-64 h-auto border-2 rounded-md max-h-64" id="lower" src={Image} />
                 ) : (
-                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="lower" src={lowerBody.image} />
+                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="lower" src={`data:image/png;base64,${lowerBody.image}`} />
                 )}
               </div>
               <div className="mx-8 my-2">
@@ -351,7 +337,7 @@ const CoordiFromCoordi = () => {
                 {!dress ? (
                   <img className="w-64 h-auto border-2 rounded-md max-h-64" id="dress" src={Image} />
                 ) : (
-                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="dress" src={dress.image} />
+                  <img className="w-64 h-auto border-2 rounded-md max-h-64" id="dress" src={`data:image/png;base64,${dress.image}`} />
                 )}
               </div>
             </div>
@@ -402,7 +388,7 @@ const CoordiFromCoordi = () => {
                         ))}
                       </div>
                     </div>
-                    <button value="검색" onClick={() => handleSearchItems} />
+                    <button value="검색" onClick={() => handleSearchItems()} />
                   </div>
                 )}
               </div>
@@ -418,7 +404,10 @@ const CoordiFromCoordi = () => {
                 <div className="p-2">{isSearchVisible ? <WhiteButton onClick={toggleSearch} value="검색 필터 닫기" /> : <WhiteButton onClick={toggleSearch} value="검색 필터 열기" />}</div>
 
                 <div className="p-2">
-                  <Button value="검색" onClick={() => handleSearchItems} />
+                  <Button value="옷장" onClick={() => clickModal()} />
+                </div>
+                <div className="p-2">
+                  <Button value="검색" onClick={() => handleSearchItems()} />
                 </div>
               </div>
             </div>
@@ -438,7 +427,7 @@ const CoordiFromCoordi = () => {
                           <div className="">
                             {outerClothes.map((item, index) => (
                               <div key={index}>
-                                <img className="w-64 h-64" src={item.image} alt="" />
+                                <img className="w-64 h-64" src={`data:image/png;base64,${item.image}`} alt="" />
                                 <Button
                                   onClick={() => {
                                     handleClickItem(item);
@@ -456,7 +445,7 @@ const CoordiFromCoordi = () => {
                           <div className="">
                             {upperBodys.map((item, index) => (
                               <div key={index}>
-                                <img className="w-64 h-64" src={item.image} alt="" />
+                                <img className="w-64 h-64" src={`data:image/png;base64,${item.image}`} alt="" />
                                 <Button
                                   onClick={() => {
                                     handleClickItem(item);
@@ -474,7 +463,7 @@ const CoordiFromCoordi = () => {
                           <div className="">
                             {lowerBodys.map((item, index) => (
                               <div key={index}>
-                                <img className="w-64 h-64" src={item.image} alt="" />
+                                <img className="w-64 h-64" src={`data:image/png;base64,${item.image}`} alt="" />
                                 <Button
                                   onClick={() => {
                                     handleClickItem(item);
@@ -492,7 +481,7 @@ const CoordiFromCoordi = () => {
                           <div className="">
                             {dresses.map((item, index) => (
                               <div key={index}>
-                                <img className="w-64 h-64" src={item.image} alt="" />
+                                <img className="w-64 h-64" src={`data:image/png;base64,${item.image}`} alt="" />
                                 <Button
                                   onClick={() => {
                                     handleClickItem(item);
@@ -517,7 +506,7 @@ const CoordiFromCoordi = () => {
                 <TextArea className="p-2 m-2 border-2 rounded-md" id="content" value={content} onChange={(event) => handleContentChange(event.target.value)} rows={4} cols={50} label="피드 내용" />
               </div>
               <div className="flex justify-end p-2 m-2">
-                <Button className="p-2 mr-2" value="피드 등록" onClick={() => handleCreateFeed} />
+                <Button className="p-2 mr-2" value="피드 등록" onClick={() => handleCreateFeed()} />
                 <Button className="p-2 ml-2" value="카카오톡 공유" onClick={() => handleShareToKakao} />
               </div>
             </div>
