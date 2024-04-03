@@ -114,7 +114,7 @@ public class FeedServiceImpl implements FeedService {
     // 피드 전체 조회
     @Override
     public ResponseEntity<FeedListReadResponse> readList(Pageable pageable) {
-        Page<Feed> feedList = feedRepository.findAll(pageable);
+        Page<Feed> feedList = feedRepository.findAllByOrderByIdDesc(pageable);
 
         if (feedList.isEmpty()) {
             throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
@@ -124,7 +124,7 @@ public class FeedServiceImpl implements FeedService {
 
         // 각 피드의 이미지를 가져와서 리스트에 추가
         for (Feed feed : feedList) {
-
+            log.info(feed.getFeedCreatedDate());
             Coordi coordi = mongoCoordiRepository.findById(feed.getCoordiId())
                     .orElseThrow(() -> new CoordiNotFoundException("코디를 찾을 수 없습니다."));
 

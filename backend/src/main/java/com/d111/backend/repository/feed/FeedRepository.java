@@ -15,6 +15,8 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
 
     Page<Feed> findAllByOrderByFeedLikesDesc(Pageable pageable);
 
+    Page<Feed> findAllByOrderByIdDesc(Pageable pageable);
+
     Page<Feed> findByfeedTitleContaining(String title, Pageable pageable);
 
     Page<Feed> findAllByuserId(Optional<User> userId, Pageable pageable);
