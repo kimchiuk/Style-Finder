@@ -8,7 +8,6 @@ import api from '../../entities/feed/feed-apis';
 import { axiosError } from '../../shared/utils/axiosError';
 import useLoginStore from '../../shared/store/use-login-store';
 import noimage from '../../assets/images/noimage.png';
-import { userInfo } from 'os';
 
 const Feed = () => {
   const navigate = useNavigate();
@@ -223,11 +222,7 @@ const Feed = () => {
                           ) : (
                             <img src={noimage} alt="Default Outer Cloth" className="w-2/4 h-32" />
                           )}
-                          {feed?.dress ? (
-                            <img src={`data:image/png;base64,${feed?.dress}`} alt="Dress" className="w-2/4 h-32" /> 
-                          ): (
-                            <img src={noimage} alt="Default Dress" className="w-2/4 h-32" />
-                          )}
+                          {feed?.dress ? <img src={`data:image/png;base64,${feed?.dress}`} alt="Dress" className="w-2/4 h-32" /> : <img src={noimage} alt="Default Dress" className="w-2/4 h-32" />}
                         </div>
                         <div className="flex flex-row">
                           {feed?.upperBody ? (
@@ -253,14 +248,14 @@ const Feed = () => {
                           }
                         }}
                       >
-                        <div className="modal-content w-1/2 h-2/5 flex justify-evenly items-center ">
-                          <div className="pr-5 pl-5 basis-1/3">
-                            <img src={`data:image/png;base64,${feed.user.profileImage}`} alt="feedImage" className="w-36 h-36 rounded-lg" />
+                        <div className="flex items-center w-1/2 modal-content h-2/5 justify-evenly ">
+                          <div className="pl-5 pr-5 basis-1/3">
+                            <img src={`data:image/png;base64,${feed.user.profileImage}`} alt="feedImage" className="rounded-lg w-36 h-36" />
                             <p>{feed.user.instagram}</p>
                             <p>{feed.user.youtube}</p>
                           </div>
                           <div className="flex flex-col basis-2/3">
-                            <p className="text-xl pb-3">{feed.user.nickname}</p>
+                            <p className="pb-3 text-xl">{feed.user.nickname}</p>
                             <div className="introduction-box">
                               <p>{feed.user.introduce}</p>
                             </div>
@@ -301,7 +296,7 @@ const Feed = () => {
                   <button className={'modal-open-btn'} onClick={() => setModalOpen(feed.feedId)}>
                     <div className="flex justify-between pt-2">
                       <div>
-                        <img src={`data:image/png;base64,${feed.user.profileImage}`} className="rounded-lg w-12 h-12" />
+                        <img src={`data:image/png;base64,${feed.user.profileImage}`} className="w-12 h-12 rounded-lg" />
                       </div>
                       <div className="text-center">
                         <div className="flex flex-row ml-4">

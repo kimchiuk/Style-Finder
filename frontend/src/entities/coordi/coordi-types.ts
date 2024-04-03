@@ -17,13 +17,3 @@ export interface Coordi {
   lowerBody: string;
   dress: string;
 }
-
-export interface CoordiCloth {
-  id: number;
-  image: string;
-  imageUrl: string;
-  part: string;
-  categories: string[];
-  details: string[];
-  textures: string[];
-}

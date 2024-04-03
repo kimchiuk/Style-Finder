@@ -365,7 +365,7 @@ const CoordiFromCoordi = () => {
                         {styles.map((style, index) => (
                           <button
                             key={index}
-                            className={`rounded-full border-2 py-2 my-2 mr-2 shadow-md border-md cursor-pointer ${selectedStyles.includes(style) ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}
+                            className={`rounded-full border-2 px-4 py-2 my-2 mr-2 shadow-md border-md cursor-pointer ${selectedStyles.includes(style) ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}
                             onClick={() => toggleStyle(style)}
                           >
                             {style}
@@ -379,7 +379,7 @@ const CoordiFromCoordi = () => {
                         {categories.map((category, index) => (
                           <button
                             key={index}
-                            className={`rounded-full border-2  py-2 my-2 mr-2 shadow-md border-md cursor-pointer ${selectedCategories.includes(category) ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}
+                            className={`rounded-full border-2 px-4 py-2 my-2 mr-2 shadow-md border-md cursor-pointer ${selectedCategories.includes(category) ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}
                             onClick={() => toggleCategory(category)}
                           >
                             {category}
@@ -393,7 +393,7 @@ const CoordiFromCoordi = () => {
                         {colors.map((color, index) => (
                           <button
                             key={index}
-                            className={`rounded-full border-2  py-2 my-2 mr-2 shadow-md border-md cursor-pointer ${selectedColors.includes(color) ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}
+                            className={`rounded-full border-2 px-4 py-2 my-2 mr-2 shadow-md border-md cursor-pointer ${selectedColors.includes(color) ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}
                             value={color}
                             onClick={() => toggleColor(color)}
                           >
@@ -407,17 +407,19 @@ const CoordiFromCoordi = () => {
                 )}
               </div>
             </div>
-            <div className="flex justify-end p-2 m-2">
+            <div className="flex justify-between p-2 m-2">
               <div className="p-2">
-                {isRecommendListVisible ? <WhiteButton onClick={toggleRecommendList} value="추천 리스트 닫기" /> : <WhiteButton onClick={toggleRecommendList} value="추천 리스트 열기" />}
+                <Button value="내 옷장" onClick={() => clickModal} />
               </div>
-              <div className="p-2">{isSearchVisible ? <WhiteButton onClick={toggleSearch} value="검색 필터 닫기" /> : <WhiteButton onClick={toggleSearch} value="검색 필터 열기" />}</div>
+              <div className="flex">
+                <div className="p-2">
+                  {isRecommendListVisible ? <WhiteButton onClick={toggleRecommendList} value="추천 리스트 닫기" /> : <WhiteButton onClick={toggleRecommendList} value="추천 리스트 열기" />}
+                </div>
+                <div className="p-2">{isSearchVisible ? <WhiteButton onClick={toggleSearch} value="검색 필터 닫기" /> : <WhiteButton onClick={toggleSearch} value="검색 필터 열기" />}</div>
 
-              <div className="p-2">
-                <Button value="옷장" onClick={() => clickModal} />
-              </div>
-              <div className="p-2">
-                <Button value="검색" onClick={() => handleSearchItems} />
+                <div className="p-2">
+                  <Button value="검색" onClick={() => handleSearchItems} />
+                </div>
               </div>
             </div>
             <div className="">
@@ -507,7 +509,7 @@ const CoordiFromCoordi = () => {
                 )}
               </div>
             </div>
-            <div className="p-2 m-2 border-2 rounded-md">
+            <div className="p-2 m-6 border-2 rounded-md">
               <div className="p-2 m-2">
                 <Input className="p-2 m-2 border-2 rounded-md" type="text" id="title" value={title} onChange={(event) => handleTitleChange(event.target.value)} label="피드 제목" />
               </div>
