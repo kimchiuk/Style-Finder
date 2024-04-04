@@ -155,7 +155,7 @@ BE/domain/feature
 
 <br />
 
-<!-- ## 👨‍👩‍👧 팀원 역할
+## 👨‍👩‍👧 팀원 역할
 
 ### 김치욱
 
@@ -165,9 +165,17 @@ BE/domain/feature
 
 ### 김준수
 
+- Entity Class 생성과 테이블 간 관계 설정 및 데이터 처리를 위한 JPA 사용
+- Spring Boot Security + JWT 라이브러리 적용
+- Redis를 이용한 RefreshToken 관리
+- Spring Boot User, Closet, Comment API 및 관련 Exception Class 구현
+- 패션 아이템 속성 분류 AI 모델 적용
+- FastAPI Restful API 구현 (패션 아이템 속성 분류 API)
+- EC2와 Docker를 이용한 FastAPI 어플리케이션 관리
+
 ### 정수빈
 
-<br/> -->
+<br/>
 
 ## 🎨 EC2 포트 정리
 
