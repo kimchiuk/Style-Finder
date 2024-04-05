@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import WordCloud from 'react-d3-cloud';
 import api from '../../entities/user/user-apis';
 import { axiosError } from '../../shared/utils/axiosError';
@@ -13,7 +13,8 @@ const Keywords = () => {
   const loginStore = useLoginStore();
   const navigate = useNavigate();
 
-  const [datas, setDates] = useState([
+  const [isRendered, setIsRendered] = useState(false);
+  const [datas] = useState([
     // 카테고리
     { text: '재킷', value: 10 },
     { text: '조거팬츠', value: 10 },
@@ -100,6 +101,9 @@ const Keywords = () => {
           }
         });
       })
+      .then(() => {
+        setIsRendered(true)
+      })
       .catch((error) => {
         const errorCode = axiosError(error);
 
@@ -108,13 +112,13 @@ const Keywords = () => {
           navigate('/login');
         }
       });
-  }, []);
+  }, [datas]);
 
   return (
     <div>
       <div className="pt-4 text-lg">당신의 취향은?</div>
       <div>
-        <WordCloud data={datas} width={500} height={200} font="Times" fontWeight="bold" spiral="rectangular" rotate={(word) => word.value % 1} fontSize={(word) => Math.log2(word.value) * 5} />
+        {isRendered && <WordCloud data={datas} width={500} height={200} font="Times" fontWeight="bold" spiral="rectangular" rotate={(word) => word.value % 1} fontSize={(word) => Math.log2(word.value) * 5} />}
       </div>
     </div>
   );

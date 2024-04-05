@@ -1,9 +1,12 @@
-FROM python:3.10.0-alpine
+FROM python:3.10.0
+
+RUN python -m pip install --upgrade pip
+RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+RUN pip install uvicorn
 
 WORKDIR /app/
 
-COPY ./main.py /app/
-COPY ./requirements.txt /app/
+COPY ./ /app/
 
 RUN pip install -r requirements.txt
 

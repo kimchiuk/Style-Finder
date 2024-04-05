@@ -25,7 +25,7 @@ const MyClosetReadForm = (props: MyClosetReadFormProps) => {
 
   useEffect(() => {
     handleClickOption('');
-  }, []);
+  }, [ItemList]);
 
   // 해당 아이템 코디 해 보기
   const handleClickItem = (selectedItem: ClosetCloth) => {
@@ -39,6 +39,7 @@ const MyClosetReadForm = (props: MyClosetReadFormProps) => {
     };
 
     clothStore.createCloth(recommendCloth);
+    props.handleClothStore();
     props.onClose();
   };
 
@@ -66,7 +67,7 @@ const MyClosetReadForm = (props: MyClosetReadFormProps) => {
     api
       .getClosets(part)
       .then((response) => {
-        const data = response.data.data;
+        const data = response.data;
 
         setItemList(data);
         console.log(data);
@@ -83,6 +84,7 @@ const MyClosetReadForm = (props: MyClosetReadFormProps) => {
 
   return (
     <div className="p-2 m-2 rounded-lgs">
+      <div>내 옷장</div>
       <div className="flex justify-end">
         <WhiteButton className="my-2 mr-2" value="전체" onClick={() => handleClickOption('')} />
         <WhiteButton className="my-2 mr-2" value="아우터" onClick={() => handleClickOption('outerCloth')} />
@@ -96,8 +98,8 @@ const MyClosetReadForm = (props: MyClosetReadFormProps) => {
             <div className="my-20 text-center">해당 카테고리의 옷이 없습니다!</div>
           </div>
         ) : (
-          <div className="flex flex-row flex-wrap my-2">
-            <div className="flex">
+          <div className="flex w-auto pt-3 overflow-y-scroll h-96 pl-7 scrollbar-hide">
+            <div className="grid justify-between grid-cols-3 gap-10">
               {ItemList.map((item, index) => (
                 <MyClosetItem key={index} item={item} onClickItem={() => handleClickItem(item)} onClickDeleteItem={() => handleClickDeleteItem(item)} />
               ))}

@@ -114,7 +114,7 @@ public class FeedServiceImpl implements FeedService {
     // 피드 전체 조회
     @Override
     public ResponseEntity<FeedListReadResponse> readList(Pageable pageable) {
-        Page<Feed> feedList = feedRepository.findAll(pageable);
+        Page<Feed> feedList = feedRepository.findAllByOrderByIdDesc(pageable);
 
         if (feedList.isEmpty()) {
             throw new FeedNotFoundException("피드를 찾을 수 없습니다.");
@@ -124,7 +124,7 @@ public class FeedServiceImpl implements FeedService {
 
         // 각 피드의 이미지를 가져와서 리스트에 추가
         for (Feed feed : feedList) {
-
+            log.info(feed.getFeedCreatedDate());
             Coordi coordi = mongoCoordiRepository.findById(feed.getCoordiId())
                     .orElseThrow(() -> new CoordiNotFoundException("코디를 찾을 수 없습니다."));
 
@@ -182,6 +182,11 @@ public class FeedServiceImpl implements FeedService {
     // 피드 상세 조회
     @Override
     public ResponseEntity<FeedReadResponse> read(Long feedId) {
+        String userid = JWTUtil.findEmailByToken();
+
+        User currentUser = userRepository.findByEmail(userid)
+                .orElseThrow(() -> new UnauthorizedAccessException("로그인 해주세요."));
+
         Optional<Feed> optionalFeed = feedRepository.findById(feedId);
         Feed feed = optionalFeed.orElseThrow(() -> new FeedNotFoundException("피드를 찾을 수 없습니다."));
 
@@ -206,9 +211,14 @@ public class FeedServiceImpl implements FeedService {
 
         byte[] userProfileImage = getFeedThumbnailFromS3(bucket, feed.getUserId().getProfileImage());
 
+        Optional<Likes> existingLike = likesRepository.findByFeedIdAndUserId(feedId, currentUser.getId());
+
+        Boolean isLiked = existingLike.isPresent();
+
         FeedUserDTO feedUserDTO = FeedUserDTO.builder()
                 .nickname(feed.getUserId().getNickname())
                 .profileImage(userProfileImage)
+                .isLiked(isLiked)
                 .build();
 
         List<FeedCommentDTO> feedCommentDTOList = new ArrayList<>();
@@ -230,6 +240,7 @@ public class FeedServiceImpl implements FeedService {
         }
 
         FeedReadResponseDTO feedReadResponseDTO = FeedReadResponseDTO.builder()
+                .id(feed.getId())
                 .user(feedUserDTO)
                 .feedTitle(feed.getFeedTitle())
                 .feedContent(feed.getFeedContent())
@@ -655,6 +666,7 @@ public class FeedServiceImpl implements FeedService {
         } catch (IOException exception) {
             throw new FeedImageIOException("피드 썸네일을 불러오지 못했습니다.");
         } catch (AmazonS3Exception exception) {
+            log.info(storeFilePath);
             throw new FeedImageIOException("저장된 피드 썸네일이 없습니다.");
         } catch (Exception exception) {
             throw new FeedImageIOException("피드 썸네일을 불러오는 중 오류가 발생했습니다.");

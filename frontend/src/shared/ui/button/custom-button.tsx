@@ -17,7 +17,7 @@ const ButtonElement = styled.button`
   }
 `;
 
-const Button = (props: ButtonProps) => {
+const CustomButton = (props: ButtonProps) => {
   return (
     <ButtonElement className="border-2 shadow-md border-md" {...props}>
       {props.value}
@@ -25,4 +25,4 @@ const Button = (props: ButtonProps) => {
   );
 };
 
-export default Button;
+export default CustomButton;

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import './nav.css'
+import './nav.css';
 
 const NestedNavbar = () => {
   const [selectedButton, setSelectedButton] = useState<string>('closet');
@@ -15,24 +15,14 @@ const NestedNavbar = () => {
         <div className="navbar-center flex flex-row">
           <div>
             <li>
-              <Link
-                to="/analysis/closet"
-                replace={true}
-                className={`check ${selectedButton === 'closet' ? 'selected' : ''}`}
-                onClick={() => handleButtonClick('closet')}
-              >
+              <Link to="/analysis/closet" replace={true} className={`check ${selectedButton === 'closet' ? 'selected' : ''}`} onClick={() => handleButtonClick('closet')}>
                 내 옷장
               </Link>
             </li>
           </div>
           <div>
             <li>
-              <Link
-                to="/analysis/recommendation"
-                replace={true}
-                className={`check ${selectedButton === 'recommendation' ? 'selected' : ''}`}
-                onClick={() => handleButtonClick('recommendation')}
-              >
+              <Link to="/analysis/recommendation" replace={true} className={`check ${selectedButton === 'recommendation' ? 'selected' : ''}`} onClick={() => handleButtonClick('recommendation')}>
                 코디 추천
               </Link>
             </li>

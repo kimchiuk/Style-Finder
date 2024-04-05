@@ -7,11 +7,12 @@ import { useNavigate } from 'react-router';
 import useLoginStore from '../../shared/store/use-login-store';
 
 import Image from '../../assets/images/noimage.png';
-import Button from '../../shared/ui/button/button';
+import CustomButton from '../../shared/ui/button/custom-button';
 import Dropbox from '../../shared/ui/dropbox/dropbox';
 
 interface MyClosetCreateFormProps {
   onClose: () => void;
+  getCloset: () => void;
 }
 const MyClosetCreateForm = (props: MyClosetCreateFormProps) => {
   const navigate = useNavigate();
@@ -59,6 +60,7 @@ const MyClosetCreateForm = (props: MyClosetCreateFormProps) => {
   // 확인 버튼
   const handleClickSubmit = () => {
     if (selectedOption == null) {
+      alert('부위를 선택해주세요!')
       if (optionDivRef.current) {
         optionDivRef.current.focus();
         shakeElement(optionDivRef.current);
@@ -84,7 +86,7 @@ const MyClosetCreateForm = (props: MyClosetCreateFormProps) => {
       .uploadCloth(option, selectedFile)
       .then((response) => {
         const data = response.data.data;
-
+        props.getCloset();
         console.log(data);
         props.onClose();
       })
@@ -115,14 +117,14 @@ const MyClosetCreateForm = (props: MyClosetCreateFormProps) => {
           <input className="hidden" id="fileInput" type="file" accept="image/*" onChange={handleChangeFileInput} />
         </div>
         <div ref={fileDivRef}>
-          <Button className="w-64 h-auto mx-4 my-2" value="옷 이미지 업로드" onClick={handleClickUpload} />
+          <CustomButton className="w-64 h-auto mx-4 my-2" value="옷 이미지 업로드" onClick={handleClickUpload} />
         </div>
         <div ref={optionDivRef}>
           <Dropbox options={options} onSelected={handleSelectedDropbox} />
         </div>
         <div>
-          <Button className="h-auto mx-4 my-2 w-28" value="취소" onClick={props.onClose} />
-          <Button className="h-auto mx-4 my-2 w-28" value="등록" onClick={handleClickSubmit} />
+          <CustomButton className="h-auto mx-4 my-2 w-28" value="취소" onClick={props.onClose} />
+          <CustomButton className="h-auto mx-4 my-2 w-28" value="등록" onClick={handleClickSubmit} />
         </div>
       </div>
     </>

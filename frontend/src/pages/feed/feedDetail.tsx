@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../widgets/nav/navbar';
@@ -8,7 +9,6 @@ import { FeedInfo } from '../../entities/feed/feed-types';
 import noimage from '../../assets/images/noimage.png';
 import './feed.css';
 import commentApi from '../../entities/comment/comment-apis';
-import { error } from 'console';
 import useLoginStore from '../../shared/store/use-login-store';
 
 const FeedDetail: React.FC = () => {
@@ -17,8 +17,6 @@ const FeedDetail: React.FC = () => {
 
   const { feedId } = useParams<{ feedId: string }>();
   const [feedInfo, setFeedInfo] = useState<FeedInfo>();
-  const [isChecked, setIsChecked] = useState(false);
-  const [likesCount, setLikesCount] = useState(0);
   const [commentText, setCommentText] = useState('');
   const [feedLikes, setFeedLikes] = useState<number>(feedInfo?.feedLikes || 0);
   const [isLiked, setIsLiked] = useState<boolean>(false);
@@ -32,7 +30,20 @@ const FeedDetail: React.FC = () => {
     } else {
       setFeedLikes(feedLikes - 1);
     }
-    setIsLiked(!isLiked);
+
+    api
+      .likeFeed(Number(feedId))
+      .then(() => {
+        getFeedDetail();
+      })
+      .catch((error) => {
+        const errorCode = axiosError(error);
+
+        if (errorCode == 401) {
+          loginStore.setLogout();
+          navigate('/login');
+        }
+      });
   };
 
   const handleSubmitComment = (event: React.FormEvent<HTMLFormElement>) => {
@@ -55,14 +66,14 @@ const FeedDetail: React.FC = () => {
     setCommentText('');
   };
 
-  const handleClickMoveToCoordi = (coordiId: string) => {
-    navigate(`/coordi/1/${coordiId}`);
+  const handleClickMoveToCoordi = (feedId: number) => {
+    navigate(`/coordi/1/${feedId}`);
   };
 
-  const handleIconClick = () => {
-    setIsChecked(!isChecked);
-    setLikesCount(isChecked ? likesCount - 1 : likesCount + 1);
-  };
+  // const handleIconClick = () => {
+  //   setIsChecked(!isChecked);
+  //   setLikesCount(isChecked ? likesCount - 1 : likesCount + 1);
+  // };
 
   const getFeedDetail = () => {
     api
@@ -70,29 +81,29 @@ const FeedDetail: React.FC = () => {
       .then((response) => {
         const data = response.data.data;
         setFeedInfo(data);
+        setIsLiked(data.user.isLiked);
       })
       .catch((error: any) => {
-        axiosError(error);
+        const errorCode = axiosError(error);
+
+        if (errorCode == 401) {
+          loginStore.setLogout();
+          navigate('/login');
+        }
       });
   };
 
   useEffect(() => {
     getFeedDetail();
-  }, [feedId]);
-
-  useEffect(() => {
-    if (feedInfo?.feedLikes !== undefined) {
-      setFeedLikes(feedInfo.feedLikes);
-    }
-  }, [feedInfo]);
+  }, []);
 
   return (
     <>
       <Navbar />
       <div className="h-full pt-5 mx-auto px-36">
-        <div className="flex flex-col min-w-min hero h-full bg-base-200 bg-[#161A30] text-color p-8 ">
+        <div className="flex flex-col min-w-min hero h-full bg-base-200 bg-[#161A30] text-color p-8 rounded-md">
           <div className="flex flex-row pb-5">
-            <img src={`data:image/png;base64,${feedInfo?.user.profileImage}`} alt="profileImage" className="w-16 h-16 rounded-full" />
+            {feedInfo?.user.profileImage && <img src={`data:image/png;base64,${feedInfo?.user.profileImage}`} alt="profileImage" className="w-16 h-16 rounded-full" />}
             <div className="flex items-center pl-5 author-name">작성자 닉네임: {feedInfo?.user.nickname}</div>
           </div>
           <div className="flex flex-row">
@@ -103,16 +114,20 @@ const FeedDetail: React.FC = () => {
                     <div className="flex justify-center">아우터</div>
                     <div>
                       {feedInfo?.outerCloth ? (
-                        <img src={`data:image/png;base64,${feedInfo?.outerCloth}`} alt="Outer Cloth" className="w-48 h-32" />
+                        <img src={`data:image/png;base64,${feedInfo?.outerCloth}`} alt="Outer Cloth" className="w-40 h-40 rounded-md" />
                       ) : (
-                        <img src={noimage} alt="Default Outer Cloth" className="w-48 h-32" />
+                        <img src={noimage} alt="Default Outer Cloth" className="w-40 h-40 rounded-md" />
                       )}
                     </div>
                   </div>
                   <div className="p-3">
                     <div className="flex justify-center">드레스</div>
                     <div>
-                      {feedInfo?.dress ? <img src={`data:image/png;base64,${feedInfo?.dress}`} alt="Dress" className="w-48 h-32" /> : <img src={noimage} alt="Default Dress" className="w-48 h-32 " />}
+                      {feedInfo?.dress ? (
+                        <img src={`data:image/png;base64,${feedInfo?.dress}`} alt="Dress" className="w-40 h-40 rounded-md" />
+                      ) : (
+                        <img src={noimage} alt="Default Dress" className="w-40 h-40 rounded-md" />
+                      )}
                     </div>
                   </div>
                 </div>
@@ -124,9 +139,9 @@ const FeedDetail: React.FC = () => {
                       <div className="flex justify-center">상의</div>
                       <div>
                         {feedInfo?.upperBody ? (
-                          <img src={`data:image/png;base64,${feedInfo?.upperBody}`} alt="Upper Body" className="w-48 h-32" />
+                          <img src={`data:image/png;base64,${feedInfo?.upperBody}`} alt="Upper Body" className="w-40 h-40 rounded-md" />
                         ) : (
-                          <img src={noimage} alt="Default Upper Body" className="w-48 h-32" />
+                          <img src={noimage} alt="Default Upper Body" className="w-40 h-40 rounded-md" />
                         )}
                       </div>
                     </div>
@@ -134,9 +149,9 @@ const FeedDetail: React.FC = () => {
                       <div className="flex justify-center">하의</div>
                       <div>
                         {feedInfo?.lowerBody ? (
-                          <img src={`data:image/png;base64,${feedInfo?.lowerBody}`} alt="Lower Body" className="w-48 h-32" />
+                          <img src={`data:image/png;base64,${feedInfo?.lowerBody}`} alt="Lower Body" className="w-40 h-40 rounded-md" />
                         ) : (
-                          <img src={noimage} alt="Default Lower Body" className="w-48 h-32" />
+                          <img src={noimage} alt="Default Lower Body" className="w-40 h-40 rounded-md" />
                         )}
                       </div>
                     </div>
@@ -152,7 +167,7 @@ const FeedDetail: React.FC = () => {
                 <div className="flex justify-center pt-5 author-name">Comments</div>
                 <div className="flex flex-col justify-between max-h-[270px] overflow-y-auto">
                   {feedInfo?.comments.map((comment) => (
-                    <div key={comment.nickname} className="flex items-center justify-center">
+                    <div key={comment.nickname + comment.content} className="flex items-center justify-center">
                       <div className="flex items-start flex-grow max-w-screen-xl mt-5 hero bg-base-200">
                         <div className="avatar">
                           <img src={`data:image/png;base64,${comment.profileImage}`} alt="commentProfileImage" className="w-10 h-10 rounded-full" />
@@ -203,7 +218,7 @@ const FeedDetail: React.FC = () => {
 
                     <div className="pl-4">
                       {feedInfo && (
-                        <button className="btn btn-outline" onClick={() => handleClickMoveToCoordi(feedInfo.coordiContainer.id)}>
+                        <button className="btn btn-outline" onClick={() => handleClickMoveToCoordi(feedInfo?.id)}>
                           코디 해 보기
                         </button>
                       )}

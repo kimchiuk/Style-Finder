@@ -1,14 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useRef, useState } from 'react';
-import useUserStore from '../../shared/store/use-user-store';
 import api from '../../entities/user/user-apis';
 import { axiosError } from '../../shared/utils/axiosError';
 import { UserInfo } from '../../entities/user/user-types';
 import useLoginStore from '../../shared/store/use-login-store';
 import { useNavigate } from 'react-router';
 import './my.css';
+import CustomButton from '../../shared/ui/button/custom-button';
+import WhiteButton from '../../shared/ui/button/white-button';
 
 const style = [
   '레트로',
@@ -61,7 +63,6 @@ const categories = [
 ];
 
 const My = () => {
-  const userStore = useUserStore();
   const loginStore = useLoginStore();
   const navigate = useNavigate();
 
@@ -76,7 +77,7 @@ const My = () => {
   const [nickname, setNickname] = useState('');
   const [image, setImage] = useState<File | null>(null);
   const [introduce, setIntroduce] = useState('');
-  const [dislikeCategories, setDislikeCategories] = useState<string[]>([]);
+  const [dislikeCategories] = useState<string[]>([]);
 
   const [heightValid, setHeightValid] = useState(true);
   const [weightValid, setWeightValid] = useState(true);
@@ -149,7 +150,7 @@ const My = () => {
 
     api
       .updateUserInfo(request)
-      .then((response) => {
+      .then(() => {
         setIsUpdate(false);
         getUserInfo();
       })
@@ -197,6 +198,9 @@ const My = () => {
 
   useEffect(() => {
     getUserInfo();
+    categories;
+    style;
+    introduce;
   }, []);
 
   useEffect(() => {
@@ -209,29 +213,26 @@ const My = () => {
     <div>
       <div className="flex flex-row justify-between">
         <div className="pb-3 text-lg font-bold">내 정보</div>
-        <div className="flex justify-center button">
-          <button onClick={() => setIsUpdate(true)}>수정</button>
+        <div className="flex justify-center my-2">
+          <WhiteButton onClick={() => setIsUpdate(true)} value="수정" />
         </div>
       </div>
       <div className="w-auto h-56 card bg-base-100 bg-[#F0ECE5] rounded-lg ">
         <div className="card-body">
           <div className="flex flex-row p-5 pl-8">
             <div>
-              <div className="h-auto w-36">{userInfo?.profileImage && <img src={`data:image/png;base64,${userInfo?.profileImage}`} className="h-auto rounded-lg" />}</div>
+              <div className="h-auto w-44">{userInfo?.profileImage && <img src={`data:image/png;base64,${userInfo?.profileImage}`} className="rounded-lg h-44" />}</div>
             </div>
             <div className="flex flex-col ml-4">
               <div className="pb-3 text-lg">{userInfo?.nickname}</div>
               <div className="pb-2 text-lg">
-                키: {userInfo?.height}cm, 몸무게: {userInfo?.weight}kg
+                <div className="text-gray-700">
+                  {userInfo?.height} cm, {userInfo?.weight} kg
+                </div>
               </div>
-              <div className="pb-5">피드 내용: {userInfo?.introduce}</div>
-              <div className="text-md">
-                {userInfo?.likeCategories.map((category, index) => (
-                  <span key={index} className="likecate">
-                    {category}
-                  </span>
-                ))}
-              </div>
+              <div>한 줄 소개</div>
+              <div className="pb-2 text-gray-700">{userInfo?.introduce}</div>
+              <div className="text-md">{userInfo?.likeCategories.map((category, index) => <WhiteButton key={index} className="rounded-full" value={category} />)}</div>
               {isUpdate && (
                 <div
                   className={'modal-container'}
@@ -247,7 +248,7 @@ const My = () => {
                       {userInfo && (
                         <div>
                           <div className="flex justify-center pt-3 mb-5">
-                            <img src={image ? URL.createObjectURL(image) : `data:image/png;base64,${userInfo.profileImage}`} alt="Profile Image" className="uploadedImage" />
+                            <img src={image ? URL.createObjectURL(image) : `data:image/png;base64,${userInfo.profileImage}`} alt="Profile Image" className="rounded-md uploadedImage" />
                           </div>
                           <div className="flex justify-center mb-5 inputWrap customInputWrap">
                             <label htmlFor="customFileInput" className="customFileInputLabel">
@@ -340,12 +341,8 @@ const My = () => {
                         <div></div>
                       </div>
                       <div className="flex justify-center">
-                        <button className="p-2 m-2 border-2 save" onClick={modifyUserInfo}>
-                          저장
-                        </button>
-                        <button className="p-2 m-2 border-2 cancel" onClick={() => setIsUpdate(false)}>
-                          취소
-                        </button>
+                        <CustomButton className="p-2 m-2 border-2 save" onClick={modifyUserInfo} value="저장" />
+                        <WhiteButton className="p-2 m-2 border-2 cancel" onClick={() => setIsUpdate(false)} value="취소" />
                       </div>
                     </div>
                   </div>

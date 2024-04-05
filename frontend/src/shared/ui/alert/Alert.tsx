@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import Button from '../button/button';
+import Button from '../button/custom-button';
 
 interface AlertProps {
   message: string;

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import MyClosetItem from './my-closet-Item';
 import MyClosetCreateForm from './my-closet-create-form';
 
-import Button from '../../shared/ui/button/button';
+import CustomButton from '../../shared/ui/button/custom-button';
 import Modal from '../../shared/ui/modal/Modal';
 import useOpenModal from '../../shared/hooks/use-open-modal';
 import { useNavigate } from 'react-router';
@@ -40,6 +40,7 @@ const MyCloset = () => {
     };
 
     clothStore.createCloth(recommendCloth);
+    console.log(clothStore.cloth);
     navigate(`/coordi/0`);
   };
 
@@ -47,9 +48,8 @@ const MyCloset = () => {
   const handleClickDeleteItem = (selectedItem: ClosetCloth) => {
     api
       .deleteCloth(selectedItem.id)
-      .then((response) => {
-        const data = response.data.data;
-        console.log(data);
+      .then(() => {
+        getClosets('');
       })
       .catch((error) => {
         const errorCode = axiosError(error);
@@ -58,19 +58,14 @@ const MyCloset = () => {
           navigate('/login');
         }
       });
-
-    handleClickOption(selectedItem.part);
   };
 
-  // 내 옷장 조회
-  const handleClickOption = (part: string) => {
+  const getClosets = (part: string) => {
     api
       .getClosets(part)
       .then((response) => {
         const data = response.data;
-
         setItemList(data);
-        console.log(data);
       })
       .catch((error) => {
         const errorCode = axiosError(error);
@@ -80,6 +75,11 @@ const MyCloset = () => {
           navigate('/login');
         }
       });
+  };
+
+  // 내 옷장 조회
+  const handleClickOption = (part: string) => {
+    getClosets(part);
   };
 
   return (
@@ -90,11 +90,8 @@ const MyCloset = () => {
         <WhiteButton className="mx-2 my-2" value="상의" onClick={() => handleClickOption('upperBody')} />
         <WhiteButton className="mx-2 my-2" value="하의" onClick={() => handleClickOption('lowerBody')} />
         <WhiteButton className="mx-2 my-2" value="드레스" onClick={() => handleClickOption('dress')} />
-        <Button className="my-2 ml-2" value="옷 등록" onClick={clickModal} />
+        <CustomButton className="my-2 ml-2" value="옷 등록" onClick={clickModal} />
       </div>
-      <Modal isOpen={isOpenModal} onClose={closeModal}>
-        <MyClosetCreateForm onClose={closeModal} />
-      </Modal>
       <br className="bg-gray-100 rounded-md " />
       <div className="">
         {ItemList.length == 0 ? (
@@ -102,15 +99,16 @@ const MyCloset = () => {
             <div className="my-20 text-center">해당 카테고리의 옷이 없습니다!</div>
           </div>
         ) : (
-          <div className="flex flex-row flex-wrap my-2">
-            <div className="flex">
-              {ItemList.map((item, index) => (
-                <MyClosetItem item={item} key={index} onClickItem={() => handleClickItem(item)} onClickDeleteItem={() => handleClickDeleteItem(item)} />
-              ))}
-            </div>
+          <div className="grid justify-between grid-cols-3 gap-16">
+            {ItemList.map((item, index) => (
+              <MyClosetItem item={item} key={index} onClickItem={() => handleClickItem(item)} onClickDeleteItem={() => handleClickDeleteItem(item)} />
+            ))}
           </div>
         )}
       </div>
+      <Modal isOpen={isOpenModal} onClose={closeModal} classN="w-auto h-auto">
+        <MyClosetCreateForm onClose={closeModal} getCloset={() => getClosets('')} />
+      </Modal>
     </div>
   );
 };

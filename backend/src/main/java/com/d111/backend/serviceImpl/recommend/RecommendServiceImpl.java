@@ -133,7 +133,7 @@ public class RecommendServiceImpl implements RecommendService {
 
     @Override
     public ResponseEntity<List<ClothResponseDTO>> getCategoryRecommend(String category) {
-        String apiUrl = "http://j10d111.p.ssafy.io:8000/get_category_items?category=" + category;
+        String apiUrl = "http://j10d111.p.ssafy.io:8000/get_category_items?item=" + category;
 
         List<ClothResponseDTO> clothResponseDTOList = getClothItems(apiUrl);
 
@@ -176,6 +176,8 @@ public class RecommendServiceImpl implements RecommendService {
 
         List<ClothResponseDTO> clothResponseDTOList = new ArrayList<>();
 
+        String[] parts = {"outer", "dress", "upper", "lower"};
+
         String[] categoryKeys = {
                 "데이터셋 정보_데이터셋 상세설명_라벨링_아우터_0_카테고리",
                 "데이터셋 정보_데이터셋 상세설명_라벨링_드레스_0_카테고리",
@@ -195,15 +197,26 @@ public class RecommendServiceImpl implements RecommendService {
             String style = (String) response.get("데이터셋 정보_데이터셋 상세설명_라벨링_스타일_0_스타일");
             String category = null;
             String color = null;
+            String part = null;
 
-            for (String key : categoryKeys) {
+            for (int i = 0; i < categoryKeys.length; i++) {
+                String key = categoryKeys[i];
                 category = (String) response.get(key);
-                if (category != null) break;
+
+                if (category != null) {
+                    part = parts[i];
+                    break;
+                };
             }
 
-            for (String key : colorKeys) {
+            for (int i = 0; i < colorKeys.length; i++) {
+                String key = colorKeys[i];
                 color = (String) response.get(key);
-                if (color != null) break;
+
+                if (color != null) {
+                    part = parts[i];
+                    break;
+                };
             }
 
             clothResponseDTOList.add(
@@ -212,6 +225,7 @@ public class RecommendServiceImpl implements RecommendService {
                             .style(style)
                             .category(category)
                             .color(color)
+                            .part(part)
                             .build()
             );
         }

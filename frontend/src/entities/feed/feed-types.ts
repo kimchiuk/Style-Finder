@@ -10,6 +10,7 @@ export interface FeedUpdateResponseDTO extends FeedContent {}
 export interface FeedUser {
   nickname: string;
   profileImage: string;
+  isLiked: boolean;
 }
 
 export interface FeedContent {
@@ -34,7 +35,7 @@ export interface CoordiContainer {
 }
 
 export interface FeedInfo extends FeedContent {
-  feedId: number;
+  id: number;
 
   user: FeedUser;
   feedThumbnail: string;

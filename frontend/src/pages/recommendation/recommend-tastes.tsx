@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RecommendationItem from './recommendation-Item';
 import Dropbox from '../../shared/ui/dropbox/dropbox';
 
@@ -47,7 +47,6 @@ const RecommendationTastes = () => {
   // 취향 설정
   const handleSelectedTaste = (selectedItem: string) => {
     setTaste(selectedItem);
-    handleGetTasteList();
   };
 
   // 해당 taste 에 대한 추천 결과 리스트를 조회
@@ -76,21 +75,27 @@ const RecommendationTastes = () => {
     navigate(`/coordi/0`);
   };
 
+  useEffect(() => {
+    handleGetTasteList();
+  }, [taste]);
+
   return (
     <div className="py-4 my-4">
       <div className="flex justify-between">
         <div className="text-lg">취향별 추천</div>
-        <Dropbox options={tasteList} onSelected={() => handleSelectedTaste}></Dropbox>
+        <Dropbox options={tasteList} onSelected={(select) => handleSelectedTaste(select)}></Dropbox>
       </div>
       {tasteResponseList.length == 0 ? (
-        <div className="mx-4 my-20">
+        <div className="mx-4 my-32">
           <div className="my-20 text-center">검색된 추천 리스트가 없습니다!</div>
         </div>
       ) : (
         <div className="mx-4 my-2">
-          <div className="flex">
+          <div className="flex w-full h-auto pt-3 overflow-x-scroll pl-7 scrollbar-hide">
             {tasteResponseList.map((item, index) => (
-              <RecommendationItem key={index} item={item} onClickItem={() => handleClickMoveToCoordi(item)} />
+              <div className="mr-5">
+                <RecommendationItem key={index} item={item} onClickItem={() => handleClickMoveToCoordi(item)} />
+              </div>
             ))}
           </div>
         </div>

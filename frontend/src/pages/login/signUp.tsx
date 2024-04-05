@@ -6,7 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../../widgets/nav/navbar';
 import api from '../../entities/user/user-apis';
 import { axiosError } from '../../shared/utils/axiosError';
-import './signUp.css';
+import './signup.css';
+import CustomButton from '../../shared/ui/button/custom-button';
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -172,7 +173,7 @@ const SignUp = () => {
                     </div>
                   </div>
                 </div>
-                <div className="mb-2 inputTitle">프로필 이미지 업로드</div>
+                <CustomButton className="mb-2 inputTitle" value="프로필 이미지 업로드" onClick={() => {}} />
                 <div className="mb-5 inputWrap customInputWrap">
                   <input type="file" accept="image/*" onChange={handleImageUpload} className="customFileInput" />
                 </div>
@@ -232,9 +233,7 @@ const SignUp = () => {
               </div>
             </div>
             <div className="flex justify-center">
-              <button onClick={onClickConfirmButton} disabled={notAllow} className="bottomButton">
-                회원가입
-              </button>
+              <CustomButton onClick={onClickConfirmButton} disabled={notAllow} className="bottomButton" value="회원 가입" />
               {error && <div className="error">{error}</div>}
             </div>
           </div>

@@ -1,15 +1,12 @@
-version: '3'
+version: '3.8'
 
 services:
   frontend:
     image: frontend:latest
+    build:                         
+      context: ./     
+      dockerfile: Dockerfile
     ports:
-      - "3000:3000"
-  nginx:
-    image: nginx:latest
-    ports:
-      - "80:80"
+      - "80:80"   
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
-    depends_on:
-      - frontend

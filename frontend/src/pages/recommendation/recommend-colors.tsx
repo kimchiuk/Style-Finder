@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RecommendationItem from './recommendation-Item';
 import Dropbox from '../../shared/ui/dropbox/dropbox';
 
@@ -8,13 +8,11 @@ import api from '../../entities/analysis/analysis-apis';
 import { axiosError } from '../../shared/utils/axiosError';
 import useLoginStore from '../../shared/store/use-login-store';
 import useClothStore from '../../shared/store/use-cloth-store';
-// import { useParams } from 'react-router';
 
 const RecommendationColors = () => {
-  // const { info } = useParams<{ id: string; image: string }>();
   const navigate = useNavigate();
-  const loginStore = useLoginStore();
   const clothStore = useClothStore();
+  const loginStore = useLoginStore();
 
   const [color, setColor] = useState<string>('');
   const colorList = [
@@ -46,7 +44,6 @@ const RecommendationColors = () => {
   // 색상 설정
   const handleSelectedColor = (selectedItem: string) => {
     setColor(selectedItem);
-    handleGetColorList();
   };
 
   // 해당 color 에 대한 추천 결과 리스트를 조회
@@ -71,25 +68,32 @@ const RecommendationColors = () => {
 
   // 해당 아이템 코디 해 보기
   const handleClickMoveToCoordi = (selectedItem: RecommendCloth) => {
+    console.log(selectedItem);
     clothStore.createCloth(selectedItem);
     navigate(`/coordi/0}`);
   };
+
+  useEffect(() => {
+    handleGetColorList();
+  }, [color]);
 
   return (
     <div className="py-4 my-4">
       <div className="flex justify-between">
         <div className="text-lg">색상별 추천</div>
-        <Dropbox options={colorList} onSelected={handleSelectedColor}></Dropbox>
+        <Dropbox options={colorList} onSelected={(select) => handleSelectedColor(select)}></Dropbox>
       </div>
       {colorResponseList.length == 0 ? (
-        <div className="mx-4 my-20">
+        <div className="mx-4 my-32">
           <div className="my-20 text-center">검색된 추천 리스트가 없습니다!</div>
         </div>
       ) : (
         <div className="mx-4 my-2">
-          <div className="flex">
+          <div className="flex w-full h-auto pt-3 overflow-x-scroll pl-7 scrollbar-hide">
             {colorResponseList.map((item, index) => (
-              <RecommendationItem key={index} item={item} onClickItem={() => handleClickMoveToCoordi(item)} />
+              <div className="mr-5">
+                <RecommendationItem key={index} item={item} onClickItem={() => handleClickMoveToCoordi(item)} />
+              </div>
             ))}
           </div>
         </div>
