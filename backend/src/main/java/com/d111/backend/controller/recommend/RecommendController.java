@@ -19,7 +19,7 @@ public class RecommendController {
 
     @PostMapping
     public ResponseEntity<RecommendListResponseDTO> recommend(@RequestBody RecommendListRequestDTO recommendListRequestDTO) {
-        return recommendService.recommendItems(recommendListRequestDTO);
+        return recommendService.getRecommendItems(recommendListRequestDTO);
     }
 
     @GetMapping("/style")

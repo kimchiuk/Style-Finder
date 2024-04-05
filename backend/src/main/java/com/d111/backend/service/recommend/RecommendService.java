@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface RecommendService {
 
+    ResponseEntity<RecommendListResponseDTO> getRecommendItems(RecommendListRequestDTO recommendListRequestDTO);
+
     ResponseEntity<RecommendListResponseDTO> recommendItems(RecommendListRequestDTO recommendListRequestDTO);
 
     ResponseEntity<List<ClothResponseDTO>> getStyleRecommend(String style);

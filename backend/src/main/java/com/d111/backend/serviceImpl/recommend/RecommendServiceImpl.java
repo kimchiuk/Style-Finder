@@ -19,10 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Log4j2
@@ -38,6 +35,104 @@ public class RecommendServiceImpl implements RecommendService {
     List<String> BOTTOM = Arrays.asList("청바지", "팬츠", "스커트", "래깅스", "조거팬츠");
     List<String> OUTER = Arrays.asList("코트", "재킷", "점퍼", "패딩", "베스트", "가디건", "짚업");
     List<String> DRESS = Arrays.asList("드레스", "점프수트");
+
+    String[] parts = {"outer", "dress", "upper", "lower"};
+
+    String[] categoryKeys = {
+            "데이터셋 정보_데이터셋 상세설명_라벨링_아우터_0_카테고리",
+            "데이터셋 정보_데이터셋 상세설명_라벨링_드레스_0_카테고리",
+            "데이터셋 정보_데이터셋 상세설명_라벨링_상의_0_카테고리",
+            "데이터셋 정보_데이터셋 상세설명_라벨링_하의_0_카테고리"
+    };
+
+    String[] colorKeys = {
+            "데이터셋 정보_데이터셋 상세설명_라벨링_아우터_0_색상",
+            "데이터셋 정보_데이터셋 상세설명_라벨링_드레스_0_색상",
+            "데이터셋 정보_데이터셋 상세설명_라벨링_상의_0_색상",
+            "데이터셋 정보_데이터셋 상세설명_라벨링_하의_0_색상"
+    };
+
+    public ClothResponseDTO createClothResponseDTO(Map<String, String> clothResponse,Integer type) {
+        String filename = clothResponse.get("데이터셋 정보_파일 번호");
+        String style = clothResponse.get("데이터셋 정보_데이터셋 상세설명_라벨링_스타일_0_스타일");
+        String category = clothResponse.get(categoryKeys[type]);
+        String color = clothResponse.get(colorKeys[type]);;
+        String part = clothResponse.get(parts[type]);;
+
+        String storeFilePath = "big_date_image/" + filename + ".jpg";
+
+        return ClothResponseDTO.builder()
+                .image(getImage(storeFilePath))
+                .imageUrl(storeFilePath)
+                .style(style)
+                .category(category)
+                .color(color)
+                .part(part)
+                .part("outer")
+                .build();
+    };
+
+    @Override
+    public ResponseEntity<RecommendListResponseDTO> getRecommendItems(RecommendListRequestDTO recommendListRequestDTO) {
+        // RestTemplate 인스턴스 생성
+        RestTemplate restTemplate = new RestTemplate();
+
+        // HTTP 요청 헤더 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        StringBuilder apiUrl = new StringBuilder("http://j10d111.p.ssafy.io:8000/get_full_items/?");
+
+        for (String style: recommendListRequestDTO.getStyle()) {
+            apiUrl.append("style=").append(style).append("&");
+        }
+
+        for (String category: recommendListRequestDTO.getCategory()) {
+            apiUrl.append("category=").append(category).append("&");
+        }
+
+        for (String color: recommendListRequestDTO.getColor()) {
+            apiUrl.append("color=").append(color).append("&");
+        }
+
+        Map<String, List<Map<String, String>>> responses = restTemplate.getForObject(apiUrl.toString(), Map.class);
+        log.info(apiUrl);
+
+        List<Map<String, String>> outerResponses = responses.get("outer_data");
+        List<Map<String, String>> topResponses = responses.get("top_data");
+        List<Map<String, String>> bottomResponses = responses.get("bottom_data");
+        List<Map<String, String>> dressResponses = responses.get("dress_data");
+
+        List<ClothResponseDTO> outerResponseDTOList = new ArrayList<>();
+        List<ClothResponseDTO> topResponseDTOList = new ArrayList<>();
+        List<ClothResponseDTO> bottomResponseDTOList = new ArrayList<>();
+        List<ClothResponseDTO> dressResponseDTOList = new ArrayList<>();
+
+        for (Map<String, String> clothResponse: outerResponses) {
+            outerResponseDTOList.add(createClothResponseDTO(clothResponse, 0));
+        }
+
+        for (Map<String, String> clothResponse: dressResponses) {
+            outerResponseDTOList.add(createClothResponseDTO(clothResponse, 1));
+        }
+
+        for (Map<String, String> clothResponse: topResponses) {
+            outerResponseDTOList.add(createClothResponseDTO(clothResponse, 2));
+        }
+
+        for (Map<String, String> clothResponse: bottomResponses) {
+            outerResponseDTOList.add(createClothResponseDTO(clothResponse, 3));
+        }
+
+        RecommendListResponseDTO itemRecommendResponseDTO = RecommendListResponseDTO.builder()
+                .outerCloth(outerResponseDTOList)
+                .upperBody(topResponseDTOList)
+                .lowerBody(bottomResponseDTOList)
+                .dress(dressResponseDTOList)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(itemRecommendResponseDTO);
+    }
 
     @Override
     public ResponseEntity<RecommendListResponseDTO>recommendItems(RecommendListRequestDTO recommendListRequestDTO) {
